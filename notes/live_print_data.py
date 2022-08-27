@@ -2,6 +2,7 @@ import re
 import sys
 import print_hex_data
 import argparse
+from datetime import datetime
 
 p = argparse.ArgumentParser()
 p.add_argument('--filter-service', type=int, required=False)
@@ -9,7 +10,20 @@ p.add_argument('--filter-command', type=int, required=False)
 p.add_argument('--print', action='store_true', help='Print data as text')
 p.add_argument('--verbose', action='store_true', help='Print all raw data')
 p.add_argument('--only-print', action='store_true', help='Skip everything else and just print as text')
+p.add_argument('--search-for-bytes', type=str, required=False,
+               help='Search for these bytes anywhere in data (in decimal)')
+p.add_argument('--print-time', action='store_true')
+p.add_argument('--only-sent', action='store_true', help='Only print sent data')
+p.add_argument('--only-received', action='store_true', help='Only print received data')
 args = p.parse_args()
+
+
+def is_sublist(big_list, sublist):
+    for idx in range(len(big_list) - len(sublist) + 1):
+        if big_list[idx: idx + len(sublist)] == sublist:
+            return True
+    return False
+
 
 while True:
     line = sys.stdin.readline()
@@ -30,9 +44,15 @@ while True:
             raise Exception(f'EMPTY BYTES NOT EMPTY!!!\nBytes:{empty_bytes}\n{data}')
 
         if (args.filter_service is not None and service_id != args.filter_service) \
-                or (args.filter_command is not None and command_id != args.filter_command):
+                or (args.filter_command is not None and command_id != args.filter_command) \
+                or (args.search_for_bytes is not None and not is_sublist(decimals, eval(args.search_for_bytes)))\
+                or (args.only_sent and not is_send) \
+                or (args.only_received and not is_receive):
             continue
 
+        # print unix epoch
+        if args.print_time:
+            print(datetime.now().timestamp(), end=' ')
         print("---Sent---:" if is_send else ("-Received-:" if is_receive else "UNKNOWN SOURCE: "))
         if args.verbose:
             print(data)
