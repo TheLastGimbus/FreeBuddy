@@ -1,4 +1,9 @@
+import 'dart:async';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:freebuddy/headphones/otter_constants.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,10 +30,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  late StreamSubscription _periodSS;
+  BluetoothConnection? otterConn;
 
-  void _incrementCounter() {
-    setState(() => _counter++);
+  @override
+  void initState() {
+    super.initState();
+    _periodSS = Stream.periodic(const Duration(milliseconds: 1000), (_) async {
+      final devs = await FlutterBluetoothSerial.instance.getBondedDevices();
+      final otters = devs.where(
+          (d) => (d.isConnected && Otter.btMacRegex.hasMatch(d.address)));
+      if (otterConn == null && otters.length == 1) {
+        final otter = otters.first;
+        otterConn = await BluetoothConnection.toAddress(otter.address);
+        setState(() {});
+      }
+    }).listen((_) {});
   }
 
   @override
@@ -36,22 +53,50 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(title: const Text("FreeBuddy")),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: otterConn == null
+            ? const Text("Not connected :(")
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // Noise cancellation settings:
+                children: [
+                  // ANC
+                  Expanded(
+                    child: FittedBox(
+                      child: IconButton(
+                        onPressed: () {
+                          otterConn?.output.add(Uint8List.fromList([90, 0, 7, 0, 43, 4, 1, 2, 1, -1, -1, -20]));
+                        },
+                        icon: const Icon(Icons.hearing_disabled),
+                      ),
+                    ),
+                  ),
+                  // OFF
+                  Expanded(
+                    child: FittedBox(
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.highlight_off),
+                      ),
+                    ),
+                  ),
+                  // Awareness:
+                  Expanded(
+                    child: FittedBox(
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.hearing),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _periodSS.cancel();
+    super.dispose();
   }
 }
