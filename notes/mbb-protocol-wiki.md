@@ -1,7 +1,7 @@
 # Huawei MBB protocol
 As known from de-compilation (and some logs) of the [Huawei AI Life app](https://consumer.huawei.com/pl/campaign/ai-life-app/), "MBB" is the name of the protocol that they use to communicate with headphones.
 
-I did not found **ANY** information about this protocol/name *anywhere* - not on Github, nor on plain google search. Thus, all informations here will be very inconsistent, maybe unprofessional, and probably, biased because I only own one pair of Freebuds 4i headphones - not pro's, or other versions.
+I did not found **ANY** information about this protocol/name *anywhere* - not on Github, nor on plain google search. Thus, all descriptions here will be very inconsistent, maybe unprofessional, and probably, biased because I only own one pair of FreeBuds 4i headphones - not pro's, or other versions.
 
 However, I heaivliy tried to make everything as universal as I could. Enjoy!
 
@@ -49,4 +49,10 @@ they almost always change and are often negative (yes, negative - but in convers
 
 They are actually most problematic, because I don't know how to compute/fabricate them 🙃
 
+
+## Services
+Below are IDs and their suspected purposes. They will also have detailed descriptions of CommandIDs and their usage, if any discovered.
+
+### 1 - Battery service
+Seems to be heavily related to battery.
 
