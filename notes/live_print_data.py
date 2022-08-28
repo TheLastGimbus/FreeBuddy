@@ -39,9 +39,9 @@ while True:
         length = decimals[2]
         service_id = decimals[4]
         command_id = decimals[5]
-        empty_bytes = decimals[1], decimals[3]
-        if empty_bytes != (0, 0):
-            raise Exception(f'EMPTY BYTES NOT EMPTY!!!\nBytes:{empty_bytes}\n{data}')
+        magic_bytes = decimals[0], decimals[1], decimals[3]
+        if magic_bytes != (90, 0, 0):
+            raise Exception(f'MAGIC BYTES NOT MAGIC!!!\nBytes:{magic_bytes}\n{data}')
 
         if (args.filter_service is not None and service_id != args.filter_service) \
                 or (args.filter_command is not None and command_id != args.filter_command) \
