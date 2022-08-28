@@ -7,6 +7,7 @@ from datetime import datetime
 p = argparse.ArgumentParser()
 p.add_argument('--filter-service', type=int, required=False)
 p.add_argument('--filter-command', type=int, required=False)
+p.add_argument('--filter-length-max', type=int, required=False, help='Only print stuff below this length')
 p.add_argument('--print', action='store_true', help='Print data as text')
 p.add_argument('--verbose', action='store_true', help='Print all raw data')
 p.add_argument('--only-print', action='store_true', help='Skip everything else and just print as text')
@@ -47,7 +48,8 @@ while True:
                 or (args.filter_command is not None and command_id != args.filter_command) \
                 or (args.search_for_bytes is not None and not is_sublist(decimals, eval(args.search_for_bytes)))\
                 or (args.only_sent and not is_send) \
-                or (args.only_received and not is_receive):
+                or (args.only_received and not is_receive)\
+                or (args.filter_length_max is not None and length > args.filter_length_max):
             continue
 
         # print unix epoch
