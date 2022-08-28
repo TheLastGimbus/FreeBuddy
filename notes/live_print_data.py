@@ -51,8 +51,8 @@ def matches_rules(filter_rules: dict, decimals: list[int], is_send: bool, is_rec
                 key == "commandId" and decimals[5] != rule[key],
                 key == "minLength" and len(decimals) - 3 - 1 - 2 - 2 < rule[key],
                 key == "maxLength" and len(decimals) - 3 - 1 - 2 - 2 > rule[key],
-                key == "includesBytesInOrder" and not is_sublist(decimals, rule[key]),
-                key == "includesBytesAnyOrder" and not all(i in decimals for i in rule[key]),
+                key == "includesBytesInOrder" and not is_sublist(decimals[6:-2], rule[key]),
+                key == "includesBytesAnyOrder" and not all(i in decimals[6:-2] for i in rule[key]),
             ]):
                 matches_all = False
                 break
@@ -80,7 +80,7 @@ def handle_payload(raw_line: str, payload: str, is_send: bool, is_receive: bool,
 
     if (args.filter_service is not None and service_id != args.filter_service) \
             or (args.filter_command is not None and command_id != args.filter_command) \
-            or (args.search_for_bytes is not None and not is_sublist(decimals, eval(args.search_for_bytes))) \
+            or (args.search_for_bytes is not None and not is_sublist(decimals[6:-2], eval(args.search_for_bytes))) \
             or (args.only_sent and not is_send) \
             or (args.only_received and not is_receive) \
             or (args.filter_length_max is not None and length > args.filter_length_max) \
