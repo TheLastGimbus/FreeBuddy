@@ -64,8 +64,8 @@ while True:
             print(chars)
             continue
 
-        print('{ Length:', length, 'ServiceID:', service_id, 'CommandID:', command_id, 'Checksums:', decimals[-2:], '}')
-        print(decimals[6:-2])
+        print('{ ServiceID:', service_id, 'CommandID:', command_id, '}')
+        print('Data:', decimals[6:-2])
 
         if args.print:
             print('=== Printable ===')
