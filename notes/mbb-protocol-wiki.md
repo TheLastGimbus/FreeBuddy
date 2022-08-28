@@ -76,7 +76,7 @@ I assume 0 means null, because it shows up placeholder "-" in the app, but why 5
 When I've put the right bud, it showed this:
 `[1, 1, 55, 2, 3, 55, 65, 1, 3, 3, 0, 0, 0]`
 
-...SO, **I think** third byte is just highest charge there is 👀
+...SO, **I think** third byte is just lowest (non-null) charged bud there is 👀
 
 > CommandID=8 also *sometimes* gives same bytes, but sometimes completely different, meanwhile 39 seems to be stable
 
