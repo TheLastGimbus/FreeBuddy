@@ -1,0 +1,3 @@
+# Ignore all rule files
+*-rule.json
+!filter-rules.json
