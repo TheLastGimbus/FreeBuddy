@@ -76,7 +76,7 @@ I assume 0 means null, because it shows up placeholder "-" in the app, but why 5
 When I've put the right bud, it showed this:
 `[1, 1, 55, 2, 3, 55, 65, 1, 3, 3, 0, 0, 0]`
 
-...SO, **I think** third byte is just lowest charge there is 👀
+...SO, **I think** third byte is just highest charge there is 👀
 
 > CommandID=8 also *sometimes* gives same bytes, but sometimes completely different, meanwhile 39 seems to be stable
 
@@ -88,7 +88,7 @@ Data bytes look like this:
 - `[1, 2, 0, 0]` for off
 - `[1, 2, 2, 255]` for transparency
 
-I don't know what last `255`/`0` mean - maybe it's something like "strenght" of the canceling? I tried to change them, but nothing changes... maybe it's something legacy/working on other headphones.
+I don't know what last `255`/`0` mean - maybe it's something like "strength" of the canceling? I tried to change them, but nothing changes... maybe it's something legacy/working on other headphones.
 
 ### 10 CommandID=13 - Party :tada:
 This seems to be some kind of party mode. Hear me out. Those buds randomly start to span out shitload of those jsons:
