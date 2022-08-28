@@ -1,8 +1,10 @@
-import re
-import sys
-import print_hex_data
 import argparse
+import re
 from datetime import datetime
+
+import sys
+
+import print_hex_data
 
 p = argparse.ArgumentParser()
 p.add_argument('--filter-service', type=int, required=False)
@@ -46,9 +48,9 @@ while True:
 
         if (args.filter_service is not None and service_id != args.filter_service) \
                 or (args.filter_command is not None and command_id != args.filter_command) \
-                or (args.search_for_bytes is not None and not is_sublist(decimals, eval(args.search_for_bytes)))\
+                or (args.search_for_bytes is not None and not is_sublist(decimals, eval(args.search_for_bytes))) \
                 or (args.only_sent and not is_send) \
-                or (args.only_received and not is_receive)\
+                or (args.only_received and not is_receive) \
                 or (args.filter_length_max is not None and length > args.filter_length_max):
             continue
 
