@@ -44,18 +44,16 @@ def matches_rules(filter_rules: dict, decimals: list[int], is_send: bool, is_rec
     for rule in filter_rules["rules"]:
         matches_all = True
         for key in rule:
-            if any(
-                    [
-                        key == "source" and \
-                        ((rule[key] == "send" and not is_send) or (rule[key] == "receive" and not is_receive)),
-                        key == "serviceId" and decimals[4] != rule[key],
-                        key == "commandId" and decimals[5] != rule[key],
-                        key == "minLength" and len(decimals) - 3 - 1 - 2 - 2 < rule[key],
-                        key == "maxLength" and len(decimals) - 3 - 1 - 2 - 2 > rule[key],
-                        key == "includesBytesInOrder" and not is_sublist(decimals, rule[key]),
-                        key == "includesBytesAnyOrder" and not all(i in decimals for i in rule[key]),
-                    ]
-            ):
+            if any([
+                key == "source" and \
+                ((rule[key] == "send" and not is_send) or (rule[key] == "receive" and not is_receive)),
+                key == "serviceId" and decimals[4] != rule[key],
+                key == "commandId" and decimals[5] != rule[key],
+                key == "minLength" and len(decimals) - 3 - 1 - 2 - 2 < rule[key],
+                key == "maxLength" and len(decimals) - 3 - 1 - 2 - 2 > rule[key],
+                key == "includesBytesInOrder" and not is_sublist(decimals, rule[key]),
+                key == "includesBytesAnyOrder" and not all(i in decimals for i in rule[key]),
+            ]):
                 matches_all = False
                 break
         if matches_all:
