@@ -12,6 +12,7 @@ p.add_argument('--filter-command', type=int, required=False)
 p.add_argument('--filter-length-max', type=int, required=False, help='Only print stuff below this length')
 p.add_argument('--print', action='store_true', help='Print data as text')
 p.add_argument('--verbose', action='store_true', help='Print all raw data')
+p.add_argument('--very-verbose', action='store_true', help='Print even raw lines from stdin')
 p.add_argument('--only-print', action='store_true', help='Skip everything else and just print as text')
 p.add_argument('--search-for-bytes', type=str, required=False,
                help='Search for these bytes anywhere in data (in decimal)')
@@ -58,6 +59,8 @@ while True:
         if args.print_time:
             print(datetime.now().timestamp(), end=' ')
         print("---Sent---:" if is_send else ("-Received-:" if is_receive else "UNKNOWN SOURCE: "))
+        if args.very_verbose:
+            print(line, end='')
         if args.verbose:
             print(data)
             print(decimals)
