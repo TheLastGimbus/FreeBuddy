@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:freebuddy/headphones/mbb.dart';
 import 'package:freebuddy/headphones/otter_constants.dart';
 
 void main() {
@@ -50,6 +51,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Widget ancButton(IconData icon, List<int> bytes) {
+      return Expanded(
+        child: FittedBox(
+          child: IconButton(
+            onPressed: () {
+              final data = Mbb.getPayload(43, 4, Uint8List.fromList(bytes));
+              print('data: $data');
+              otterConn?.output.add(data);
+            },
+            icon: Icon(icon),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: const Text("FreeBuddy")),
       body: Center(
@@ -59,35 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 // Noise cancellation settings:
                 children: [
-                  // ANC
-                  Expanded(
-                    child: FittedBox(
-                      child: IconButton(
-                        onPressed: () {
-                          otterConn?.output.add(Uint8List.fromList([90, 0, 7, 0, 43, 4, 1, 2, 1, -1, -1, -20]));
-                        },
-                        icon: const Icon(Icons.hearing_disabled),
-                      ),
-                    ),
-                  ),
-                  // OFF
-                  Expanded(
-                    child: FittedBox(
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.highlight_off),
-                      ),
-                    ),
-                  ),
-                  // Awareness:
-                  Expanded(
-                    child: FittedBox(
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: const Icon(Icons.hearing),
-                      ),
-                    ),
-                  ),
+                  ancButton(Icons.hearing_disabled, [1, 2, 1]),
+                  ancButton(Icons.highlight_off, [1, 2, 0]),
+                  ancButton(Icons.hearing, [1, 2, 2]),
                 ],
               ),
       ),
