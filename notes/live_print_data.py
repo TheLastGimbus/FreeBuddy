@@ -88,6 +88,8 @@ while True:
             handle_payload(line, data, _is_send, _is_receive, False)
             continue
 
+        # Psst: while testing this, i was shaking my head why it wasn't showing me some commands
+        # Then i realized, i filtered them out with filters :D So it actually works great!!
         last_payload = ""
         _smart_divided = False
         while len(data) >= 14:
