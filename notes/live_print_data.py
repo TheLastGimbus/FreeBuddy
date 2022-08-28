@@ -2,6 +2,8 @@ import argparse
 import re
 from datetime import datetime
 
+import sys
+
 import print_hex_data
 
 p = argparse.ArgumentParser()
@@ -53,7 +55,7 @@ def handle_payload(raw_line: str, payload: str, is_send: bool, is_receive: bool,
         print(datetime.now().timestamp(), end=' ')
     print("---Sent---:" if is_send else ("-Received-:" if is_receive else "UNKNOWN SOURCE: "))
     if args.very_verbose:
-        print(raw_line)
+        print(raw_line, end=' ')
         if smart_divided:
             print('(Psst: Actually parsed bytes were smartly divided/ignored thanks to --smart-divide option)')
     if args.verbose:
@@ -83,14 +85,14 @@ while True:
         res = re.search(r'5a\w+', line)
         data = res.group(0)
         if not args.smart_divide:
-            handle_payload(data, _is_send, _is_receive)
+            handle_payload(line, data, _is_send, _is_receive, False)
             continue
 
         last_payload = ""
         _smart_divided = False
         while len(data) >= 14:
             decimals = print_hex_data.string_to_decimals(data)
-            length = decimals[2] + 5  # get lenght byte and add 5 for rest of bytes that it doesn't include
+            length = decimals[2] + 5  # get length byte and add 5 for rest of bytes that it doesn't include
             if length < len(decimals):
                 _smart_divided = True  # length shows to be smaller than what we have - we will smart divide
             hex_str_length = length * 2  # every byte is two hex chars
