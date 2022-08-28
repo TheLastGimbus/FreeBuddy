@@ -90,6 +90,15 @@ Data bytes look like this:
 
 I don't know what last `255`/`0` mean - maybe it's something like "strength" of the canceling? I tried to change them, but nothing changes... maybe it's something legacy/working on other headphones.
 
+Headphones themselves seem to advertise *their current* anc mode on CommandId=42 (still same service). They do it like this:
+- `[1, 2, 4, 1]` for noise-canceling
+- `[1, 2, 0, 0]` for off
+- `[1, 2, 0, 2]` for transparency
+
+They send this when you hold them, pull them out of your ear, and they even echo-style it back when you change the mode with app.
+
+Looks like last byte is the mode number, same as third byte in CommandID=4. I don't know what rest of them do, but 🤷
+
 ### 10 CommandID=13 - Party :tada:
 This seems to be some kind of party mode. Hear me out. Those buds randomly start to span out shitload of those jsons:
 
