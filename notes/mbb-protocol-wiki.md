@@ -60,3 +60,12 @@ Below are IDs and their suspected purposes. They will also have detailed descrip
 ### 1 - Battery service
 Seems to be heavily related to battery.
 
+### 43 - ANC service?
+Seems to be related to ANC. All three commands to set anc to on, off, and transparency, have ServiceID=43 and CommandID=4
+
+Data bytes look like this:
+- `[1, 2, 1, 255]` for noise-canceling
+- `[1, 2, 0, 0]` for off
+- `[1, 2, 2, 255]` for transparency
+
+I don't know what last `255`/`0` mean - maybe it's something like "strenght" of the canceling? I tried to change them, but nothing changes... maybe it's something legacy/working on other headphones.
