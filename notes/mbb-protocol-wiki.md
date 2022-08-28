@@ -60,6 +60,26 @@ Below are IDs and their suspected purposes. They will also have detailed descrip
 ### 1 - Battery service
 Seems to be heavily related to battery.
 
+#### CommandID=39 
+Looks like a main juice that gives me levels etc.
+
+While my headphones are 55%L, 65%R, 1%C, these are the data bytes:
+`[1, 1, 55, 2, 3, 55, 65, 1, 3, 3, 0, 0, 0]`
+
+So looks like 5th byte is left, 6th right and 7th case. Last 3 bytes are charging states, in same order (as I learned other time).
+
+But that's with both buds out. If I put the left bud in case and close it, it gives me this:
+`[1, 1, 65, 2, 3, 0, 65, 1, 3, 3, 0, 0, 0]`
+
+I assume 0 means null, because it shows up placeholder "-" in the app, but why 55 changed to 65 in third byte?
+
+When I've put the right bud, it showed this:
+`[1, 1, 55, 2, 3, 55, 65, 1, 3, 3, 0, 0, 0]`
+
+...SO, **I think** third byte is just lowest charge there is 👀
+
+> CommandID=8 also *sometimes* gives same bytes, but sometimes completely different, meanwhile 39 seems to be stable
+
 ### 43 - ANC service?
 Seems to be related to ANC. All three commands to set anc to on, off, and transparency, have ServiceID=43 and CommandID=4
 
