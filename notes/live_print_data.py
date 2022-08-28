@@ -1,4 +1,5 @@
 import argparse
+import json
 import re
 from datetime import datetime
 
@@ -21,7 +22,14 @@ p.add_argument('--only-sent', action='store_true', help='Only print sent data')
 p.add_argument('--only-received', action='store_true', help='Only print received data')
 p.add_argument('--smart-divide', type=bool, default=True, help='Divide payloads into two if length byte says so.'
                                                                'Also detects if they are duplicates and skips them.')
+p.add_argument('--filter-rules-file', type=str, help='Path to file with filter rules. Look at filter-rules.json '
+                                                     'for an example :)')
 args = p.parse_args()
+
+file_filter_rules = None
+if args.filter_rules_file is not None:
+    with open(args.filter_rules_file) as f:
+        file_filter_rules = json.load(f)
 
 
 def is_sublist(big_list, sublist):
@@ -29,6 +37,44 @@ def is_sublist(big_list, sublist):
         if big_list[idx: idx + len(sublist)] == sublist:
             return True
     return False
+
+
+def matches_rules(filter_rules: dict, decimals: list[int], is_send: bool, is_receive: bool):
+    matches_any = False
+    for rule in filter_rules["rules"]:
+        matches_all = True
+        for key in rule:
+            if key == "source" and \
+                    ((rule[key] == "send" and not is_send) or (rule[key] == "receive" and not is_receive)):
+                matches_all = False
+                break
+            if key == "serviceId" and decimals[4] != rule[key]:
+                matches_all = False
+                break
+            if key == "commandId" and decimals[5] != rule[key]:
+                matches_all = False
+                break
+            if key == "minLength" and len(decimals) - 3 - 1 - 2 - 2 < rule[key]:
+                matches_all = False
+                break
+            if key == "maxLength" and len(decimals) - 3 - 1 - 2 - 2 > rule[key]:
+                matches_all = False
+                break
+            if key == "includesBytesInOrder" and not is_sublist(decimals, rule[key]):
+                matches_all = False
+                break
+            if key == "includesBytesAnyOrder" and not all(i in decimals for i in rule[key]):
+                matches_all = False
+                break
+        if matches_all:
+            matches_any = True
+            break
+    if filter_rules["filterType"] == "only":
+        return matches_any
+    elif filter_rules["filterType"] == "not":
+        return not matches_any
+    else:
+        raise Exception("Invalid filter type in rules: ", filter_rules)
 
 
 def handle_payload(raw_line: str, payload: str, is_send: bool, is_receive: bool, smart_divided: bool):
@@ -47,7 +93,8 @@ def handle_payload(raw_line: str, payload: str, is_send: bool, is_receive: bool,
             or (args.search_for_bytes is not None and not is_sublist(decimals, eval(args.search_for_bytes))) \
             or (args.only_sent and not is_send) \
             or (args.only_received and not is_receive) \
-            or (args.filter_length_max is not None and length > args.filter_length_max):
+            or (args.filter_length_max is not None and length > args.filter_length_max) \
+            or (file_filter_rules is not None and not matches_rules(file_filter_rules, decimals, is_send, is_receive)):
         return
 
     # print unix epoch

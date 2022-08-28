@@ -1,0 +1,22 @@
+// Example filter rules to showcase features
+{
+  // Can be "only" or "not". "Only" means "only those matching cryteria will be shown, and "not" means "those matching
+  // criteria will be hidden".
+  "filterType": "only",
+  // Rules one by one. Will match if *any* of them matches.
+  "rules": [
+    {
+      // May be "send" or "receive" - will show only from given source
+      "source":  "receive",
+      "serviceId": 1,
+      "commandId": 39,
+      // Min and max lenght of *DATA* bytes (not whole msg)
+      "minLength": 10,
+      "maxLength": 20,
+      // If data bytes include those bytes, in this order
+      "includesBytesInOrder": [55, 65, 1],
+      // same, but *any* order, placement and whatever. May be useful if you are desepratly looking for some values
+      "includesBytesAnyOrder": [1, 0]
+    }
+  ]
+}
