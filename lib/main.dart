@@ -51,14 +51,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    Widget ancButton(IconData icon, List<int> bytes) {
+    Widget ancButton(IconData icon, MbbCommand cmd) {
       return Expanded(
         child: FittedBox(
           child: IconButton(
             onPressed: () {
-              final data = Mbb.getPayload(43, 4, Uint8List.fromList(bytes));
-              print('data: $data');
-              otterConn?.output.add(data);
+              final payload = cmd.toPayload();
+              print('payload: $payload');
+              otterConn?.output.add(payload);
             },
             icon: Icon(icon),
           ),
@@ -75,9 +75,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 // Noise cancellation settings:
                 children: [
-                  ancButton(Icons.hearing_disabled, [1, 2, 1]),
-                  ancButton(Icons.highlight_off, [1, 2, 0]),
-                  ancButton(Icons.hearing, [1, 2, 2]),
+                  ancButton(Icons.hearing_disabled, MbbCommand.ancNoiseCancel),
+                  ancButton(Icons.highlight_off, MbbCommand.ancOff),
+                  ancButton(Icons.hearing, MbbCommand.ancAware),
                 ],
               ),
       ),
