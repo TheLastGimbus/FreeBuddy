@@ -45,9 +45,13 @@ The rest of the bytes seem to be "data bytes" - counted to [third "length" byte]
 Thus, rest of bytes contain actual data - whether it be battery level, or charging state, or something else - with exception of...
 
 #### Last two bytes
-they almost always change and are often negative (yes, negative - but in conversion to hex bytes they just roll around ??) - they seem to be "checksum" bytes ??
+<sub>With a sheer luck, I found out that...<sub>
 
-They are actually most problematic, because I don't know how to compute/fabricate them 🙃
+They are a CTC16-Xmodem checksum 🎉 Just take the *whole* message (besides those two bytes of course), run them through this algo and there you have them!
+
+> In my Dart code, I use [crclib](https://pub.dev/packages/crclib) package that provides a `Crc16Xmodem` class
+
+You can check it on [online calculator (where I actually found out about it)](https://www.lammertbies.nl/comm/info/crc-calculation)
 
 
 ## Services
