@@ -89,3 +89,17 @@ Data bytes look like this:
 - `[1, 2, 2, 255]` for transparency
 
 I don't know what last `255`/`0` mean - maybe it's something like "strenght" of the canceling? I tried to change them, but nothing changes... maybe it's something legacy/working on other headphones.
+
+### 10 CommandID=13 - Party :tada:
+This seems to be some kind of party mode. Hear me out. Those buds randomly start to span out shitload of those jsons:
+
+```json
+{"Type":"BTFT0001-000124|0x23|0x3e8","Time":0x630b17f2,"ID":0x4,"VID":0x16fe2498,"Ver":"1.9.0.198","Code":0x1,"SubCode":0x1}
+{"Type":"BTFT0001-000124|0x24|0x3e9","Time":0x630b17f2,"ID":0x4,"Code":0x7,"SubCode":0x1}
+{"Type":"BTFT0001-000124|0x27|0x3ea","Time":0x630b17f2,"ID":0x4,"VID":0x16fe2498,"Ver":"1.9.0.198","Code":0x4,"SubCode":0x0}
+{"Type":"BTFT0001-000124|0x29|0x3eb","Time":0x630b17f2,"ID":0x4,"VID":0x16fe2498,"Ver":"1.9.0.198","Code":0x1,"SubCode":0xf}
+{"Type":"BTFT0001-000124|0x2a|0x3ec","Time":0x630b17f2,"ID":0x4,"VID":0x16fe2498,"Ver":"1.9.0.198","Code":0x2,"SubCode":0xa}
+```
+(each one is separate payload)
+
+It's actually super annoying when I try to watch other commands
