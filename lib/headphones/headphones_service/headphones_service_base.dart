@@ -62,11 +62,6 @@ abstract class HeadphonesServiceBase {
 
   Stream<HeadphonesConnectionState> get connectionState;
 
-  Stream<HeadphonesBatteryData> get batteryData;
-
-  Stream<HeadphonesAncMode> get ancMode;
-
-  Future<void> setAncMode(HeadphonesAncMode mode);
 
   Future<void> dispose();
 }

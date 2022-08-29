@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:freebuddy/headphones/headphones_service/headphones_service_base.dart';
-import 'package:freebuddy/headphones/headphones_service/headphones_service_bluetooth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+
+import 'headphones/headphones_connection_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +16,14 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FreeBuddy',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const MyHomePage(),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<HeadphonesConnectionCubit>(
+              create: (_) => HeadphonesConnectionCubit(
+                  bluetooth: FlutterBluetoothSerial.instance)),
+        ],
+        child: const MyHomePage(),
+      ),
     );
   }
 }
@@ -27,11 +36,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final service = HeadphonesServiceBluetooth();
-
   @override
   void initState() {
-    service.init();
     super.initState();
   }
 
@@ -42,39 +48,20 @@ class _MyHomePageState extends State<MyHomePage> {
       body: Center(
         child: Column(
           children: [
-            StreamBuilder(
-              initialData: HeadphonesConnectionState.notPaired,
-              stream: service.connectionState,
-              builder:
-                  (context, AsyncSnapshot<HeadphonesConnectionState> snapshot) {
-                if (!snapshot.hasData) return const Text("no data!");
-                switch (snapshot.data) {
-                  case HeadphonesConnectionState.connected:
-                    return const Text("connected");
-                  case HeadphonesConnectionState.connecting:
-                    return const Text("connecting");
-                  case HeadphonesConnectionState.disconnected:
-                    return const Text("disconnected");
-                  case HeadphonesConnectionState.disconnecting:
-                    return const Text("disconnecting");
-                  case HeadphonesConnectionState.notPaired:
-                    return const Text("notPaired");
-                  default:
-                    return const Text("unknown :(");
+            BlocBuilder<HeadphonesConnectionCubit, HeadphonesObject>(
+              builder: (context, state) {
+                if (state is HeadphonesConnected) {
+                  return const Text("connected");
+                } else if (state is HeadphonesConnecting) {
+                  return const Text("connecting");
+                } else if (state is HeadphonesDisconnected) {
+                  return const Text("disconnected");
+                } else if (state is HeadphonesNotPaired) {
+                  return const Text("notPaired");
+                } else {
+                  return const Text("unknown :(");
                 }
               },
-            ),
-            TextButton(
-              onPressed: () {
-                service.init();
-              },
-              child: const Text("init"),
-            ),
-            TextButton(
-              onPressed: () {
-                service.dispose();
-              },
-              child: const Text("dispose"),
             ),
           ],
         ),
