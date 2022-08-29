@@ -1,11 +1,6 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
-import 'package:flutter_foreground_task/flutter_foreground_task.dart';
-import 'package:freebuddy/headphones/foreground_service.dart';
-import 'package:freebuddy/headphones/mbb.dart';
-import 'package:freebuddy/headphones/otter_constants.dart';
+import 'package:freebuddy/headphones/headphones_service/headphones_service_base.dart';
+import 'package:freebuddy/headphones/headphones_service/headphones_service_bluetooth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -32,84 +27,58 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late StreamSubscription _periodSS;
-  BluetoothConnection? otterConn;
+  final service = HeadphonesServiceBluetooth();
 
   @override
   void initState() {
+    service.init();
     super.initState();
-
-    initForegroundTask();
-
-    _periodSS = Stream.periodic(const Duration(milliseconds: 1000), (_) async {
-      final devs = await FlutterBluetoothSerial.instance.getBondedDevices();
-      final otters = devs.where(
-          (d) => (d.isConnected && Otter.btMacRegex.hasMatch(d.address)));
-      if (otterConn == null && otters.length == 1) {
-        final otter = otters.first;
-        otterConn = await BluetoothConnection.toAddress(otter.address);
-        setState(() {});
-      }
-    }).listen((_) {});
   }
 
   @override
   Widget build(BuildContext context) {
-    Widget ancButton(IconData icon, MbbCommand cmd) {
-      return Expanded(
-        child: FittedBox(
-          child: IconButton(
-            onPressed: () {
-              final payload = cmd.toPayload();
-              print('payload: $payload');
-              otterConn?.output.add(payload);
-            },
-            icon: Icon(icon),
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       appBar: AppBar(title: const Text("FreeBuddy")),
       body: Center(
-        child: otterConn == null
-            ? Column(
-                children: [
-                  TextButton(
-                    child: const Text("init service"),
-                    onPressed: () => initForegroundTask(),
-                  ),
-                  TextButton(
-                    child: const Text('Start service'),
-                    onPressed: () => FlutterForegroundTask.startService(
-                      notificationTitle: 'FreeBuddy',
-                      notificationText: 'Connection to headphones...',
-                      callback: foregroundTaskStartCallback,
-                    ),
-                  ),
-                  TextButton(
-                    child: const Text('Stop service'),
-                    onPressed: () => FlutterForegroundTask.stopService(),
-                  ),
-                ],
-              )
-            : Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // Noise cancellation settings:
-                children: [
-                  ancButton(Icons.hearing_disabled, MbbCommand.ancNoiseCancel),
-                  ancButton(Icons.highlight_off, MbbCommand.ancOff),
-                  ancButton(Icons.hearing, MbbCommand.ancAware),
-                ],
-              ),
+        child: Column(
+          children: [
+            StreamBuilder(
+              initialData: HeadphonesConnectionState.notPaired,
+              stream: service.connectionState,
+              builder:
+                  (context, AsyncSnapshot<HeadphonesConnectionState> snapshot) {
+                if (!snapshot.hasData) return const Text("no data!");
+                switch (snapshot.data) {
+                  case HeadphonesConnectionState.connected:
+                    return const Text("connected");
+                  case HeadphonesConnectionState.connecting:
+                    return const Text("connecting");
+                  case HeadphonesConnectionState.disconnected:
+                    return const Text("disconnected");
+                  case HeadphonesConnectionState.disconnecting:
+                    return const Text("disconnecting");
+                  case HeadphonesConnectionState.notPaired:
+                    return const Text("notPaired");
+                  default:
+                    return const Text("unknown :(");
+                }
+              },
+            ),
+            TextButton(
+              onPressed: () {
+                service.init();
+              },
+              child: const Text("init"),
+            ),
+            TextButton(
+              onPressed: () {
+                service.dispose();
+              },
+              child: const Text("dispose"),
+            ),
+          ],
+        ),
       ),
     );
-  }
-
-  @override
-  void dispose() {
-    _periodSS.cancel();
-    super.dispose();
   }
 }
