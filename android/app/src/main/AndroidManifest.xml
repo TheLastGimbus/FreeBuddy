@@ -1,5 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.freebuddy">
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+<!--    We may need those later for foreground service: -->
+<!--    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />-->
+<!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
+
    <application
         android:label="freebuddy"
         android:name="${applicationName}"
@@ -30,5 +37,8 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+
+       <service android:name="com.pravera.flutter_foreground_task.service.ForegroundService" />
+
     </application>
 </manifest>

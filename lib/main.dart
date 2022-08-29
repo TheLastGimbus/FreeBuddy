@@ -1,8 +1,9 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:flutter_foreground_task/flutter_foreground_task.dart';
+import 'package:freebuddy/headphones/foreground_service.dart';
 import 'package:freebuddy/headphones/mbb.dart';
 import 'package:freebuddy/headphones/otter_constants.dart';
 
@@ -37,6 +38,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+
+    initForegroundTask();
+
     _periodSS = Stream.periodic(const Duration(milliseconds: 1000), (_) async {
       final devs = await FlutterBluetoothSerial.instance.getBondedDevices();
       final otters = devs.where(
@@ -70,7 +74,26 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(title: const Text("FreeBuddy")),
       body: Center(
         child: otterConn == null
-            ? const Text("Not connected :(")
+            ? Column(
+                children: [
+                  TextButton(
+                    child: const Text("init service"),
+                    onPressed: () => initForegroundTask(),
+                  ),
+                  TextButton(
+                    child: const Text('Start service'),
+                    onPressed: () => FlutterForegroundTask.startService(
+                      notificationTitle: 'FreeBuddy',
+                      notificationText: 'Connection to headphones...',
+                      callback: foregroundTaskStartCallback,
+                    ),
+                  ),
+                  TextButton(
+                    child: const Text('Stop service'),
+                    onPressed: () => FlutterForegroundTask.stopService(),
+                  ),
+                ],
+              )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 // Noise cancellation settings:
