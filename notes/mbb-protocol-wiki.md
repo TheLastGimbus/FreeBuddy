@@ -80,8 +80,11 @@ When I've put the right bud, it showed this:
 
 > CommandID=8 also *sometimes* gives same bytes, but sometimes completely different, meanwhile 39 seems to be stable
 
-### 43 - ANC service?
-Seems to be related to ANC. All three commands to set anc to on, off, and transparency, have ServiceID=43 and CommandID=4
+### 43 - ANC / settings service ?
+Seems to be related to ANC / settings. 
+
+#### ANC
+All three commands to set anc to on, off, and transparency, have ServiceID=43 and CommandID=4
 
 Data bytes look like this:
 - `[1, 2, 1, 255]` for noise-canceling
@@ -98,6 +101,45 @@ Headphones themselves seem to advertise *their current* anc mode on CommandId=42
 They send this when you hold them, pull them out of your ear, and they even echo-style it back when you change the mode with app.
 
 Looks like last byte is the mode number, same as third byte in CommandID=4. I don't know what rest of them do, but 🤷
+
+#### Settings
+
+**TODO:** Clean up this section when i know more
+
+When I open up the settings (where there is currently only "Smart wear detection" option), and i have this option off, the app sends this data:
+
+```
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 0]
+{ ServiceID: 43 CommandID: 97 }
+Data: [1, 0]
+{ ServiceID: 43 CommandID: 143 }
+Data: [1, 0]
+```
+and headphones respond with:
+```
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 1, 0]
+```
+
+If i have smart-wear turned on, they instead respond with
+```
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 1, 1]
+```
+...so, the last byte changes
+
+And it doesn't seem to be more complicated than that, because when i press the switch to change it, communication looks like this:
+```
+1661729012.695396 ---Sent---:
+{ ServiceID: 43 CommandID: 16 }
+Data: [1, 1, 0]
+
+1661729012.778076 -Received-:
+{ ServiceID: 43 CommandID: 16 }
+Data: [127, 4, 0, 1, 134, 160]
+```
+and when i press again to turn it off, only thing that changes is that last byte in `sent` data... the received `[127, 4 ...` stays the same... so it seems like some kind of "ok" message?
 
 ### 10 CommandID=13 - Party :tada:
 This seems to be some kind of party mode. Hear me out. Those buds randomly start to span out shitload of those jsons:
