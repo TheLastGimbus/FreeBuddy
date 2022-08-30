@@ -20,3 +20,64 @@ I: --onDeviceBatteryQuerySuccess
  
 
 ```
+# Decompiled stuff
+In `decompiledPlugin/assets/touchsetting/config_za08.json` i found info about touch settings:
+```json
+...
+{
+  "primaryText": "otter_touch_settings_previous",
+  "hasDivider": true,
+  "isLeftEar": true,
+  "buttonType": 3,
+  "selectedValue": 7
+},
+{
+"primaryText": "fiji_touch_settings_wake_voice_assistant",
+"hasDivider": true,
+"isLeftEar": true,
+"buttonType": 3,
+"selectedValue": 0
+},
+...
+```
+The "selected value" number may be useful in figuring out the proto
+
+This seems to help me with figuring out how to send noise ctrl functions:
+```json
+...
+{
+  "subTitleId": "hold_ear_noise_control_sub_title",
+  "customView": "MultiUsageTextView",
+  "isRefresh": true,
+  "isGoneItem": true,
+  "isSetGone": true,
+  "noiseControlFunction": [2, 4, 3, 1],
+  "itemBeans": [
+    {
+      "primaryText": "noise_reduction",
+      "secondaryText": "block_external_sound",
+      "hasDivider": true,
+      "isNoiseControl": true,
+      "selectedValue": 4,
+      "buttonType": 2
+    },
+    {
+      "primaryText": "base_none",
+      "secondaryText": "off_and_pass_through",
+      "hasDivider": true,
+      "isNoiseControl": true,
+      "selectedValue": 3,
+      "buttonType": 2
+    },
+    {
+      "primaryText": "base_pass_through",
+      "secondaryText": "pass_through_external_voice",
+      "hasDivider": false,
+      "isNoiseControl": true,
+      "selectedValue": 1,
+      "buttonType": 2
+    }
+  ]
+}
+...
+```
