@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
@@ -35,9 +36,11 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
           },
           onDone: () async {
             print('headphones done!');
+            await _connection!.finish();
             _connection!.dispose();
             _connection = null;
             emit(HeadphonesDisconnected());
+            await Future.delayed(const Duration(seconds: 1));
             _connectingStream?.resume();
           },
         );
@@ -45,7 +48,14 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
             ? HeadphonesDisconnected()
             : HeadphonesConnectedPlugin(_connection!));
         _connectingStream?.pause();
-      } on StateError catch (_) {}
+      } on StateError catch (_) {
+      } on PlatformException catch (e) {
+        await _connection?.finish();
+        _connection?.dispose();
+        _connection = null;
+        print('Platform error in connection loop: $e');
+        emit(HeadphonesDisconnected());
+      }
       if (_connection == null) {
         await Future.delayed(const Duration(milliseconds: 100));
       }
@@ -84,30 +94,35 @@ abstract class HeadphonesConnected extends HeadphonesObject {
 Stream loopStream<T>(Future<T> Function(int computationCount) computation) {
   var computationCount = 0;
   var run = false;
-  final ctrl = StreamController();
-  ctrl.onListen = () {
-    run = true;
-    loop() async {
-      while (true) {
-        if (!run) break;
+  late StreamController ctrl;
+  loop() async {
+    while (true) {
+      if (!run) break;
+      try {
         ctrl.add(await computation(computationCount++));
+      } catch (e, s) {
+        ctrl.addError(e, s);
       }
     }
+  }
 
-    ctrl.onPause = () => run = false;
-    ctrl.onResume = () {
+  ctrl = StreamController(
+    onListen: () {
+      run = true;
+      loop();
+    },
+    onPause: () => run = false,
+    onResume: () {
       if (!run) {
         run = true;
         loop();
       }
-    };
-    ctrl.onCancel = () {
+    },
+    onCancel: () {
       run = false;
       ctrl.close();
-    };
-
-    loop();
-  };
+    },
+  );
 
   return ctrl.stream;
 }
