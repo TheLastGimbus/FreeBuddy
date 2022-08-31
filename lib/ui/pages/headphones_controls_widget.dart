@@ -35,56 +35,88 @@ class HeadphonesControlsWidget extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              StreamBuilder<HeadphonesBatteryData>(
-                stream: headphones.batteryData,
-                builder: (context, snapshot) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+          child: StreamBuilder<HeadphonesBatteryData>(
+            initialData:
+                HeadphonesBatteryData(null, null, null, false, false, false),
+            stream: headphones.batteryData,
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const Text(":(");
+              final b = snapshot.data!;
+
+              batteryCircle(int? level, int altLevel, bool isCharging) =>
+                  Column(
                     children: [
-                      Text("Letft: ${snapshot.data?.levelLeft ?? "unknown"}"
-                          "${snapshot.data?.chargingLeft ?? false ? "\n🔌" : ""}"),
-                      Text("Right: ${snapshot.data?.levelRight ?? "unknown"}"
-                          "${snapshot.data?.chargingRight ?? false ? "\n🔌" : ""}"),
-                      Text("Case: ${snapshot.data?.levelCase ?? "unknown"}"
-                          "${snapshot.data?.chargingCase ?? false ? "\n🔌" : ""}"),
+                      SizedBox(
+                        width: 48,
+                        height: 48,
+                        child: CircularProgressIndicator(
+                          value: (level ?? altLevel) / 100,
+                          // gayed out if value is null
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            level == null
+                                ? const Color(0xffe5e5e5)
+                                : Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        '${level ?? ' - '}%',
+                        style: Theme.of(context).textTheme.subtitle1,
+                      ),
                     ],
                   );
-                },
+
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  batteryCircle(b.levelLeft, b.lowestLevel, b.chargingLeft),
+                  batteryCircle(b.levelRight, b.lowestLevel, b.chargingRight),
+                  batteryCircle(b.levelCase, b.lowestLevel, b.chargingCase),
+                ],
+              );
+            },
+          ),
+        ),
+        const SizedBox(height: 16.0),
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(8.0),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.1),
+                blurRadius: 10,
+                spreadRadius: 5,
               ),
-              // TODO: actual functionality
-              StreamBuilder<HeadphonesAncMode>(
-                stream: headphones.ancMode,
-                builder: (context, snapshot) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ancButton(
-                        icon: Icons.hearing_disabled,
-                        isSelected:
-                            snapshot.data == HeadphonesAncMode.noiseCancel,
-                        onPressed: () => headphones
-                            .setAncMode(HeadphonesAncMode.noiseCancel),
-                      ),
-                      ancButton(
-                        icon: Icons.highlight_off,
-                        isSelected: snapshot.data == HeadphonesAncMode.off,
-                        onPressed: () =>
-                            headphones.setAncMode(HeadphonesAncMode.off),
-                      ),
-                      ancButton(
-                        icon: Icons.hearing,
-                        isSelected:
-                            snapshot.data == HeadphonesAncMode.awareness,
-                        onPressed: () =>
-                            headphones.setAncMode(HeadphonesAncMode.awareness),
-                      ),
-                    ],
-                  );
-                },
-              )
             ],
+          ),
+          child: StreamBuilder<HeadphonesAncMode>(
+            stream: headphones.ancMode,
+            builder: (context, snapshot) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ancButton(
+                    icon: Icons.hearing_disabled,
+                    isSelected: snapshot.data == HeadphonesAncMode.noiseCancel,
+                    onPressed: () =>
+                        headphones.setAncMode(HeadphonesAncMode.noiseCancel),
+                  ),
+                  ancButton(
+                    icon: Icons.highlight_off,
+                    isSelected: snapshot.data == HeadphonesAncMode.off,
+                    onPressed: () =>
+                        headphones.setAncMode(HeadphonesAncMode.off),
+                  ),
+                  ancButton(
+                    icon: Icons.hearing,
+                    isSelected: snapshot.data == HeadphonesAncMode.awareness,
+                    onPressed: () =>
+                        headphones.setAncMode(HeadphonesAncMode.awareness),
+                  ),
+                ],
+              );
+            },
           ),
         ),
       ],

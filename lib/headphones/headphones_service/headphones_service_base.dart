@@ -1,3 +1,5 @@
+import 'dart:math';
+
 enum HeadphonesConnectionState {
   connected,
   connecting,
@@ -22,6 +24,8 @@ class HeadphonesBatteryData {
     this.chargingRight,
     this.chargingCase,
   );
+
+  int get lowestLevel => min(levelLeft ?? 100, levelLeft ?? 100);
 
   @override
   String toString() => 'BatteryData(levelLeft: $levelLeft, '
