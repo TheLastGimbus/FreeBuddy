@@ -1,24 +1,14 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 
+import 'pretty_rounded_container_widget.dart';
+
 class NotPairedInfoWidget extends StatelessWidget {
   const NotPairedInfoWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(8.0),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            spreadRadius: 5,
-          ),
-        ],
-      ),
-      padding: const EdgeInsets.all(8.0),
+    return PrettyRoundedContainerWidget(
       child: Center(
           child: Column(
         children: [

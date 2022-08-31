@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:freebuddy/ui/pages/pretty_rounded_container_widget.dart';
 
 import '../../headphones/headphones_connection_cubit.dart';
 import '../../headphones/headphones_service/headphones_service_base.dart';
+import 'anc_button_widget.dart';
+import 'battery_circle_widget.dart';
 
 class HeadphonesControlsWidget extends StatelessWidget {
   final HeadphonesConnected headphones;
@@ -23,18 +26,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
             filterQuality: FilterQuality.none,
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 5,
-              ),
-            ],
-          ),
+        PrettyRoundedContainerWidget(
           child: StreamBuilder<HeadphonesBatteryData>(
             initialData:
                 HeadphonesBatteryData(null, null, null, false, false, false),
@@ -42,73 +34,41 @@ class HeadphonesControlsWidget extends StatelessWidget {
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const Text(":(");
               final b = snapshot.data!;
-
-              batteryCircle(int? level, int altLevel, bool isCharging) =>
-                  Column(
-                    children: [
-                      SizedBox(
-                        width: 48,
-                        height: 48,
-                        child: CircularProgressIndicator(
-                          value: (level ?? altLevel) / 100,
-                          // gayed out if value is null
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                            level == null
-                                ? const Color(0xffe5e5e5)
-                                : Theme.of(context).colorScheme.primary,
-                          ),
-                        ),
-                      ),
-                      Text(
-                        '${level ?? ' - '}%',
-                        style: Theme.of(context).textTheme.subtitle1,
-                      ),
-                    ],
-                  );
-
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  batteryCircle(b.levelLeft, b.lowestLevel, b.chargingLeft),
-                  batteryCircle(b.levelRight, b.lowestLevel, b.chargingRight),
-                  batteryCircle(b.levelCase, b.lowestLevel, b.chargingCase),
+                  BatteryCircleWidget(
+                      b.levelLeft, b.lowestLevel, b.chargingLeft, "L"),
+                  BatteryCircleWidget(
+                      b.levelRight, b.lowestLevel, b.chargingRight, "R"),
+                  BatteryCircleWidget(
+                      b.levelCase, b.lowestLevel, b.chargingCase, "C"),
                 ],
               );
             },
           ),
         ),
         const SizedBox(height: 16.0),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(8.0),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.1),
-                blurRadius: 10,
-                spreadRadius: 5,
-              ),
-            ],
-          ),
+        PrettyRoundedContainerWidget(
           child: StreamBuilder<HeadphonesAncMode>(
             stream: headphones.ancMode,
             builder: (context, snapshot) {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  ancButton(
+                  AncButtonWidget(
                     icon: Icons.hearing_disabled,
                     isSelected: snapshot.data == HeadphonesAncMode.noiseCancel,
                     onPressed: () =>
                         headphones.setAncMode(HeadphonesAncMode.noiseCancel),
                   ),
-                  ancButton(
+                  AncButtonWidget(
                     icon: Icons.highlight_off,
                     isSelected: snapshot.data == HeadphonesAncMode.off,
                     onPressed: () =>
                         headphones.setAncMode(HeadphonesAncMode.off),
                   ),
-                  ancButton(
+                  AncButtonWidget(
                     icon: Icons.hearing,
                     isSelected: snapshot.data == HeadphonesAncMode.awareness,
                     onPressed: () =>
@@ -120,23 +80,6 @@ class HeadphonesControlsWidget extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget ancButton({
-    required IconData icon,
-    required bool isSelected,
-    VoidCallback? onPressed,
-  }) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        backgroundColor: MaterialStateProperty.all<Color>(
-            isSelected ? Colors.blue : Colors.grey),
-        shape: MaterialStateProperty.all<CircleBorder>(const CircleBorder()),
-      ),
-      onPressed: onPressed,
-      child: Icon(icon),
     );
   }
 }
