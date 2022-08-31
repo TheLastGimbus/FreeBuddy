@@ -33,6 +33,7 @@ dependencies:
   # Platform plugins
   flutter_foreground_task: ^3.8.2
   flutter_bluetooth_serial: ^0.4.0
+  app_settings: ^4.1.8
 
   # Logic libs
   crclib: ^3.0.0
