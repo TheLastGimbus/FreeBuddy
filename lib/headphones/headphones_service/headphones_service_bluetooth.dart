@@ -12,6 +12,8 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
   final BluetoothConnection connection;
 
   final _ancStreamCtrl = StreamController<HeadphonesAncMode>.broadcast();
+  final _batteryStreamCtrl =
+      StreamController<HeadphonesBatteryData>.broadcast();
 
   HeadphonesConnectedPlugin(this.connection,
       {required Future<dynamic> Function() onDone}) {
@@ -39,6 +41,18 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
           }
           _ancStreamCtrl.add(newMode);
         }
+        if (comm.serviceId == 1 &&
+            comm.commandId == 39 &&
+            comm.dataBytes.length == 13) {
+          _batteryStreamCtrl.add(HeadphonesBatteryData(
+            comm.dataBytes[5],
+            comm.dataBytes[6],
+            comm.dataBytes[7],
+            comm.dataBytes[10] == 1,
+            comm.dataBytes[11] == 1,
+            comm.dataBytes[12] == 1,
+          ));
+        }
       },
       onDone: () async => await onDone(),
       onError: (e) async => await onDone(),
@@ -49,7 +63,7 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
   Stream<HeadphonesAncMode> get ancMode => _ancStreamCtrl.stream;
 
   @override
-  Stream<HeadphonesBatteryData> get batteryData => throw UnimplementedError();
+  Stream<HeadphonesBatteryData> get batteryData => _batteryStreamCtrl.stream;
 
   @override
   Future<void> setAncMode(HeadphonesAncMode mode) async {

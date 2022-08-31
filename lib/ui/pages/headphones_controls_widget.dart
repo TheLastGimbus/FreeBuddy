@@ -25,6 +25,22 @@ class HeadphonesControlsWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
+          StreamBuilder<HeadphonesBatteryData>(
+            stream: headphones.batteryData,
+            builder: (context, snapshot) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text("Letft: ${snapshot.data?.levelLeft ?? "unknown"}"
+                      "${snapshot.data?.chargingLeft ?? false ? "\n🔌" : ""}"),
+                  Text("Right: ${snapshot.data?.levelRight ?? "unknown"}"
+                      "${snapshot.data?.chargingRight ?? false ? "\n🔌" : ""}"),
+                  Text("Case: ${snapshot.data?.levelCase ?? "unknown"}"
+                      "${snapshot.data?.chargingCase ?? false ? "\n🔌" : ""}"),
+                ],
+              );
+            },
+          ),
           // TODO: actual functionality
           StreamBuilder<HeadphonesAncMode>(
             stream: headphones.ancMode,
