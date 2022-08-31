@@ -44,10 +44,11 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
         if (comm.serviceId == 1 &&
             comm.commandId == 39 &&
             comm.dataBytes.length == 13) {
+          final b = comm.dataBytes.sublist(5, 8);
           _batteryStreamCtrl.add(HeadphonesBatteryData(
-            comm.dataBytes[5],
-            comm.dataBytes[6],
-            comm.dataBytes[7],
+            b[0] == 0 ? null : b[0],
+            b[1] == 0 ? null : b[1],
+            b[2] == 0 ? null : b[2],
             comm.dataBytes[10] == 1,
             comm.dataBytes[11] == 1,
             comm.dataBytes[12] == 1,
