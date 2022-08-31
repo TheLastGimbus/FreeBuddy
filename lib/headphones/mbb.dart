@@ -51,7 +51,7 @@ class Mbb {
     if (payload.length < 3 + 1 + 1 + 1 + 2) {
       return Exception("Payload $payload is too short");
     }
-    if (payload.sublist(0, 2).elementsEqual([90, 0]) || payload[3] != 0) {
+    if (!payload.sublist(0, 2).elementsEqual([90, 0]) || payload[3] != 0) {
       return Exception("Payload $payload has invalid magic bytes");
     }
     if (payload.length - 6 + 1 != payload[2]) {
