@@ -62,6 +62,5 @@ abstract class HeadphonesServiceBase {
 
   Stream<HeadphonesConnectionState> get connectionState;
 
-
   Future<void> dispose();
 }
