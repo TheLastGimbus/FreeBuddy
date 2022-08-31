@@ -1,4 +1,4 @@
-package com.example.freebuddy
+package com.lastgimbus.the.freebuddy
 
 import io.flutter.embedding.android.FlutterActivity
 
