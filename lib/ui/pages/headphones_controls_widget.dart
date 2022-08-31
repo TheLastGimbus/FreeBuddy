@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../headphones/headphones_connection_cubit.dart';
+import '../../headphones/headphones_service/headphones_service_base.dart';
 
 class HeadphonesControlsWidget extends StatelessWidget {
   final HeadphonesConnected headphones;
@@ -25,13 +26,33 @@ class HeadphonesControlsWidget extends StatelessWidget {
       child: Column(
         children: [
           // TODO: actual functionality
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ancButton(icon: Icons.hearing_disabled, isSelected: false),
-              ancButton(icon: Icons.highlight_off, isSelected: true),
-              ancButton(icon: Icons.hearing, isSelected: false),
-            ],
+          StreamBuilder<HeadphonesAncMode>(
+            stream: headphones.ancMode,
+            builder: (context, snapshot) {
+              return Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ancButton(
+                    icon: Icons.hearing_disabled,
+                    isSelected: snapshot.data == HeadphonesAncMode.noiseCancel,
+                    onPressed: () =>
+                        headphones.setAncMode(HeadphonesAncMode.noiseCancel),
+                  ),
+                  ancButton(
+                    icon: Icons.highlight_off,
+                    isSelected: snapshot.data == HeadphonesAncMode.off,
+                    onPressed: () =>
+                        headphones.setAncMode(HeadphonesAncMode.off),
+                  ),
+                  ancButton(
+                    icon: Icons.hearing,
+                    isSelected: snapshot.data == HeadphonesAncMode.awareness,
+                    onPressed: () =>
+                        headphones.setAncMode(HeadphonesAncMode.awareness),
+                  ),
+                ],
+              );
+            },
           )
         ],
       ),

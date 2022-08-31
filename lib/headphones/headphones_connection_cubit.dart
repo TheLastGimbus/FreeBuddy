@@ -30,10 +30,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
 
         emit(HeadphonesConnecting());
         _connection = await BluetoothConnection.toAddress(otter.address);
-        _connection!.input!.listen(
-          (event) {
-            print('dev input: $event');
-          },
+        emit(HeadphonesConnectedPlugin(
+          _connection!,
           onDone: () async {
             print('headphones done!');
             await _connection!.finish();
@@ -43,10 +41,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
             await Future.delayed(const Duration(seconds: 1));
             _connectingStream?.resume();
           },
-        );
-        emit(_connection == null
-            ? HeadphonesDisconnected()
-            : HeadphonesConnectedPlugin(_connection!));
+        ));
         _connectingStream?.pause();
       } on StateError catch (_) {
       } on PlatformException catch (e) {
