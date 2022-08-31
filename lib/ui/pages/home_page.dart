@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../headphones/headphones_connection_cubit.dart';
@@ -24,30 +25,26 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(title: const Text("FreeBuddy")),
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: Center(
-        child: Column(
-          children: [
-            BlocBuilder<HeadphonesConnectionCubit, HeadphonesObject>(
-              builder: (context, state) {
-                if (state is HeadphonesConnected) {
-                  return Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: HeadphonesControlsWidget(headphones: state),
-                  );
-                } else if (state is HeadphonesConnecting) {
-                  return const Text("connecting");
-                } else if (state is HeadphonesDisconnected) {
-                  return const Text("disconnected");
-                } else if (state is HeadphonesNotPaired) {
-                  return const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: NotPairedInfoWidget(),
-                  );
-                } else {
-                  return const Text("unknown :(");
-                }
-              },
-            ),
-          ],
+        child: BlocBuilder<HeadphonesConnectionCubit, HeadphonesObject>(
+          builder: (context, state) {
+            if (state is HeadphonesConnected) {
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: HeadphonesControlsWidget(headphones: state),
+              );
+            } else if (state is HeadphonesConnecting) {
+              return const Text("connecting");
+            } else if (state is HeadphonesDisconnected) {
+              return const Text("disconnected");
+            } else if (state is HeadphonesNotPaired) {
+              return const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: NotPairedInfoWidget(),
+              );
+            } else {
+              return const Text("unknown :(");
+            }
+          },
         ),
       ),
     );
