@@ -44,7 +44,29 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  flutter_launcher_icons: ^0.10.0
+  flutter_native_splash: ^2.2.8
+
   flutter_lints: ^2.0.1
+
+
+# Run with:
+# $ flutter pub run flutter_launcher_icons:main
+flutter_icons:
+  # This was made using:
+  # $ convert ic_launcher.png  -gravity Center -background transparent -extent 352x352 ic_launcher_adaptive_fore.png
+  image_path: "assets/app_icons/ic_launcher.png"
+  android: "ic_launcher"
+  adaptive_icon_background: "#ffefefef"
+  adaptive_icon_foreground: "assets/app_icons/ic_launcher_adaptive_fore.png"
+
+# Run with:
+# $ flutter pub run flutter_native_splash:create
+flutter_native_splash:
+  color: "#efefef"
+  color_dark: "#0f0f0f"
+  image: "assets/app_icons/ic_launcher.png"
+
 
 # The following section is specific to Flutter packages.
 flutter:
