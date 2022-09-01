@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -58,7 +57,12 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
       onDone: () async => await onDone(),
       onError: (e) async => await onDone(),
     );
-    connection.output.add(MbbCommand.requestBattery.toPayload());
+    _initRequestInfo();
+  }
+
+  Future<void> _initRequestInfo() async {
+    await _sendMbb(MbbCommand.requestBattery);
+    await _sendMbb(MbbCommand.requestAnc);
   }
 
   @override
@@ -69,19 +73,23 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
 
   @override
   Future<void> setAncMode(HeadphonesAncMode mode) async {
-    late Uint8List payload;
+    late MbbCommand comm;
     switch (mode) {
       case HeadphonesAncMode.noiseCancel:
-        payload = MbbCommand.ancNoiseCancel.toPayload();
+        comm = MbbCommand.ancNoiseCancel;
         break;
       case HeadphonesAncMode.off:
-        payload = MbbCommand.ancOff.toPayload();
+        comm = MbbCommand.ancOff;
         break;
       case HeadphonesAncMode.awareness:
-        payload = MbbCommand.ancAware.toPayload();
+        comm = MbbCommand.ancAware;
         break;
     }
-    connection.output.add(payload);
+    await _sendMbb(comm);
+  }
+
+  Future<void> _sendMbb(MbbCommand comm) async {
+    connection.output.add(comm.toPayload());
     await connection.output.allSent;
   }
 

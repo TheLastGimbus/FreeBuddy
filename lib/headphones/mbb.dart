@@ -109,4 +109,5 @@ class MbbCommand {
   static const ancOff = MbbCommand(43, 4, [1, 2, 0, 0]);
   static const ancAware = MbbCommand(43, 4, [1, 2, 2, 255]);
   static const requestBattery = MbbCommand(1, 8, []);
+  static const requestAnc = MbbCommand(43, 42, []);
 }

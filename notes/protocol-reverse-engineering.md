@@ -125,3 +125,5 @@ Data: [1, 1, 1]
 ```
 
 i've sent the "{ ServiceID: 1 CommandID: 8 } Data: [1, 0, 2, 0, 3, 0]" to headphones, and it does respond! at same service=1 command=8. I've also sent it without any data, and it also works! Nice!!
+
+"{ ServiceID: 43 CommandID: 42 }" also works to get anc! I will also remove data bytes because i don't know why whould need them
