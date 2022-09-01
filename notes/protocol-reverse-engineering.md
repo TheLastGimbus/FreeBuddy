@@ -81,3 +81,47 @@ This seems to help me with figuring out how to send noise ctrl functions:
 }
 ...
 ```
+
+# Data sent by app at launch
+When connecting, headphones not necessary instantly send us all data. I suppose there is some "give me the data" command. So this are first 3 commands sent by app at launch:
+```
+1662069336.29157 ---Sent---:
+{ ServiceID: 1 CommandID: 7 }
+Data: [1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0, 9, 0, 10, 0, 11, 0, 12, 0, 15, 0, 25, 0]
+
+1662069336.291772 ---Sent---:
+{ ServiceID: 1 CommandID: 8 }
+Data: [1, 0, 2, 0, 3, 0]
+
+// Same service&command as "ANC status" command 👀
+1662069336.291897 ---Sent---:
+{ ServiceID: 43 CommandID: 42 }
+Data: [1, 0]
+
+1662069336.292109 ---Sent---:
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 0]
+```
+
+headphones then respond with some data, among others:
+```
+// Uknown
+1662069336.292489 -Received-:
+{ ServiceID: 1 CommandID: 7 }
+Data: [2, 2, 1, 36, 3, 11, 72, 76, 49, 79, 84, 69, 77, 50, 95, 86, 66, 7, 9, 49, 46, 57, 46, 48, 46, 49, 57, 56, 9, 16, 85, 51, 85, 66, 66, 50, 49, 51, 48, 52, 49, 49, 51, 53, 56, 51, 10, 15, 66, 84, 70, 84, 48, 48, 48, 49, 45, 48, 48, 48, 49, 50, 52, 15, 8, 66, 84, 70, 84, 48, 48, 48, 49, 24, 16, 66, 66, 57, 68, 75, 68, 50, 49, 50, 51, 65, 48, 55, 57, 48, 49, 25, 1, 1]
+// Battery data
+1662069336.292745 -Received-:
+{ ServiceID: 1 CommandID: 8 }
+Data: [1, 1, 75, 2, 3, 75, 95, 20, 3, 3, 0, 0, 0]
+// ANC status
+1662069336.292813 -Received-:
+{ ServiceID: 43 CommandID: 42 }
+Data: [1, 2, 0, 0]  // stands for "off" (look at the wiki)
+// uknown
+1662069336.292876 -Received-:
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 1, 1]
+
+```
+
+i've sent the "{ ServiceID: 1 CommandID: 8 } Data: [1, 0, 2, 0, 3, 0]" to headphones, and it does respond! at same service=1 command=8. I've also sent it without any data, and it also works! Nice!!

@@ -108,4 +108,5 @@ class MbbCommand {
   static const ancNoiseCancel = MbbCommand(43, 4, [1, 2, 1, 255]);
   static const ancOff = MbbCommand(43, 4, [1, 2, 0, 0]);
   static const ancAware = MbbCommand(43, 4, [1, 2, 2, 255]);
+  static const requestBattery = MbbCommand(1, 8, []);
 }

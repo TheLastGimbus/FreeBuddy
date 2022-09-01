@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../headphones/headphones_connection_cubit.dart';
 import '../../headphones/headphones_service/headphones_service_base.dart';
+import '../../headphones/headphones_service/headphones_service_bluetooth.dart';
+import '../../headphones/mbb.dart';
 import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
 import 'pretty_rounded_container_widget.dart';
@@ -26,6 +29,15 @@ class HeadphonesControlsWidget extends StatelessWidget {
             filterQuality: FilterQuality.none,
           ),
         ),
+        if (kDebugMode && headphones is HeadphonesConnectedPlugin)
+          TextButton(
+            onPressed: () {
+              (headphones as HeadphonesConnectedPlugin).sendCustomMbbCommand(
+                const MbbCommand(1, 8, []),
+              );
+            },
+            child: const Text("custom"),
+          ),
         PrettyRoundedContainerWidget(
           child: StreamBuilder<HeadphonesBatteryData>(
             initialData:

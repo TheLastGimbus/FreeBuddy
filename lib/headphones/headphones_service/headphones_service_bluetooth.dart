@@ -42,7 +42,7 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
           _ancStreamCtrl.add(newMode);
         }
         if (comm.serviceId == 1 &&
-            comm.commandId == 39 &&
+            (comm.commandId == 39 || comm.commandId == 8) &&
             comm.dataBytes.length == 13) {
           final b = comm.dataBytes.sublist(5, 8);
           _batteryStreamCtrl.add(HeadphonesBatteryData(
@@ -58,6 +58,7 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
       onDone: () async => await onDone(),
       onError: (e) async => await onDone(),
     );
+    connection.output.add(MbbCommand.requestBattery.toPayload());
   }
 
   @override
@@ -81,6 +82,11 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
         break;
     }
     connection.output.add(payload);
+    await connection.output.allSent;
+  }
+
+  Future<void> sendCustomMbbCommand(MbbCommand comm) async {
+    connection.output.add(comm.toPayload());
     await connection.output.allSent;
   }
 }
