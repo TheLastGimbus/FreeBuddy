@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
@@ -16,6 +17,11 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
 
   void _setupTryConnectingStream() {
     _connectingStream = loopStream((computationCount) async {
+      // TODO: Pause and resume stream based on that
+      if (!((await bluetooth.isEnabled) ?? false)) {
+        emit(HeadphonesBluetoothDisabled());
+        return;
+      }
       final devs = await bluetooth.getBondedDevices();
       emit(
         devs.any((d) => Otter.btMacRegex.hasMatch(d.address))
@@ -61,9 +67,17 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       : super(HeadphonesNotPaired()) {
     _setupTryConnectingStream();
   }
+
+  Future<bool> enableBluetooth() async =>
+      (await bluetooth.requestEnable()) ?? false;
+
+  Future<void> openBluetoothSettings() =>
+      AppSettings.openBluetoothSettings(asAnotherTask: true);
 }
 
 abstract class HeadphonesObject {}
+
+class HeadphonesBluetoothDisabled extends HeadphonesObject {}
 
 class HeadphonesNotPaired extends HeadphonesObject {}
 
