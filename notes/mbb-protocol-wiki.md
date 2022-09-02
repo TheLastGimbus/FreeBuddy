@@ -25,7 +25,7 @@ Break it down to decimal bytes:
 First byte/two bytes (`90, 0`) seem to be a "magic number" of protocol - they never change (at least on my single pair of headphones).
 
 #### Third byte
-Third byte - `16` - is the "length of data bytes - 1". You will see what "data bytes are" in a second.
+Third byte - `16` - is the "length of data bytes + checksum bytes + 1". You will see what "data bytes are" in a second.
 
 #### Fourth byte
 Next (fourth) byte seems to also always be 0
@@ -39,7 +39,14 @@ D: --[60:AA:*:*:*:7E] (VirtualDevice Layer) Receive response from Event => [SOF:
 ```
 ..."ServiceID" and "CommandID" - they seem to signify what packet is all about. Notice the "`command = 5a0127`" - it seems to specify that `01` and `27` bytes (`1` and `39` in decimal) are particularly important. More on them will be in special sections.
 
-The rest of the bytes seem to be "data bytes" - counted to [third "length" byte](#third-byte).
+The rest of the bytes seem to be "data bytes" + checksum bytes - counted to [third "length" byte](#third-byte).
+
+```python
+$ python
+>>> # Bytes starting after service&command ids:
+>>> len([1, 1, 90, 2, 3, 90, 100, 15, 3, 3, 0, 0, 1, 190, 217])
+15  # +1 == 16 - the length byte!
+```
 
 #### Middle bytes
 Thus, rest of bytes contain actual data - whether it be battery level, or charging state, or something else - with exception of...
