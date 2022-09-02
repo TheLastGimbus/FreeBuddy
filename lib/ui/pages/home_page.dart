@@ -43,9 +43,12 @@ class _HomePageState extends State<HomePage> {
               );
             } else if (state is HeadphonesBluetoothDisabled) {
               final cbt = context.read<HeadphonesConnectionCubit>();
-              return BluetoothDisabledInfoWidget(
-                onEnable: () => cbt.enableBluetooth(),
-                onOpenSettings: () => cbt.openBluetoothSettings(),
+              return Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: BluetoothDisabledInfoWidget(
+                  onEnable: () => cbt.enableBluetooth(),
+                  onOpenSettings: () => cbt.openBluetoothSettings(),
+                ),
               );
             } else {
               return const Text("unknown :(");
