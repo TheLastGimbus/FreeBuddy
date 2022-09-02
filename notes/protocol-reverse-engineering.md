@@ -127,3 +127,55 @@ Data: [1, 1, 1]
 i've sent the "{ ServiceID: 1 CommandID: 8 } Data: [1, 0, 2, 0, 3, 0]" to headphones, and it does respond! at same service=1 command=8. I've also sent it without any data, and it also works! Nice!!
 
 "{ ServiceID: 43 CommandID: 42 }" also works to get anc! I will also remove data bytes because i don't know why whould need them
+
+# Smart wear settings
+When i open settings screen:
+```
+1662155578.941404 ---Sent---:
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 0]
+
+1662155578.946794 ---Sent---:
+{ ServiceID: 43 CommandID: 97 }
+Data: [1, 0]
+
+1662155578.961574 ---Sent---:
+{ ServiceID: 43 CommandID: 143 }
+Data: [1, 0]
+
+1662155578.971868 -Received-:
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 1, 1]
+```
+
+Looks like it sends three requests, but gets back only one (43:17) - maybe there used to/there are on other models - other settings - and mine just don't have them
+
+Anyway, looks like command (43:17) is to query smart-wear state. When i open the screen with it disabled, i get:
+```
+... same as before ...
+1662155721.284483 -Received-:
+{ ServiceID: 43 CommandID: 17 }
+Data: [1, 1, 0]
+```
+...so only last byte signifies it being on/off
+
+When clicking:
+```
+/// ON ///
+1662158487.964747 ---Sent---:
+{ ServiceID: 43 CommandID: 16 }
+Data: [1, 1, 1]
+
+1662158488.028921 -Received-:
+{ ServiceID: 43 CommandID: 16 }
+Data: [127, 4, 0, 1, 134, 160]
+
+/// OFF ///
+1662158512.064944 ---Sent---:
+{ ServiceID: 43 CommandID: 16 }
+Data: [1, 1, 0]
+
+1662158512.349493 -Received-:
+{ ServiceID: 43 CommandID: 16 }
+Data: [127, 4, 0, 1, 134, 160]
+```
