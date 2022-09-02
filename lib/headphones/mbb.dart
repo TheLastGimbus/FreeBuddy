@@ -11,6 +11,9 @@ extension _ListUtils on List {
 
 /// Helper class for Mbb protocol used to communicate with headphones
 class Mbb {
+  // plus 3 magic bytes + 2 command bytes
+  static int getLength(int lengthByte) => lengthByte + 3 + 2;
+
   /// Get Crc16Xmodem checksum of [data] as Uin8List of two bytes
   static Uint8List _checksum(List<int> data) {
     final crc = Crc16Xmodem().convert(data);
@@ -94,15 +97,39 @@ class MbbCommand {
   /// Convert to binary data to be sent to headphones
   Uint8List toPayload() => Mbb.getPayload(serviceId, commandId, dataBytes);
 
-  static MbbCommand fromPayload(Uint8List payload, {bool verify = true}) {
-    if (verify) {
-      final e = Mbb.verifyIntegrity(payload);
-      if (e != null) throw e;
+  static List<MbbCommand> fromPayload(
+    Uint8List payload, {
+    bool verify = true,
+    bool smartDivide = true,
+  }) {
+    final divided = <Uint8List>[];
+    if (smartDivide) {
+      while (payload.length >= 8) {
+        divided.add(payload.sublist(0, Mbb.getLength(payload[2])));
+        payload = payload.sublist(Mbb.getLength(payload[2]));
+      }
+    } else {
+      divided.add(payload);
     }
-    final serviceId = payload[4];
-    final commandId = payload[5];
-    final dataBytes = payload.sublist(6, payload.length - 2);
-    return MbbCommand(serviceId, commandId, dataBytes);
+    if (divided.isEmpty) {
+      if (verify) {
+        throw Exception("No commands found in payload");
+      } else {
+        return [];
+      }
+    }
+    final cmds = <MbbCommand>[];
+    for (final divPay in divided) {
+      if (verify) {
+        final e = Mbb.verifyIntegrity(divPay);
+        if (e != null) throw e;
+      }
+      final serviceId = divPay[4];
+      final commandId = divPay[5];
+      final dataBytes = divPay.sublist(6, divPay.length - 2);
+      cmds.add(MbbCommand(serviceId, commandId, dataBytes));
+    }
+    return cmds;
   }
 
   static const ancNoiseCancel = MbbCommand(43, 4, [1, 2, 1, 255]);
