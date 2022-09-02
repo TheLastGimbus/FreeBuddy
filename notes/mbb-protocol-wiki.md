@@ -141,6 +141,20 @@ Data: [127, 4, 0, 1, 134, 160]
 ```
 and when i press again to turn it off, only thing that changes is that last byte in `sent` data... the received `[127, 4 ...` stays the same... so it seems like some kind of "ok" message?
 
+#### In-ear detection
+While observing random commands, I found how headphones report they were put in/out of the ear - this may be super useful!
+
+ServiceID=43 CommandID=3 sends you this:
+- `[9, 1, 1]` - right bud in ear
+- `[9, 1, 0]` - right bud out of ear
+- `[8, 1, 1]` - left bud in ear
+- `[8, 1, 0]` - left bud out of ear
+
+...so the `9` at first bud is for right, and `8` for left, and `1` at last one is for "in ear" and `0` for out 🎉
+
+> Fun fact: Many commands respond you their data if you send their service/command ids with empty bytes - this one responds with `[0, 0, 0]` if you do so 😿 So I guess you can't query this state
+> > Actually, this makes sense because this is "event command" - it prints when it happens. Tho it could just print it again...
+
 ### 10 CommandID=13 - Party :tada:
 This seems to be some kind of party mode. Hear me out. Those buds randomly start to span out shitload of those jsons:
 
