@@ -66,8 +66,9 @@ You can check it on [online calculator (where I actually found out about it)](ht
 > 
 > I will later refer to this pair as "command", because it's shorter and clearer
 
-Typically, for one property of headphones (anc mode, battery charge etc) there is some concrete `(ServiceID:CommandID)` command. Often is that there are many more bytes in the data that we actually need. For example, battery command (see below) gives us 13 bytes while only 6 really interest us. It is probably because we don't know what reset of them mean - but we often don't need to know 😉
+Typically, for one property of headphones (anc mode, battery charge etc) there is some concrete `(ServiceID:CommandID)` command. Often is that there are many more bytes in the data that we actually need. For example, [battery command](#battery) gives us 13 bytes while only 6 really interest us. It is probably because we don't know what reset of them mean - but we often don't need to know 😉
 
+### Querying data
 Usually, when you send the same command with empty data bytes, the headphones respond you with that command *with* the bytes - that's what I call that "you can **query** the data" 🚀 - so, if for example, you don't know the battery, just send them an empty battery command, and they will respond 😌
 
 > There are some weird exceptions to those rules, which will be described
@@ -110,11 +111,9 @@ BUT, headphones themselves report the current mode on separate command: `(43:42)
 - `[1, 2, 0, 0]` for off
 - `[1, 2, 0, 2]` for transparency
 
-They send this when you hold them, pull them out of your ear, and they even echo-style it back when you change the mode with app (with `(43:4)` command 🤯)
+They send this when you hold them, pull them out of your ear, and they even echo-style it back when you change the mode with app (with `(43:4)` command 🤯) - you can also query it (usual ["same command and empty data"](#querying-data)) 👍
 
 Looks like last byte is the mode number, same as third byte in CommandID=4. I don't know what rest of them do, but 🤷
-
-// TODO: How to query?
 
 ### Smart wear setting
 > This is another setting that has weird exceptions and different commands for the same thing 👎
