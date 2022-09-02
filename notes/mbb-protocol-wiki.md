@@ -119,7 +119,17 @@ Looks like last byte is the mode number, same as third byte in CommandID=4. I do
 ### Smart wear setting
 > This is another setting that has weird exceptions and different commands for the same thing 👎
 
-// TODO: Clear info how this works
+To query it, use `(43:17)` with empty bytes. I will respond (same command) with:
+- `[1, 1, 1]` - smart wear on
+- `[1, 1, 0]` - smart wear off
+
+Now, if you want to change it, it gets tricky. You use `(43:16)` (pretty much the same):
+- `[1, 1, 1]` - smart wear on
+- `[1, 1, 0]` - smart wear off
+
+...BUT, it always (at least for me) responds with "`[127, 4, 0, 1, 134, 160]`" - both for off and on
+
+So, to get consistent and certain info, I would suggest querying it *again* with `(43:17)` to check it 👍
 
 ### In-ear detection
 While observing random commands, I found how headphones report they were put in/out of the ear - this may be super useful!
