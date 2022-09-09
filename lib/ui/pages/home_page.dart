@@ -22,7 +22,15 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("FreeBuddy")),
+      appBar: AppBar(
+        title: const Text("FreeBuddy"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () => Navigator.of(context).pushNamed('/settings'),
+          ),
+        ],
+      ),
       backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: Center(
         child: BlocBuilder<HeadphonesConnectionCubit, HeadphonesObject>(

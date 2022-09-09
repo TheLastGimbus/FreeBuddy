@@ -4,6 +4,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import 'headphones/headphones_connection_cubit.dart';
 import 'ui/pages/home_page.dart';
+import 'ui/pages/settings_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,14 +18,19 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'FreeBuddy',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider<HeadphonesConnectionCubit>(
-              create: (_) => HeadphonesConnectionCubit(
-                  bluetooth: FlutterBluetoothSerial.instance)),
-        ],
-        child: const HomePage(),
-      ),
+      routes: {
+        '/': (context) => MultiBlocProvider(
+              providers: [
+                BlocProvider<HeadphonesConnectionCubit>(
+                    create: (_) => HeadphonesConnectionCubit(
+                        bluetooth: FlutterBluetoothSerial.instance)),
+              ],
+              child: const HomePage(),
+            ),
+        '/settings': (context) => const SettingsPage(),
+        '/settings/licenses': (context) => const LicensePage(),
+      },
+      initialRoute: '/',
     );
   }
 }
