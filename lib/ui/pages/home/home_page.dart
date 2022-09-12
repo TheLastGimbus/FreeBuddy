@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../headphones/headphones_connection_cubit.dart';
+import '../../../headphones/headphones_connection_cubit.dart';
 import 'bluetooth_disabled_info_widget.dart';
 import 'headphones_controls_widget.dart';
 import 'not_paired_info_widget.dart';

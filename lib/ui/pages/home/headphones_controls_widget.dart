@@ -1,13 +1,13 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../headphones/headphones_connection_cubit.dart';
-import '../../headphones/headphones_service/headphones_service_base.dart';
-import '../../headphones/headphones_service/headphones_service_bluetooth.dart';
-import '../../headphones/mbb.dart';
+import '../../../headphones/headphones_connection_cubit.dart';
+import '../../../headphones/headphones_service/headphones_service_base.dart';
+import '../../../headphones/headphones_service/headphones_service_bluetooth.dart';
+import '../../../headphones/mbb.dart';
+import '../pretty_rounded_container_widget.dart';
 import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
-import 'pretty_rounded_container_widget.dart';
 
 class HeadphonesControlsWidget extends StatelessWidget {
   final HeadphonesConnected headphones;

@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
 import 'headphones/headphones_connection_cubit.dart';
-import 'ui/pages/home_page.dart';
-import 'ui/pages/settings_page.dart';
+import 'ui/pages/home/home_page.dart';
+import 'ui/pages/settings/settings_page.dart';
 
 void main() {
   runApp(const MyApp());

@@ -1,7 +1,7 @@
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 
-import 'pretty_rounded_container_widget.dart';
+import '../pretty_rounded_container_widget.dart';
 
 class NotPairedInfoWidget extends StatelessWidget {
   const NotPairedInfoWidget({Key? key}) : super(key: key);

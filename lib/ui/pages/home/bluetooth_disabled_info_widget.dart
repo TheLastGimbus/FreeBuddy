@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pretty_rounded_container_widget.dart';
+import '../pretty_rounded_container_widget.dart';
 
 class BluetoothDisabledInfoWidget extends StatelessWidget {
   final VoidCallback? onEnable;
