@@ -1,3 +1,11 @@
 {
-  "helloWorld": "Witaj świecie!"
+  "appTitle": "FreeBuddy",
+  "helloWorld": "Witaj świecie!",
+  "settings": "Ustawienia",
+  "privacyPolicy": "Polityka prywatności",
+  "privacyPolicyTitle": "Polityka prywatności (tak naprawde to nie, ale jest wymagana)",
+  "privacyPolicyText": "Ta aplikacja nie zbiera żadnych informacji o tobie. Ja (twórca, ;) nie zbieram żadnych emaili, identyfikatorów, lub czegokolwiek takiego na serwerze, bo nawet go nie mam :D a ta aplikacja nie ma dostępu do internetu :D\n\nFreeBuddy nie korzysta też z żadnych analityk typu Google Analytics, czy innego serwisu który zbierałby twoje dane <3\n\nJeśli masz jakieś pytania, napisz do mnie śmiało na 4i05wllh@anonaddy.me\n\nDzięki za przeczytanie i miłej zabawy przy korzystaniu :)",
+  "privacyPolicyUrl": "https://the.lastgimbus.com/empty-privacy-policy/",
+  "privacyPolicyUrlBtn": "Link do tej samej \"Polityki prywatności\"",
+  "openSourceLicensesBtn": "Licencje open source"
 }

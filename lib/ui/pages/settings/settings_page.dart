@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -6,30 +7,21 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     final t = Theme.of(context);
     return Scaffold(
-      appBar: AppBar(title: const Text("Settings")),
+      appBar: AppBar(title: Text(l.settings)),
       body: Center(
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            Text('Privacy policy (not really but is required):',
-                style: t.textTheme.headlineSmall),
+            Text(l.privacyPolicyTitle, style: t.textTheme.headlineSmall),
             const SizedBox(height: 8.0),
-            const Text(
-              '''This app does not collect any personal information about you. I do not store emails, identifiers, or anything like that, on any server, because I don’t even have one, and this app doesn't have internet access!
-
-The app also doesn’t use Firebase Analytics, or any other service that would collect your data.
-
-If you have any questions, you can contact me at: 4i05wllh@anonaddy.me
-
-Thanks for reading, and enjoy using the app :)''',
-            ),
+            Text(l.privacyPolicyText),
             TextButton(
-              onPressed: () => launchUrlString(
-                  'https://the.lastgimbus.com/empty-privacy-policy/',
+              onPressed: () => launchUrlString(l.privacyPolicyUrl,
                   mode: LaunchMode.externalApplication),
-              child: const Text('Click here to read the same "privacy policy"'),
+              child: Text(l.privacyPolicyUrlBtn),
             ),
             Container(
               height: 1.0,
@@ -39,7 +31,7 @@ Thanks for reading, and enjoy using the app :)''',
             TextButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed('/settings/licenses'),
-              child: const Text('Open Source licenses'),
+              child: Text(l.openSourceLicensesBtn),
             ),
           ],
         ),
