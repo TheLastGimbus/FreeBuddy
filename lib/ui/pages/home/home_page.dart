@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../headphones/headphones_connection_cubit.dart';
 import 'bluetooth_disabled_info_widget.dart';
@@ -21,9 +22,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("FreeBuddy"),
+        title: Text(l.appTitle),
         actions: [
           IconButton(
             icon: const Icon(Icons.settings),
@@ -41,9 +43,9 @@ class _HomePageState extends State<HomePage> {
                 child: HeadphonesControlsWidget(headphones: state),
               );
             } else if (state is HeadphonesConnecting) {
-              return const Text("connecting");
+              return Text(l.pageHomeConnecting);
             } else if (state is HeadphonesDisconnected) {
-              return const Text("disconnected");
+              return Text(l.pageHomeDisconnected);
             } else if (state is HeadphonesNotPaired) {
               return const Padding(
                 padding: EdgeInsets.all(16.0),
@@ -59,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             } else {
-              return const Text("unknown :(");
+              return Text(l.pageHomeUnknown);
             }
           },
         ),
