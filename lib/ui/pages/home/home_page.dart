@@ -43,9 +43,9 @@ class _HomePageState extends State<HomePage> {
                 child: HeadphonesControlsWidget(headphones: state),
               );
             } else if (state is HeadphonesConnecting) {
-              return const Text("connecting");
+              return Text(l.pageHomeConnecting);
             } else if (state is HeadphonesDisconnected) {
-              return const Text("disconnected");
+              return Text(l.pageHomeDisconnected);
             } else if (state is HeadphonesNotPaired) {
               return const Padding(
                 padding: EdgeInsets.all(16.0),
@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               );
             } else {
-              return const Text("unknown :(");
+              return Text(l.pageHomeUnknown);
             }
           },
         ),

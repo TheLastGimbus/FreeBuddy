@@ -1,6 +1,10 @@
 {
   "appTitle": "FreeBuddy",
   "helloWorld": "Witaj świecie!",
+  "pageHomeConnected": "Połączone",
+  "pageHomeDisconnected": "Rozłączone",
+  "pageHomeConnecting": "Łączenie...",
+  "pageHomeUnknown": "Nieznane :(",
   "settings": "Ustawienia",
   "privacyPolicy": "Polityka prywatności",
   "privacyPolicyTitle": "Polityka prywatności (tak naprawde to nie, ale jest wymagana)",
