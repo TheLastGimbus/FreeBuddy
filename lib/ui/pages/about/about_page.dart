@@ -29,7 +29,7 @@ class AboutPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            Text(l.pageAboutMeHeader, style: tt.headlineMedium),
+            Center(child: Text(l.pageAboutMeHeader, style: tt.headlineLarge)),
             const SizedBox(height: 4.0),
             Text(l.pageAboutMeBio),
             const SizedBox(height: 4.0),
@@ -62,6 +62,7 @@ class AboutPage extends StatelessWidget {
                   TextSpan(text: l.pageAboutMeBlog),
                   _link("https://the.lastgimbus.com/blog/"),
                 ],
+                style: tt.bodyMedium,
               ),
             ),
             const SizedBox(height: 8.0),
@@ -80,6 +81,7 @@ class AboutPage extends StatelessWidget {
                   const TextSpan(text: "\n\n"),
                   _link(l.privacyPolicyUrl),
                 ],
+                style: tt.bodyMedium,
               ),
             ),
             Container(
