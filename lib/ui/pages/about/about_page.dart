@@ -26,6 +26,8 @@ class AboutPage extends StatelessWidget {
 
     smallSpace() => const SizedBox(height: 6.0);
 
+    newline() => const TextSpan(text: "\n");
+
     Widget divider() => Column(
           children: [
             const SizedBox(height: 6.0),
@@ -73,11 +75,40 @@ class AboutPage extends StatelessWidget {
                 children: [
                   TextSpan(text: l.pageAboutMeOpenSource),
                   _link("https://github.com/TheLastGimbus/FreeBuddy/"),
-                  const TextSpan(text: "\n"),
-                  TextSpan(text: l.pageAboutMeBlog),
-                  _link("https://the.lastgimbus.com/blog/"),
+                  // TODO: Actually write a blog
+                  // const TextSpan(text: "\n"),
+                  // TextSpan(text: l.pageAboutMeBlog),
+                  // _link("https://the.lastgimbus.com/blog/"),
                 ],
                 style: tt.bodyMedium,
+              ),
+            ),
+            divider(),
+            Text("Honorable mentions 🎖", style: tt.headlineMedium),
+            smallSpace(),
+            Text("People 🧑:", style: tt.headlineSmall),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                      text:
+                          " - All people on the street with Freebuds 4i that did't ghost me 👻"),
+                  newline(),
+                  TextSpan(
+                      text:
+                          " - Huawei, for creating a shitty app to motivate me 💩"),
+                ],
+              ),
+            ),
+            smallSpace(),
+            Text("Libraries and tech 🤖:", style: tt.headlineSmall),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: " - Flutter 🐦"),
+                  newline(),
+                  TextSpan(text: " - Wireshark 🦈"),
+                ],
               ),
             ),
             divider(),

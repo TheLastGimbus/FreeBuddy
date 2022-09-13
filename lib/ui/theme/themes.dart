@@ -17,6 +17,12 @@ ThemeData _customize(ThemeData theme) {
       bodyLarge: theme.textTheme.bodyLarge!.copyWith(
         fontSize: 17.0,
       ),
+      headlineSmall: theme.textTheme.headlineSmall!.copyWith(
+        fontSize: 20.0,
+      ),
+      headlineMedium: theme.textTheme.headlineMedium!.copyWith(
+        color: theme.textTheme.bodyMedium!.color,
+      ),
       headlineLarge: theme.textTheme.headlineLarge!.copyWith(
         color: theme.textTheme.bodyMedium!.color,
       ),
