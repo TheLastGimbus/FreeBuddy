@@ -7,14 +7,13 @@ class SettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    final t = Theme.of(context);
     return Scaffold(
       appBar: AppBar(title: Text(l.settings)),
       body: Center(
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            TextButton(
+            ElevatedButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed('/settings/about'),
               child: const Text('About app'),
