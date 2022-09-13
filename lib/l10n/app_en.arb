@@ -21,5 +21,10 @@
   "pageAboutMeAnyQuestions": "If you have *ANY* questions, suggestions, or just want to chat, feel free to contact me on any of below:",
   "pageAboutMeOpenSource": "FreeBuddy is 💯% open source - meaning, you can read the source code it was made with: ",
   "pageAboutMeBlog": "I also made a blog about how it was created 🧑‍🎓 you can give it a read here: ",
+  "pageAboutMentionsHeader": "Honorable mentions 🎖",
+  "pageAboutMentionsPeopleHeader": "People 🧑:",
+  "pageAboutMentionsPeopleStreet": "All people on the street with Freebuds 4i that did't ghost me 👻",
+  "pageAboutMentionsPeopleHuawei": "Huawei, for creating a crappy app to motivate me 💩",
+  "pageAboutMentionsTechHeader": "Libraries and tech 🤖:",
   "pageAboutOpenSourceLicensesBtn": "Open source licenses"
 }

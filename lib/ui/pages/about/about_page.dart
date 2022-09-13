@@ -84,30 +84,26 @@ class AboutPage extends StatelessWidget {
               ),
             ),
             divider(),
-            Text("Honorable mentions 🎖", style: tt.headlineMedium),
+            Text(l.pageAboutMentionsHeader, style: tt.headlineMedium),
             smallSpace(),
-            Text("People 🧑:", style: tt.headlineSmall),
+            Text(l.pageAboutMentionsPeopleHeader, style: tt.headlineSmall),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text:
-                          " - All people on the street with Freebuds 4i that did't ghost me 👻"),
+                  TextSpan(text: " - ${l.pageAboutMentionsPeopleStreet}"),
                   newline(),
-                  TextSpan(
-                      text:
-                          " - Huawei, for creating a shitty app to motivate me 💩"),
+                  TextSpan(text: " - ${l.pageAboutMentionsPeopleHuawei}"),
                 ],
               ),
             ),
             smallSpace(),
-            Text("Libraries and tech 🤖:", style: tt.headlineSmall),
+            Text(l.pageAboutMentionsTechHeader, style: tt.headlineSmall),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: " - Flutter 🐦"),
+                  const TextSpan(text: " - Flutter 🐦"),
                   newline(),
-                  TextSpan(text: " - Wireshark 🦈"),
+                  const TextSpan(text: " - Wireshark 🦈"),
                 ],
               ),
             ),

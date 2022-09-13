@@ -21,5 +21,10 @@
   "pageAboutMeAnyQuestions": "Jeśli masz *JAKIEKOLWIEK* pytania, sugestie, albo po prostu chcesz zagadać, możesz śmiało pisać do mnie na poniższych:",
   "pageAboutMeOpenSource": "FreeBuddy jest w 💯% open source - co znaczy, że możesz obejrzeć kod z którego jest stworzone: ",
   "pageAboutMeBlog": "Napisałem też bloga o tym jak FreeBuddy zostało stworzone 🧑‍🎓 możesz go przeczytać tutaj: ",
+  "pageAboutMentionsHeader": "Wyróżnienia 🎖",
+  "pageAboutMentionsPeopleHeader": "Ludzie 🧑:",
+  "pageAboutMentionsPeopleStreet": "Wszyscy ludzie na ulicy z Freebudsami którzy mnie nie zlali 🚿",
+  "pageAboutMentionsPeopleHuawei": "Huawei, za stworzenie ciulowej apki na motywacje 💩",
+  "pageAboutMentionsTechHeader": "Biblioteki i technologie 🤖:",
   "pageAboutOpenSourceLicensesBtn": "Licencje open source"
 }
