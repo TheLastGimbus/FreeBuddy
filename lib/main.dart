@@ -6,6 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'headphones/headphones_connection_cubit.dart';
 import 'ui/pages/home/home_page.dart';
 import 'ui/pages/settings/settings_page.dart';
+import 'ui/theme/themes.dart';
 
 void main() {
   runApp(const MyApp());
@@ -20,7 +21,9 @@ class MyApp extends StatelessWidget {
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(primarySwatch: Colors.blue),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: ThemeMode.system,
       routes: {
         '/': (context) => MultiBlocProvider(
               providers: [

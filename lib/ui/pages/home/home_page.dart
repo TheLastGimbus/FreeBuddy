@@ -33,7 +33,6 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      backgroundColor: const Color.fromARGB(255, 245, 245, 245),
       body: Center(
         child: BlocBuilder<HeadphonesConnectionCubit, HeadphonesObject>(
           builder: (context, state) {

@@ -17,11 +17,9 @@ class BatteryCircleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: add this somewhere fancy in theme
-    const grayColor = Color(0xffdcdcdc);
     const circleSize = 36.0;
-    final th = Theme.of(context);
-    final tt = th.textTheme;
+    final t = Theme.of(context);
+    final tt = t.textTheme;
     return Column(
       children: [
         Container(
@@ -30,21 +28,18 @@ class BatteryCircleWidget extends StatelessWidget {
           height: circleSize,
           child: Stack(
             children: [
-              Center(
-                child: Text(
-                  textInCircle,
-                  style: TextStyle(
-                      color: Colors.black.withAlpha(120), fontSize: 20),
-                ),
-              ),
+              Center(child: Text(textInCircle, style: tt.labelLarge!)),
               SizedBox(
                 width: circleSize,
                 height: circleSize,
                 child: CircularProgressIndicator(
                   value: (level ?? altLevel) / 100,
-                  backgroundColor: grayColor.withAlpha(140),
+                  backgroundColor: t.colorScheme.shadow.withAlpha(50),
                   valueColor: AlwaysStoppedAnimation<Color>(
-                    level == null ? grayColor : th.colorScheme.primary,
+                    // TODO: decide nice color here
+                    level == null
+                        ? t.colorScheme.shadow.withAlpha(120)
+                        : t.colorScheme.primary,
                   ),
                   strokeWidth: 6.0,
                 ),
