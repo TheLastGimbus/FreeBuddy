@@ -4,6 +4,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import 'headphones/headphones_connection_cubit.dart';
+import 'ui/pages/about/about_page.dart';
 import 'ui/pages/home/home_page.dart';
 import 'ui/pages/settings/settings_page.dart';
 import 'ui/theme/themes.dart';
@@ -34,7 +35,8 @@ class MyApp extends StatelessWidget {
               child: const HomePage(),
             ),
         '/settings': (context) => const SettingsPage(),
-        '/settings/licenses': (context) => const LicensePage(),
+        '/settings/about': (context) => const AboutPage(),
+        '/settings/about/licenses': (context) => const LicensePage(),
       },
       initialRoute: '/',
     );

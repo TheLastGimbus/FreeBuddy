@@ -16,5 +16,6 @@
   "privacyPolicyText": "This app does not collect any personal information about you. I (the author :) do not store emails, identifiers, or anything like that, on any server, because I don’t even have one :D and this app doesn't have internet access :D\n\nThe app also doesn’t use Google Analytics, or any other service that would collect your data <3\n\nIf you have any questions, you can contact me at: 4i05wllh@anonaddy.me\n\nThanks for reading, and enjoy using the app :)",
   "privacyPolicyUrl": "https://the.lastgimbus.com/empty-privacy-policy/",
   "privacyPolicyUrlBtn": "Link to same \"privacy policy\"",
-  "openSourceLicensesBtn": "Open source licenses"
+  "pageAboutTitle": "About app",
+  "pageAboutOpenSourceLicensesBtn": "Open source licenses"
 }

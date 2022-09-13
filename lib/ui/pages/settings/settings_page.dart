@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -15,24 +14,11 @@ class SettingsPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            Text(l.privacyPolicyTitle, style: t.textTheme.headlineSmall),
-            const SizedBox(height: 8.0),
-            Text(l.privacyPolicyText),
-            TextButton(
-              onPressed: () => launchUrlString(l.privacyPolicyUrl,
-                  mode: LaunchMode.externalApplication),
-              child: Text(l.privacyPolicyUrlBtn),
-            ),
-            Container(
-              height: 1.0,
-              color: t.dividerColor,
-              margin: const EdgeInsets.symmetric(vertical: 16.0),
-            ),
             TextButton(
               onPressed: () =>
-                  Navigator.of(context).pushNamed('/settings/licenses'),
-              child: Text(l.openSourceLicensesBtn),
-            ),
+                  Navigator.of(context).pushNamed('/settings/about'),
+              child: const Text('About app'),
+            )
           ],
         ),
       ),
