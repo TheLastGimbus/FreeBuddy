@@ -12,20 +12,21 @@ class NotPairedInfoWidget extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return PrettyRoundedContainerWidget(
       child: Center(
-          child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(l.pageHomeNotPaired),
-          ),
-          TextButton(
-            child: Text(l.pageHomeNotPairedPairOpenSettings),
-            onPressed: () {
-              AppSettings.openBluetoothSettings(asAnotherTask: true);
-            },
-          ),
-        ],
-          )),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(l.pageHomeNotPaired),
+            ),
+            TextButton(
+              child: Text(l.pageHomeNotPairedPairOpenSettings),
+              onPressed: () {
+                AppSettings.openBluetoothSettings(asAnotherTask: true);
+              },
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
