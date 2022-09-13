@@ -87,7 +87,7 @@ class AboutPage extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(text: l.privacyPolicyText),
-                  const TextSpan(text: "\n\n"),
+                  const TextSpan(text: "\n"),
                   _link(l.privacyPolicyUrl),
                 ],
                 style: tt.bodyMedium,

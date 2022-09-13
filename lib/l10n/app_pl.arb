@@ -13,13 +13,13 @@
   "settings": "Ustawienia",
   "privacyPolicy": "Polityka prywatności",
   "privacyPolicyTitle": "\"Polityka prywatności\"",
-  "privacyPolicyText": "Ta aplikacja nie zbiera żadnych informacji o tobie - żadnych emaili, identyfikatorów, lub czegokolwiek takiego na serwerze, bo nawet go nie mam :D\n\nFreeBuddy nie korzysta też z Google Analytics, czy innego serwisu który zbierałby twoje dane <3\n\n",
+  "privacyPolicyText": "Ta aplikacja nie zbiera żadnych informacji o tobie - żadnych emaili, identyfikatorów, lub czegokolwiek takiego na serwerze, bo nawet go nie mam :D\nFreeBuddy nie korzysta też z Google Analytics, czy innego serwisu który zbierałby twoje dane <3",
   "privacyPolicyUrl": "https://the.lastgimbus.com/empty-privacy-policy/",
   "pageAboutTitle": "O aplikacji",
   "pageAboutMeHeader": "O aplikacji i o mnie",
   "pageAboutMeBio": "Heja 👋 Jestem @TheLastGimbus, twórca tej apki 🧑‍💻 Mam nadzieje że cie ona raduje! Stworzyłem ją z czystej pasji 💖",
   "pageAboutMeAnyQuestions": "Jeśli masz *JAKIEKOLWIEK* pytania, sugestie, albo po prostu chcesz zagadać, możesz śmiało pisać do mnie na poniższych:",
-  "pageAboutMeOpenSource": "FreeBuddy jest w 💯% open source - co znaczy że możesz obejrzeć kod z którego jest stworzone - na jej GitHub'ie: ",
+  "pageAboutMeOpenSource": "FreeBuddy jest w 💯% open source - co znaczy, że możesz obejrzeć kod z którego jest stworzone: ",
   "pageAboutMeBlog": "Napisałem też bloga o tym jak FreeBuddy zostało stworzone 🧑‍🎓 możesz go przeczytać tutaj: ",
   "pageAboutOpenSourceLicensesBtn": "Licencje open source"
 }
