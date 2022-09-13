@@ -73,11 +73,14 @@ class AboutPage extends StatelessWidget {
             const SizedBox(height: 8.0),
             Text(l.privacyPolicyTitle, style: t.textTheme.headlineSmall),
             const SizedBox(height: 4.0),
-            Text(l.privacyPolicyText),
-            TextButton(
-              onPressed: () => launchUrlString(l.privacyPolicyUrl,
-                  mode: LaunchMode.externalApplication),
-              child: Text(l.privacyPolicyUrlBtn),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(text: l.privacyPolicyText),
+                  const TextSpan(text: "\n\n"),
+                  _link(l.privacyPolicyUrl),
+                ],
+              ),
             ),
             Container(
               height: 1.0,
