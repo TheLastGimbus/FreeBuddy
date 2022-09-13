@@ -17,5 +17,10 @@
   "privacyPolicyUrl": "https://the.lastgimbus.com/empty-privacy-policy/",
   "privacyPolicyUrlBtn": "Link to same \"privacy policy\"",
   "pageAboutTitle": "About app",
+  "pageAboutMeHeader": "About this app and me",
+  "pageAboutMeBio": "Hi there 👋 I'm @TheLastGimbus, creator of this app 🧑‍💻 I hope you're enjoying it! I created it out of pure passion 💖",
+  "pageAboutMeAnyQuestions": "If you have *ANY* questions, suggestions, or just want to chat, feel free to contact me on any of below:",
+  "pageAboutMeOpenSource": "FreeBuddy is 💯% open source - meaning you can read the source code it was made with - here, on it's GitHub: ",
+  "pageAboutMeBlog": "I also made a blog about how it was created 🧑‍🎓 you can give it a read here: ",
   "pageAboutOpenSourceLicensesBtn": "Open source licenses"
 }

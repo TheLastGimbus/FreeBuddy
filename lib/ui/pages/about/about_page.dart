@@ -29,25 +29,23 @@ class AboutPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            Text("About this app and me", style: tt.headlineMedium),
+            Text(l.pageAboutMeHeader, style: tt.headlineMedium),
             const SizedBox(height: 4.0),
-            Text(
-                "Hi there 👋 I'm @TheLastGimbus, creator of this app 🧑‍💻 I hope you're enjoying it! I created it out of pure passion 💖"),
+            Text(l.pageAboutMeBio),
             const SizedBox(height: 4.0),
-            Text(
-                "If you have *ANY* questions, suggestions, or just want to chat, feel free to contact me on any of below:"),
+            Text(l.pageAboutMeAnyQuestions),
             const SizedBox(height: 4.0),
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(text: "Email 📧: "),
+                  const TextSpan(text: "Email 📧: "),
                   _link("mateusz.soszynski.2003@gmail.com",
                       "mailto:mateusz.soszynski.2003@gmail.com"),
-                  TextSpan(text: "\n"),
-                  TextSpan(text: "Twitter 🐦: "),
+                  const TextSpan(text: "\n"),
+                  const TextSpan(text: "Twitter 🐦: "),
                   _link("@TheLastGimbus", "https://twitter.com/TheLastGimbus"),
-                  TextSpan(text: "\n"),
-                  TextSpan(text: "Reddit: "),
+                  const TextSpan(text: "\n"),
+                  const TextSpan(text: "Reddit: "),
                   _link("/u/TheLastGimbus",
                       "https://www.reddit.com/u/TheLastGimbus"),
                 ],
@@ -58,15 +56,10 @@ class AboutPage extends StatelessWidget {
             RichText(
               text: TextSpan(
                 children: [
-                  TextSpan(
-                      text:
-                          "FreeBuddy is 💯% open source - meaning you can read whole source code it was made with - here, on it's GitHub: "),
+                  TextSpan(text: l.pageAboutMeOpenSource),
                   _link("https://github.com/TheLastGimbus/FreeBuddy/"),
-                  WidgetSpan(child: SizedBox(height: 8.0)),
-                  TextSpan(text: "\n"),
-                  TextSpan(
-                      text:
-                          "I also made a blog about how it was created 🧑‍🎓 you can give it a read here: "),
+                  const TextSpan(text: "\n"),
+                  TextSpan(text: l.pageAboutMeBlog),
                   _link("https://the.lastgimbus.com/blog/"),
                 ],
               ),
