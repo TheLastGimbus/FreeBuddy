@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import '../logger.dart';
 import 'headphones_service/headphones_service_base.dart';
 import 'headphones_service/headphones_service_bluetooth.dart';
 import 'otter_constants.dart';
@@ -39,7 +40,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
         emit(HeadphonesConnectedPlugin(
           _connection!,
           onDone: () async {
-            print('headphones done!');
+            logg.d('headphones done!');
             await _connection!.finish();
             _connection!.dispose();
             _connection = null;
@@ -50,11 +51,11 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
         ));
         _connectingStream?.pause();
       } on StateError catch (_) {
-      } on PlatformException catch (e) {
+      } on PlatformException catch (e, s) {
         await _connection?.finish();
         _connection?.dispose();
         _connection = null;
-        print('Platform error in connection loop: $e');
+        logg.e('Platform error in connection loop', e, s);
         emit(HeadphonesDisconnected());
       }
       if (_connection == null) {

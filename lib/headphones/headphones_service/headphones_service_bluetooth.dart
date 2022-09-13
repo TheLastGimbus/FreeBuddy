@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 
+import '../../logger.dart';
 import '../headphones_connection_cubit.dart';
 import '../mbb.dart';
 import 'headphones_service_base.dart';
@@ -21,12 +22,12 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
         List<MbbCommand>? comms;
         try {
           comms = MbbCommand.fromPayload(event);
-        } catch (e) {
-          print("MBB parsing error: $e");
+        } catch (e, s) {
+          logg.e("MBB parsing error", e, s);
         }
         if (comms == null) return;
         for (final comm in comms) {
-          print(comm);
+          logg.v("Received mbb comm: $comm");
 
           if (comm.serviceId == 43 &&
               comm.commandId == 42 &&

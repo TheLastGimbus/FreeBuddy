@@ -3,6 +3,8 @@ import 'dart:isolate';
 
 import 'package:flutter_foreground_task/flutter_foreground_task.dart';
 
+import '../logger.dart';
+
 void foregroundTaskStartCallback() {
   FlutterForegroundTask.setTaskHandler(HeadphonesTaskHandler());
 }
@@ -36,22 +38,22 @@ Future<void> initForegroundTask() async {
 class HeadphonesTaskHandler extends TaskHandler {
   @override
   Future<void> onStart(DateTime timestamp, SendPort? sendPort) async {
-    print('onStart ^-^ yayyy');
+    logg.d('onStart ^-^ yayyy');
   }
 
   @override
   void onButtonPressed(String id) {
-    print('button pressed: $id');
+    logg.d('button pressed: $id');
     if (id == 'stopButton') FlutterForegroundTask.stopService();
   }
 
   @override
   Future<void> onEvent(DateTime timestamp, SendPort? sendPort) async {
-    print('event $timestamp');
+    logg.d('event $timestamp');
   }
 
   @override
   Future<void> onDestroy(DateTime timestamp, SendPort? sendPort) async {
-    print('destroying :(');
+    logg.d('destroying :(');
   }
 }
