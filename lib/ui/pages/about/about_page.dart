@@ -23,6 +23,21 @@ class AboutPage extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     final t = Theme.of(context);
     final tt = t.textTheme;
+
+    smallSpace() => const SizedBox(height: 6.0);
+
+    Widget divider() => Column(
+          children: [
+            const SizedBox(height: 6.0),
+            Container(
+              height: 1.0,
+              color: t.dividerColor,
+              margin: const EdgeInsets.symmetric(vertical: 16.0),
+            ),
+            const SizedBox(height: 6.0),
+          ],
+        );
+
     return Scaffold(
       appBar: AppBar(title: Text(l.pageAboutTitle)),
       body: Center(
@@ -30,11 +45,11 @@ class AboutPage extends StatelessWidget {
           padding: const EdgeInsets.all(16.0),
           children: [
             Center(child: Text(l.pageAboutMeHeader, style: tt.headlineLarge)),
-            const SizedBox(height: 4.0),
+            smallSpace(),
             Text(l.pageAboutMeBio),
-            const SizedBox(height: 4.0),
+            smallSpace(),
             Text(l.pageAboutMeAnyQuestions),
-            const SizedBox(height: 4.0),
+            smallSpace(),
             RichText(
               text: TextSpan(
                 children: [
@@ -45,14 +60,14 @@ class AboutPage extends StatelessWidget {
                   const TextSpan(text: "Twitter 🐦: "),
                   _link("@TheLastGimbus", "https://twitter.com/TheLastGimbus"),
                   const TextSpan(text: "\n"),
-                  const TextSpan(text: "Reddit: "),
+                  const TextSpan(text: "Reddit 🤡: "),
                   _link("/u/TheLastGimbus",
                       "https://www.reddit.com/u/TheLastGimbus"),
                 ],
                 style: tt.bodyLarge,
               ),
             ),
-            const SizedBox(height: 4.0),
+            smallSpace(),
             RichText(
               text: TextSpan(
                 children: [
@@ -65,15 +80,9 @@ class AboutPage extends StatelessWidget {
                 style: tt.bodyMedium,
               ),
             ),
-            const SizedBox(height: 8.0),
-            Container(
-              height: 1.0,
-              color: t.dividerColor,
-              margin: const EdgeInsets.symmetric(vertical: 16.0),
-            ),
-            const SizedBox(height: 8.0),
+            divider(),
             Text(l.privacyPolicyTitle, style: t.textTheme.headlineSmall),
-            const SizedBox(height: 4.0),
+            smallSpace(),
             RichText(
               text: TextSpan(
                 children: [
@@ -84,11 +93,7 @@ class AboutPage extends StatelessWidget {
                 style: tt.bodyMedium,
               ),
             ),
-            Container(
-              height: 1.0,
-              color: t.dividerColor,
-              margin: const EdgeInsets.symmetric(vertical: 16.0),
-            ),
+            divider(),
             TextButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed('/settings/about/licenses'),
