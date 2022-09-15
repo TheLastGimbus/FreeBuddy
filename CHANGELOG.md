@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.0.4 (2022-09-15)
+
+- Fix finding paired device (now using name regex instead of mac)
+
 ## 0.0.3 (2022-09-15)
 
 - Dark theme
