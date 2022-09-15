@@ -12,6 +12,8 @@ Also, it doesn't have features like "find lost headphones", etc...
 
 So I got mad and decided to make my own... and here it is 🌈
 
+<img src="https://user-images.githubusercontent.com/40139196/190339164-64086d10-8c73-46f7-81f9-fe8aa0c62849.png"  width=250px> <img src="https://user-images.githubusercontent.com/40139196/190339172-a46e817b-8bd1-4a34-ac3d-9a99a7685782.png" width=250px>
+
 ## Features
 
 - [x] Switch ANC modes
