@@ -58,8 +58,6 @@ class Mbb {
       return Exception("Payload $payload has invalid magic bytes");
     }
     if (payload.length - 6 + 1 != payload[2]) {
-      // TODO: This is often :/ add "smart divide"
-      //  as in `notes/live_print_data.py`
       return Exception("Length data from $payload doesn't match length byte");
     }
     if (checksum && !verifyChecksum(payload)) {
