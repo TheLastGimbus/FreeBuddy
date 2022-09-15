@@ -36,6 +36,12 @@ So I got mad and decided to make my own... and here it is 🌈
 If you have *ANY* questions, suggestions, or just want to chat, feel free to contact me on any of below:
 
 - Twitter 🐦: [@TheLastGimbus](https://twitter.com/TheLastGimbus)
-- Reddit ??: [/u/TheLastGimbus](https://www.reddit.com/u/TheLastGimbus)
+- Reddit 🤡: [/u/TheLastGimbus](https://www.reddit.com/u/TheLastGimbus)
+
+### Donating
+
+I've spent a lot of time and love making this app 💖 if you like it, you can give me small tip on paypal: https://www.paypal.me/TheLastGimbus
+
+
 
 <sub>Google Play and the Google Play logo are trademarks of Google LLC.</sub>
