@@ -17,6 +17,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
   StreamSubscription? _connectingStream;
 
   void _setupTryConnectingStream() {
+    // TODO: Optimize and shrink this even more
     _connectingStream = loopStream((computationCount) async {
       // TODO: Pause and resume stream based on that
       if (!((await bluetooth.isEnabled) ?? false)) {
@@ -25,13 +26,13 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       }
       final devs = await bluetooth.getBondedDevices();
       emit(
-        devs.any((d) => Otter.btMacRegex.hasMatch(d.address))
+        devs.any((d) => Otter.btDevNameRegex.hasMatch(d.name ?? ""))
             ? HeadphonesDisconnected()
             : HeadphonesNotPaired(),
       );
       try {
         final otter = devs.firstWhere((d) =>
-            Otter.btMacRegex.hasMatch(d.address) &&
+        Otter.btDevNameRegex.hasMatch(d.name ?? "") &&
             d.isBonded &&
             d.isConnected);
 
