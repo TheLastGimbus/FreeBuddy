@@ -32,7 +32,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       );
       try {
         final otter = devs.firstWhere((d) =>
-        Otter.btDevNameRegex.hasMatch(d.name ?? "") &&
+            Otter.btDevNameRegex.hasMatch(d.name ?? "") &&
             d.isBonded &&
             d.isConnected);
 
