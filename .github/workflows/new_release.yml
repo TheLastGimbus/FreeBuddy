@@ -1,5 +1,5 @@
 # Run all main Flutter style and test checks
-name: Main Flutter checks
+name: Build and publish new release on version tag
 
 on:
   push:
@@ -14,12 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Check if tag is on master
-        run: |
-          if [[ $(git branch --contains ${{ github.ref }} --format="%(refname:short)" | xargs)  != "master" ]]; then
-            echo "Tag is not on master branch, exiting"
-            exit 1
-          fi
+      - name: Clean tag name
+        id: clean_tag
+        run: echo "::set-output name=tag::$(echo ${{ github.ref }} | sed 's/refs\/tags\///')"
+      #        Fuck this
+      #      If you ever get this to work, please let me know
+      #      - name: Check if tag is on master
+      #        run: |
+      #          echo $(git branch --contains ${{ github.ref }} | xargs)
+      #          if [[ $(git branch --contains ${{ github.ref }} --format="%(refname:short)" | xargs)  != *"master"* ]]; then
+      #            echo "Tag is not on master branch, exiting"
+      #            exit 1
+      #          fi
       - name: Parse fvm to set flutter version
         run: echo "flutter_version=$(cat .fvm/fvm_config.json | jq -r .flutterSdkVersion)" >> $GITHUB_ENV
       - name: Cache Flutter
@@ -34,11 +40,10 @@ jobs:
       - name: Build apk
         run: flutter build apk --flavor signingDebug --target-platform android-arm,android-arm64
       - name: Rename apk
-        run: mv build/app/outputs/flutter-apk/app-signingdebug-release.apk ./FreeBuddy-${{ github.ref }}.apk
+        run: mv build/app/outputs/flutter-apk/app-signingdebug-release.apk ./FreeBuddy-${{ steps.clean_tag.outputs.tag }}.apk
       #        Changelogs can be more rich than tag message (where # is a comment, not a header :/)
       - name: Get changelog
-        id: changelog
-        run: echo ::set-output name=message::$(python scripts/get_changelog.py --version ${{ github.ref }})
+        run: python scripts/get_changelog.py --version ${{ steps.clean_tag.outputs.tag }} > ./body-file.txt
       #        Just in case changelogs won't work out
       #      - name: Get tag message
       #        id: tag_message
@@ -46,7 +51,7 @@ jobs:
       - name: Create GH-Release
         uses: softprops/action-gh-release@v1
         with:
-          body: steps.changelog.outputs.message
-          files: ./FreeBuddy-${{ github.ref }}.apk
+          body_path: ./body-file.txt
+          files: ./FreeBuddy-${{ steps.clean_tag.outputs.tag }}.apk
           fail_on_unmatched_files: true
       # TODO: *Maybe* auto-upload to PlayStore some day?
