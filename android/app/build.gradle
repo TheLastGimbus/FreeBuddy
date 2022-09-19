@@ -67,9 +67,18 @@ android {
             storePassword keystoreProperties['storePassword']
         }
     }
+    flavorDimensions "signing"
     buildTypes {
         release {
-            signingConfig signingConfigs.release
+            productFlavors {
+                signingDefault {
+                    isDefault true
+                    signingConfig signingConfigs.release
+                }
+                signingDebug {
+                    signingConfig signingConfigs.debug
+                }
+            }
         }
         debug {
             applicationIdSuffix ".debug"
