@@ -35,10 +35,18 @@ jobs:
         run: flutter build apk --flavor signingDebug --target-platform android-arm,android-arm64
       - name: Rename apk
         run: mv build/app/outputs/flutter-apk/app-signingdebug-release.apk ./FreeBuddy-${{ github.ref }}.apk
+      #        Changelogs can be more rich than tag message (where # is a comment, not a header :/)
+      - name: Get changelog
+        id: changelog
+        run: echo ::set-output name=message::$(python scripts/get_changelog.py --version ${{ github.ref }})
+      #        Just in case changelogs won't work out
+      #      - name: Get tag message
+      #        id: tag_message
+      #        run: echo ::set-output name=message::$(git tag -l --format='%(contents)' ${{ github.ref }})
       - name: Create GH-Release
         uses: softprops/action-gh-release@v1
         with:
-          body: "todo: auto-read changelog.md"
+          body: steps.changelog.outputs.message
           files: ./FreeBuddy-${{ github.ref }}.apk
           fail_on_unmatched_files: true
       # TODO: *Maybe* auto-upload to PlayStore some day?
