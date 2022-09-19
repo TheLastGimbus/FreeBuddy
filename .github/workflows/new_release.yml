@@ -34,11 +34,11 @@ jobs:
       - name: Build apk
         run: flutter build apk --flavor signingDebug --target-platform android-arm,android-arm64
       - name: Rename apk
-        run: mv build/app/outputs/flutter-apk/app-signingdebug-release.apk ./FreeBuddy-signDebug-${{ github.ref }}.apk
+        run: mv build/app/outputs/flutter-apk/app-signingdebug-release.apk ./FreeBuddy-${{ github.ref }}.apk
       - name: Create GH-Release
         uses: softprops/action-gh-release@v1
         with:
           body: "todo: auto-read changelog.md"
-          files: ./FreeBuddy-signDebug-${{ github.ref }}.apk
+          files: ./FreeBuddy-${{ github.ref }}.apk
           fail_on_unmatched_files: true
       # TODO: *Maybe* auto-upload to PlayStore some day?
