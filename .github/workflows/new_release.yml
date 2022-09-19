@@ -1,0 +1,44 @@
+# Run all main Flutter style and test checks
+name: Main Flutter checks
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+
+env:
+  flutter_channel: "any"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Check if tag is on master
+        run: |
+          if [[ $(git branch --contains ${{ github.ref }} --format="%(refname:short)" | xargs)  != "master" ]]; then
+            echo "Tag is not on master branch, exiting"
+            exit 1
+          fi
+      - name: Parse fvm to set flutter version
+        run: echo "flutter_version=$(cat .fvm/fvm_config.json | jq -r .flutterSdkVersion)" >> $GITHUB_ENV
+      - name: Cache Flutter
+        uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ env.flutter_channel }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter_version }}
+          channel: ${{ env.flutter_channel }}
+      - name: Build apk
+        run: flutter build apk --flavor signingDebug --target-platform android-arm,android-arm64
+      - name: Rename apk
+        run: mv build/app/outputs/flutter-apk/app-signingdebug-release.apk ./FreeBuddy-signDebug-${{ github.ref }}.apk
+      - name: Create GH-Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body: "todo: auto-read changelog.md"
+          files: ./FreeBuddy-signDebug-${{ github.ref }}.apk
+          fail_on_unmatched_files: true
+      # TODO: *Maybe* auto-upload to PlayStore some day?
