@@ -25,7 +25,7 @@ So I got mad and decided to make my own... and here it is 🌈
 
 | Platform | Installation        |
 |----------|---------------------|
-| Any      | [Github Releases](https://github.com/TheLastGimbus/FreeBuddy/releases) |
+| Any      | [Github Releases](https://github.com/TheLastGimbus/FreeBuddy/releases)<br/>(Note: signed with debug keys) |
 | Android  | [<img alt="google-play-badge" src="https://user-images.githubusercontent.com/40139196/190448286-f0ac43a6-ba7e-4f92-9ad5-78728651b027.png" width="220px">](https://play.google.com/store/apps/details?id=com.lastgimbus.the.freebuddy) |
 | Windoza  | TODO: Windoza build |
 | Linux    | TODO: L00nix build  |
