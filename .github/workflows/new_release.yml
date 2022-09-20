@@ -38,9 +38,9 @@ jobs:
           flutter-version: ${{ env.flutter_version }}
           channel: ${{ env.flutter_channel }}
       - name: Build apk
-        run: flutter build apk --flavor signingDebug --target-platform android-arm,android-arm64
+        run: flutter build apk --target-platform android-arm,android-arm64
       - name: Rename apk
-        run: mv build/app/outputs/flutter-apk/app-signingdebug-release.apk ./FreeBuddy-${{ steps.clean_tag.outputs.tag }}.apk
+        run: mv build/app/outputs/flutter-apk/app-release.apk ./FreeBuddy-${{ steps.clean_tag.outputs.tag }}.apk
       #        Changelogs can be more rich than tag message (where # is a comment, not a header :/)
       - name: Get changelog
         run: python scripts/get_changelog.py --version ${{ steps.clean_tag.outputs.tag }} > ./body-file.txt
