@@ -24,8 +24,6 @@ class FreebuddyIntroduction extends StatelessWidget {
     final tt = t.textTheme;
     final l = AppLocalizations.of(context)!;
 
-    smallSpace() => const SizedBox(height: 6.0);
-
     newline() => const TextSpan(text: "\n");
 
     return Scaffold(
@@ -41,27 +39,30 @@ class FreebuddyIntroduction extends StatelessWidget {
               const Spacer(flex: 12),
               // Rich text with introduction and link to privacy policy
               RichText(
-                text: TextSpan(children: [
-                  TextSpan(text: l.pageIntroWhatIsThis),
-                  newline(),
-                  newline(),
-                  TextSpan(text: l.pageIntroSupported),
-                  newline(),
-                  newline(),
-                  TextSpan(text: l.pageIntroShortPrivacyPolicy),
-                  _link(l.privacyPolicy, l.privacyPolicyUrl),
-                  WidgetSpan(
-                    child: Icon(
-                      Icons.open_in_new,
-                      size: tt.bodyMedium!.fontSize,
-                      color: Colors.blue,
+                text: TextSpan(
+                  children: [
+                    TextSpan(text: l.pageIntroWhatIsThis),
+                    newline(),
+                    newline(),
+                    TextSpan(text: l.pageIntroSupported),
+                    newline(),
+                    newline(),
+                    TextSpan(text: l.pageIntroShortPrivacyPolicy),
+                    _link(l.privacyPolicy, l.privacyPolicyUrl),
+                    WidgetSpan(
+                      child: Icon(
+                        Icons.open_in_new,
+                        size: tt.bodyMedium!.fontSize,
+                        color: Colors.blue,
+                      ),
+                      alignment: PlaceholderAlignment.middle,
                     ),
-                    alignment: PlaceholderAlignment.middle,
-                  ),
-                  newline(),
-                  newline(),
-                  TextSpan(text: l.pageIntroAnyQuestions),
-                ], style: tt.bodyMedium),
+                    newline(),
+                    newline(),
+                    TextSpan(text: l.pageIntroAnyQuestions),
+                  ],
+                  style: tt.bodyMedium,
+                ),
               ),
               const Spacer(flex: 10),
               Row(
@@ -69,7 +70,7 @@ class FreebuddyIntroduction extends StatelessWidget {
                   const Spacer(),
                   TextButton(onPressed: () {}, child: const Text('Okay!')),
                 ],
-              )
+              ),
             ],
           ),
         ),
