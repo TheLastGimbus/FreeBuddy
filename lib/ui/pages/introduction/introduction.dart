@@ -29,7 +29,7 @@ class FreebuddyIntroduction extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: Container(
-          margin: const EdgeInsets.all(32),
+          margin: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -68,7 +68,12 @@ class FreebuddyIntroduction extends StatelessWidget {
               Row(
                 children: [
                   const Spacer(),
-                  TextButton(onPressed: () {}, child: const Text('Okay!')),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Okay!'),
+                  ),
                 ],
               ),
             ],
