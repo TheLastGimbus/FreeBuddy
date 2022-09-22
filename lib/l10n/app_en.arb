@@ -26,5 +26,11 @@
   "pageAboutMentionsPeopleStreet": "All people on the street with Freebuds 4i that did't ghost me 👻",
   "pageAboutMentionsPeopleHuawei": "Huawei, for creating a crappy app to motivate me 💩",
   "pageAboutMentionsTechHeader": "Libraries and tech 🤖:",
-  "pageAboutOpenSourceLicensesBtn": "Open source licenses"
+  "pageAboutOpenSourceLicensesBtn": "Open source licenses",
+  "pageIntroTitle": "Welcome to FreeBuddy 👋",
+  "pageIntroWhatIsThis": "FreeBuddy is open source app for your headphones 🎧",
+  "pageIntroSupported": "Currently supported are:\n - Huawei Freebuds 4i",
+  "pageIntroShortPrivacyPolicy": "This app doesn't collect any emails, identifiers, or any personal data 🎉 You can read more about it here: ",
+  "pageIntroAnyQuestions": "If you have any questions, feel free to contact me 💌 Look at \"Settings->About\" for my socials!",
+  "pageIntroQuit": "Okay 👍"
 }

@@ -36,25 +36,20 @@ class FreebuddyIntroduction extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const Spacer(flex: 6),
-              Text('Welcome to FreeBuddy 👋',
+              Text(l.pageIntroTitle,
                   style: tt.displayMedium, textAlign: TextAlign.center),
               const Spacer(flex: 12),
               // Rich text with introduction and link to privacy policy
               RichText(
                 text: TextSpan(children: [
-                  TextSpan(
-                      text:
-                          'FreeBuddy is open source app for your headphones 🎧'),
+                  TextSpan(text: l.pageIntroWhatIsThis),
                   newline(),
                   newline(),
-                  TextSpan(
-                      text: 'Currently supported are:\n - Huawei Freebuds 4i'),
+                  TextSpan(text: l.pageIntroSupported),
                   newline(),
                   newline(),
-                  TextSpan(
-                      text:
-                          "This app doesn't collect any emails, identifiers, or any personal data 🎉 You can read more about it here: "),
-                  _link("Privacy Policy", l.privacyPolicyUrl),
+                  TextSpan(text: l.pageIntroShortPrivacyPolicy),
+                  _link(l.privacyPolicy, l.privacyPolicyUrl),
                   WidgetSpan(
                     child: Icon(
                       Icons.open_in_new,
@@ -65,9 +60,7 @@ class FreebuddyIntroduction extends StatelessWidget {
                   ),
                   newline(),
                   newline(),
-                  TextSpan(
-                      text:
-                          'If you have any questions, feel free to contact me 💌 Look at "Settings->About" for my socials!'),
+                  TextSpan(text: l.pageIntroAnyQuestions),
                 ], style: tt.bodyMedium),
               ),
               const Spacer(flex: 10),

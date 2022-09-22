@@ -26,5 +26,11 @@
   "pageAboutMentionsPeopleStreet": "Wszyscy ludzie na ulicy z Freebudsami którzy mnie nie zlali 🚿",
   "pageAboutMentionsPeopleHuawei": "Huawei, za stworzenie ciulowej apki na motywacje 💩",
   "pageAboutMentionsTechHeader": "Biblioteki i technologie 🤖:",
-  "pageAboutOpenSourceLicensesBtn": "Licencje open source"
+  "pageAboutOpenSourceLicensesBtn": "Licencje open source",
+  "pageIntroTitle": "Witaj we FreeBuddy 👋",
+  "pageIntroWhatIsThis": "FreeBuddy to open-source aplikacja do twoich słuchaweczek 🎧",
+  "pageIntroSupported": "Obecnie wspierane są:\n - Huawei Freebuds 4i",
+  "pageIntroShortPrivacyPolicy": "Ta aplikacja nie zbiera żadnych maili, identyfikatorów, czy innych osobistych danych 🎉 Możesz o tym poczytać tutaj: ",
+  "pageIntroAnyQuestions": "Jeśli masz jakiekolwiek pytania, napisz do mnie śmiało 💌 Wejdź w \"Ustawienia->O aplikacji\" po moje socjale!",
+  "pageIntroQuit": "Oki doki 👍"
 }
