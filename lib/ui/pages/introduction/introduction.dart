@@ -35,9 +35,10 @@ class FreebuddyIntroduction extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              const Spacer(flex: 6),
               Text('Welcome to FreeBuddy 👋',
                   style: tt.displayMedium, textAlign: TextAlign.center),
-              const Spacer(flex: 20),
+              const Spacer(flex: 12),
               // Rich text with introduction and link to privacy policy
               RichText(
                 text: TextSpan(children: [
