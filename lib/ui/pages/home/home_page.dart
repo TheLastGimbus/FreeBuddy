@@ -18,6 +18,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    // TODO: Launch only if first open
+    Future.microtask(() => Navigator.of(context).pushNamed('/introduction'));
   }
 
   @override

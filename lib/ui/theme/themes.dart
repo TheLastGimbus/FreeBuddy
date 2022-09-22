@@ -11,6 +11,9 @@ ThemeData get _dark => ThemeData.dark(useMaterial3: useMaterial3);
 ThemeData _customize(ThemeData theme) {
   return theme.copyWith(
     textTheme: theme.textTheme.copyWith(
+      displayMedium: theme.textTheme.displayMedium!.copyWith(
+        color: theme.textTheme.bodyMedium!.color,
+      ),
       // Body
       bodyMedium: theme.textTheme.bodyMedium!.copyWith(
         fontSize: 15.0,
