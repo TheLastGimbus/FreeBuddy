@@ -41,6 +41,8 @@ dependencies:
   collection: ^1.16.0
   flutter_bloc: ^8.1.1
   logger: ^1.1.0
+  provider: ^6.0.3
+  streaming_shared_preferences: ^2.0.0
 
   # Flutter/ui stuff
   flutter_localizations:

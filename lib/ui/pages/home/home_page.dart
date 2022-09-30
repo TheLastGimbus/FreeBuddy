@@ -18,6 +18,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _introCheck();
+  }
+
+  void _introCheck() async {
+    // TODO: Get settings async then open intro if needed
+    // final sp = await StreamingSharedPreferences.instance;
+    // sp.getBool(, defaultValue: defaultValue)
     // TODO: Launch only if first open
     Future.microtask(() => Navigator.of(context).pushNamed('/introduction'));
   }
