@@ -1,3 +1,4 @@
+import 'package:async/async.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
 abstract class AppSettings {
@@ -24,9 +25,8 @@ class SharedPreferencesAppSettings implements AppSettings {
       preferences.then((p) => p.getBool(_Prefs.seenIntroduction.key,
           defaultValue: _Prefs.seenIntroduction.defaultValue));
 
-  // TODO: Lazy stream ?? :/
   @override
-  Stream<bool> get seenIntroduction => Stream.fromFuture(_seenIntroduction);
+  Stream<bool> get seenIntroduction => LazyStream(() => _seenIntroduction);
 
   @override
   Future<bool> setSeenIntroduction(bool value) =>
