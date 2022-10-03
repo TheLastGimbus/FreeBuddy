@@ -4,7 +4,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 abstract class AppSettings {
   Stream<bool> get seenIntroduction;
 
-  Future<void> setSeenIntroduction(bool value);
+  Future<bool> setSeenIntroduction(bool value);
 }
 
 enum _Prefs {
