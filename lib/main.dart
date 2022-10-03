@@ -14,11 +14,19 @@ import 'ui/pages/settings/settings_page.dart';
 import 'ui/theme/themes.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(
-    Provider(
+    Provider<AppSettings>(
       create: (context) =>
           SharedPreferencesAppSettings(StreamingSharedPreferences.instance),
-      child: const MyApp(),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider<HeadphonesConnectionCubit>(
+              create: (_) => HeadphonesConnectionCubit(
+                  bluetooth: FlutterBluetoothSerial.instance)),
+        ],
+        child: const MyApp(),
+      ),
     ),
   );
 }

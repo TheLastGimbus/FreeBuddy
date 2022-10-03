@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../headphones/headphones_connection_cubit.dart';
+import '../../app_settings.dart';
 import 'bluetooth_disabled_info_widget.dart';
 import 'headphones_controls_widget.dart';
 import 'not_paired_info_widget.dart';
@@ -18,15 +19,16 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _introCheck();
+    // Looks like we need this future to wait for first frame to generate
+    Future.microtask(_introCheck);
   }
 
   void _introCheck() async {
     // TODO: Get settings async then open intro if needed
-    // final sp = await StreamingSharedPreferences.instance;
-    // sp.getBool(, defaultValue: defaultValue)
-    // TODO: Launch only if first open
-    Future.microtask(() => Navigator.of(context).pushNamed('/introduction'));
+    final settings = context.read<AppSettings>();
+    if (!(await settings.seenIntroduction.first)) {
+      Navigator.of(context).pushNamed('/introduction');
+    }
   }
 
   @override
