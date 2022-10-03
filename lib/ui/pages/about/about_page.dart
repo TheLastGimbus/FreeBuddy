@@ -77,6 +77,7 @@ class AboutPage extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(text: l.pageAboutMeOpenSource),
+                  newline(),
                   _link("https://github.com/TheLastGimbus/FreeBuddy/"),
                   // TODO: Actually write a blog
                   // newline(),
