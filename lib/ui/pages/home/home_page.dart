@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
       // true from this route means all success and we can set the flag
       // false means user exited otherwise or smth - anyway, don't set the flag
       final success =
-          await Navigator.of(context).pushNamed<bool>('/introduction');
+          await Navigator.of(context).pushNamed('/introduction') as bool?;
       if (success ?? false) {
         await settings.setSeenIntroduction(true);
       }
