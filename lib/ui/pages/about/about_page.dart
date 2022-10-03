@@ -58,10 +58,10 @@ class AboutPage extends StatelessWidget {
                   const TextSpan(text: "Email 📧: "),
                   _link("mateusz.soszynski.2003@gmail.com",
                       "mailto:mateusz.soszynski.2003@gmail.com"),
-                  const TextSpan(text: "\n"),
+                  newline(),
                   const TextSpan(text: "Twitter 🐦: "),
                   _link("@TheLastGimbus", "https://twitter.com/TheLastGimbus"),
-                  const TextSpan(text: "\n"),
+                  newline(),
                   const TextSpan(text: "Reddit 🤡: "),
                   _link("/u/TheLastGimbus",
                       "https://www.reddit.com/u/TheLastGimbus"),
@@ -76,7 +76,7 @@ class AboutPage extends StatelessWidget {
                   TextSpan(text: l.pageAboutMeOpenSource),
                   _link("https://github.com/TheLastGimbus/FreeBuddy/"),
                   // TODO: Actually write a blog
-                  // const TextSpan(text: "\n"),
+                  // newline(),
                   // TextSpan(text: l.pageAboutMeBlog),
                   // _link("https://the.lastgimbus.com/blog/"),
                 ],
@@ -114,7 +114,7 @@ class AboutPage extends StatelessWidget {
               text: TextSpan(
                 children: [
                   TextSpan(text: l.privacyPolicyText),
-                  const TextSpan(text: "\n"),
+                  newline(),
                   _link(l.privacyPolicyUrl),
                 ],
                 style: tt.bodyMedium,
