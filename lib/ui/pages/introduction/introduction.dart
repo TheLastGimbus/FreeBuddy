@@ -69,9 +69,7 @@ class FreebuddyIntroduction extends StatelessWidget {
                 children: [
                   const Spacer(),
                   TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
+                    onPressed: () => Navigator.of(context).pop<bool>(true),
                     child: const Text('Okay!'),
                   ),
                 ],

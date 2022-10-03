@@ -27,7 +27,13 @@ class _HomePageState extends State<HomePage> {
     // TODO: Get settings async then open intro if needed
     final settings = context.read<AppSettings>();
     if (!(await settings.seenIntroduction.first)) {
-      Navigator.of(context).pushNamed('/introduction');
+      // true from this route means all success and we can set the flag
+      // false means user exited otherwise or smth - anyway, don't set the flag
+      final success =
+          await Navigator.of(context).pushNamed<bool>('/introduction');
+      if (success ?? false) {
+        await settings.setSeenIntroduction(true);
+      }
     }
   }
 
