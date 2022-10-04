@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.0.5 (2022-10-03)
+
+- Add introduction page on first launch
+- Compliant with Google Play privacy policy requirements
+- Sign with debug keys in release mode when `key.properties` doesn't exist (for CI build)
+
 ## 0.0.4 (2022-09-15)
 
 - Fix finding paired device (now using name regex instead of mac)
