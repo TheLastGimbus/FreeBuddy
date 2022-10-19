@@ -31,17 +31,17 @@ dependencies:
     sdk: flutter
 
   # Platform plugins
-  flutter_foreground_task: ^3.8.2
+  flutter_foreground_task: ^3.10.0
   flutter_bluetooth_serial: ^0.4.0
   app_settings: ^4.1.8
-  url_launcher: ^6.1.5
+  url_launcher: ^6.1.6
 
   # Logic libs
   crclib: ^3.0.0
   collection: ^1.16.0
   flutter_bloc: ^8.1.1
   logger: ^1.1.0
-  provider: ^6.0.3
+  provider: ^6.0.4
   streaming_shared_preferences: ^2.0.0
   async: ^2.9.0
 
@@ -55,7 +55,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons: ^0.10.0
-  flutter_native_splash: ^2.2.8
+  flutter_native_splash: ^2.2.11
 
   flutter_lints: ^2.0.1
 

@@ -10,7 +10,7 @@ void foregroundTaskStartCallback() {
 }
 
 Future<void> initForegroundTask() async {
-  await FlutterForegroundTask.init(
+  FlutterForegroundTask.init(
     androidNotificationOptions: AndroidNotificationOptions(
       channelId: 'headphones_foreground_service',
       channelName: 'Headphones connection service',
@@ -26,12 +26,12 @@ Future<void> initForegroundTask() async {
         const NotificationButton(id: 'stopButton', text: 'Stop service'),
       ],
     ),
+    iosNotificationOptions: const IOSNotificationOptions(),
     foregroundTaskOptions: const ForegroundTaskOptions(
       interval: 5000,
       autoRunOnBoot: false,
       allowWifiLock: false,
     ),
-    printDevLog: true,
   );
 }
 
