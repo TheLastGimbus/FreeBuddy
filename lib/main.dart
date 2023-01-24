@@ -44,14 +44,7 @@ class MyApp extends StatelessWidget {
       darkTheme: darkTheme,
       themeMode: ThemeMode.system,
       routes: {
-        '/': (context) => MultiBlocProvider(
-              providers: [
-                BlocProvider<HeadphonesConnectionCubit>(
-                    create: (_) => HeadphonesConnectionCubit(
-                        bluetooth: TheLastBluetooth.instance)),
-              ],
-              child: const HomePage(),
-            ),
+        '/': (context) => const HomePage(),
         '/introduction': (context) => const FreebuddyIntroduction(),
         '/settings': (context) => const SettingsPage(),
         '/settings/about': (context) => const AboutPage(),
