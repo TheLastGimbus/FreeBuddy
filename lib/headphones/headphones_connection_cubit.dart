@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
@@ -51,7 +52,15 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       } finally {
         await _connection?.io.sink.close();
         _connection = null;
-        emit(HeadphonesConnectedClosed());
+        emit(
+          ((await bluetooth.pairedDevices)
+                      .firstWhereOrNull(
+                          (d) => Otter.btDevNameRegex.hasMatch(d.name))
+                      ?.isConnected ??
+                  false)
+              ? HeadphonesConnectedClosed()
+              : HeadphonesDisconnected(),
+        );
       }
     });
   }
