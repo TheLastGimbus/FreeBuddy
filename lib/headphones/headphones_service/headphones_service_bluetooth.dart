@@ -4,7 +4,7 @@ import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
 import '../headphones_connection_cubit.dart';
-import '../mbb.dart';
+import '../huawei/mbb.dart';
 import 'headphones_service_base.dart';
 
 class HeadphonesConnectedOpenPlugin implements HeadphonesConnectedOpen {

@@ -1,4 +1,4 @@
-class Otter {
+class OtterConst {
   static const String name = 'Huawei Freebuds 4i';
 
   @Deprecated("This seems to not work... use [btDevNameRegex] instead")

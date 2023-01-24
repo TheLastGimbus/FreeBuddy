@@ -8,7 +8,7 @@ import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import 'headphones_service/headphones_service_base.dart';
 import 'headphones_service/headphones_service_bluetooth.dart';
-import 'otter_constants.dart';
+import 'huawei/otter/otter_constants.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
   final TheLastBluetooth bluetooth;
@@ -25,8 +25,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       return;
     }
     if (_connection != null) return; // already connected and working, skip
-    final otter =
-        devices.firstWhereOrNull((d) => Otter.btDevNameRegex.hasMatch(d.name));
+    final otter = devices
+        .firstWhereOrNull((d) => OtterConst.btDevNameRegex.hasMatch(d.name));
     if (otter == null) emit(HeadphonesNotPaired());
     if (!(otter?.isConnected ?? false)) {
       // not connected to device at all
@@ -48,7 +48,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       emit(
         ((await bluetooth.pairedDevices)
                     .firstWhereOrNull(
-                        (d) => Otter.btDevNameRegex.hasMatch(d.name))
+                        (d) => OtterConst.btDevNameRegex.hasMatch(d.name))
                     ?.isConnected ??
                 false)
             ? HeadphonesConnectedClosed()
