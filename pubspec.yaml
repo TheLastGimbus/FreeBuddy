@@ -36,6 +36,7 @@ dependencies:
     git:
       url: https://github.com/TheLastGimbus/the_last_bluetooth.git
       ref: master
+    # path: "../the_last_bluetooth"
   app_settings: ^4.1.8
   url_launcher: ^6.1.6
 

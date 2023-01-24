@@ -27,6 +27,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
         emit(HeadphonesBluetoothDisabled());
         return;
       }
+      if (_connection != null) return; // already connected and working, skip
       BluetoothDevice? otter;
       try {
         otter =
@@ -39,7 +40,13 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       emit(HeadphonesConnectedPlugin(_connection!));
       logg.d(
           "connected to otter: isBroadcast: ${_connection!.io.stream.isBroadcast}");
-      // todo: detect disconnection and only then run this loop
+      await _connection!.io.stream.listen((event) {}).asFuture();
+      // when device disconnects, future completes and we free the
+      // hopefully this happens *before* next stream event with data 🤷
+      _connection = null;
+      emit(HeadphonesDisconnected());
+      // note: now, when rfcomm closes for example because of huawei app,
+      // users get "disconnected" screen. TODO: Give them a "connect" button
     });
   }
 

@@ -430,7 +430,7 @@ packages:
     description:
       path: "."
       ref: master
-      resolved-ref: b26223a55bbdb22afba10544ec83efca3b68416e
+      resolved-ref: d786cc8ade6223b4d58af4dcda7ae9a7d814aaae
       url: "https://github.com/TheLastGimbus/the_last_bluetooth.git"
     source: git
     version: "0.0.1"
