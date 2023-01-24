@@ -132,13 +132,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "8.1.1"
-  flutter_bluetooth_serial:
-    dependency: "direct main"
-    description:
-      name: flutter_bluetooth_serial
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.4.0"
   flutter_foreground_task:
     dependency: "direct main"
     description:
@@ -432,6 +425,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.12"
+  the_last_bluetooth:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: master
+      resolved-ref: b26223a55bbdb22afba10544ec83efca3b68416e
+      url: "https://github.com/TheLastGimbus/the_last_bluetooth.git"
+    source: git
+    version: "0.0.1"
   tuple:
     dependency: transitive
     description:

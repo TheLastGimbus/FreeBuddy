@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
+import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import 'headphones/headphones_connection_cubit.dart';
 import 'ui/app_settings.dart';
@@ -23,7 +23,7 @@ void main() {
         providers: [
           BlocProvider<HeadphonesConnectionCubit>(
               create: (_) => HeadphonesConnectionCubit(
-                  bluetooth: FlutterBluetoothSerial.instance)),
+                  bluetooth: TheLastBluetooth.instance)),
         ],
         child: const MyApp(),
       ),
@@ -48,7 +48,7 @@ class MyApp extends StatelessWidget {
               providers: [
                 BlocProvider<HeadphonesConnectionCubit>(
                     create: (_) => HeadphonesConnectionCubit(
-                        bluetooth: FlutterBluetoothSerial.instance)),
+                        bluetooth: TheLastBluetooth.instance)),
               ],
               child: const HomePage(),
             ),

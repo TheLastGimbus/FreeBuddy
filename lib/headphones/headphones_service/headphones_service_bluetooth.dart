@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
 import '../headphones_connection_cubit.dart';
@@ -15,9 +15,8 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
   final _batteryStreamCtrl =
       StreamController<HeadphonesBatteryData>.broadcast();
 
-  HeadphonesConnectedPlugin(this.connection,
-      {required Future<dynamic> Function() onDone}) {
-    connection.input!.listen(
+  HeadphonesConnectedPlugin(this.connection) {
+    connection.io.stream.listen(
       (event) {
         List<MbbCommand>? comms;
         try {
@@ -63,8 +62,6 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
           }
         }
       },
-      onDone: () async => await onDone(),
-      onError: (e) async => await onDone(),
     );
     _initRequestInfo();
   }
@@ -97,13 +94,13 @@ class HeadphonesConnectedPlugin implements HeadphonesConnected {
     await _sendMbb(comm);
   }
 
+  // TODO: some .flush() for those two
+
   Future<void> _sendMbb(MbbCommand comm) async {
-    connection.output.add(comm.toPayload());
-    await connection.output.allSent;
+    connection.io.sink.add(comm.toPayload());
   }
 
   Future<void> sendCustomMbbCommand(MbbCommand comm) async {
-    connection.output.add(comm.toPayload());
-    await connection.output.allSent;
+    connection.io.sink.add(comm.toPayload());
   }
 }

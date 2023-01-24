@@ -1,9 +1,8 @@
 import 'dart:async';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../logger.dart';
 import 'headphones_service/headphones_service_base.dart';
@@ -11,58 +10,37 @@ import 'headphones_service/headphones_service_bluetooth.dart';
 import 'otter_constants.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
-  final FlutterBluetoothSerial bluetooth;
+  final TheLastBluetooth bluetooth;
   BluetoothConnection? _connection;
 
-  StreamSubscription? _connectingStream;
+  // todo: make this professional
+  static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
 
   void _setupTryConnectingStream() {
-    // TODO: Optimize and shrink this even more
-    _connectingStream = loopStream((computationCount) async {
-      // TODO: Pause and resume stream based on that
-      if (!((await bluetooth.isEnabled) ?? false)) {
+    bluetooth.adapterInfoStream.listen((adapterInfo) {
+      if (!adapterInfo.isEnabled) {
+        emit(HeadphonesBluetoothDisabled());
+      }
+    });
+    bluetooth.pairedDevicesStream.listen((devices) async {
+      if (!await bluetooth.isEnabled()) {
         emit(HeadphonesBluetoothDisabled());
         return;
       }
-      final devs = await bluetooth.getBondedDevices();
-      emit(
-        devs.any((d) => Otter.btDevNameRegex.hasMatch(d.name ?? ""))
-            ? HeadphonesDisconnected()
-            : HeadphonesNotPaired(),
-      );
+      BluetoothDevice? otter;
       try {
-        final otter = devs.firstWhere((d) =>
-            Otter.btDevNameRegex.hasMatch(d.name ?? "") &&
-            d.isBonded &&
-            d.isConnected);
-
-        emit(HeadphonesConnecting());
-        _connection = await BluetoothConnection.toAddress(otter.address);
-        emit(HeadphonesConnectedPlugin(
-          _connection!,
-          onDone: () async {
-            logg.d('headphones done!');
-            await _connection!.finish();
-            _connection!.dispose();
-            _connection = null;
-            emit(HeadphonesDisconnected());
-            await Future.delayed(const Duration(seconds: 1));
-            _connectingStream?.resume();
-          },
-        ));
-        _connectingStream?.pause();
-      } on StateError catch (_) {
-      } on PlatformException catch (e, s) {
-        await _connection?.finish();
-        _connection?.dispose();
-        _connection = null;
-        logg.e('Platform error in connection loop', e, s);
-        emit(HeadphonesDisconnected());
-      }
-      if (_connection == null) {
-        await Future.delayed(const Duration(milliseconds: 100));
-      }
-    }).listen((_) {});
+        otter =
+            devices.firstWhere((d) => Otter.btDevNameRegex.hasMatch(d.name));
+      } on StateError catch (_) {}
+      emit(otter == null ? HeadphonesNotPaired() : HeadphonesDisconnected());
+      if (otter != null && !otter.isConnected) return;
+      emit(HeadphonesConnecting());
+      _connection = await bluetooth.connectRfcomm(otter!, sppUuid);
+      emit(HeadphonesConnectedPlugin(_connection!));
+      logg.d(
+          "connected to otter: isBroadcast: ${_connection!.io.stream.isBroadcast}");
+      // todo: detect disconnection and only then run this loop
+    });
   }
 
   HeadphonesConnectionCubit({required this.bluetooth})
@@ -70,8 +48,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
     _setupTryConnectingStream();
   }
 
-  Future<bool> enableBluetooth() async =>
-      (await bluetooth.requestEnable()) ?? false;
+  // TODO:
+  Future<bool> enableBluetooth() async => false;
 
   Future<void> openBluetoothSettings() =>
       AppSettings.openBluetoothSettings(asAnotherTask: true);
@@ -93,47 +71,4 @@ abstract class HeadphonesConnected extends HeadphonesObject {
   Stream<HeadphonesAncMode> get ancMode;
 
   Future<void> setAncMode(HeadphonesAncMode mode);
-}
-
-/// Stream that keeps executing [computation] in a loop, while giving control
-/// to pause and close it :rainbow:
-///
-/// It's key difference between, for example, [Stream.periodic] is that it
-/// waits for (async) computation to complete before starting again
-///
-/// Will emit whatever is returned by [computation]
-Stream loopStream<T>(Future<T> Function(int computationCount) computation) {
-  var computationCount = 0;
-  var run = false;
-  late StreamController ctrl;
-  loop() async {
-    while (true) {
-      if (!run) break;
-      try {
-        ctrl.add(await computation(computationCount++));
-      } catch (e, s) {
-        ctrl.addError(e, s);
-      }
-    }
-  }
-
-  ctrl = StreamController(
-    onListen: () {
-      run = true;
-      loop();
-    },
-    onPause: () => run = false,
-    onResume: () {
-      if (!run) {
-        run = true;
-        loop();
-      }
-    },
-    onCancel: () {
-      run = false;
-      ctrl.close();
-    },
-  );
-
-  return ctrl.stream;
 }
