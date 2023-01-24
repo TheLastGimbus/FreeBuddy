@@ -9,6 +9,12 @@ extension _ListUtils on List {
   }
 }
 
+extension _MapUtils on Map {
+  bool elementsEqual(Map other) {
+    return const MapEquality().equals(this, other);
+  }
+}
+
 /// Helper class for Mbb protocol used to communicate with headphones
 class Mbb {
   // plus 3 magic bytes + 2 command bytes
@@ -23,10 +29,22 @@ class Mbb {
     return Uint8List.fromList(bytes.toList());
   }
 
+  static Uint8List _getDataFromArgs(Map<int, List<int>> args) {
+    final data = <int>[];
+    args.forEach((key, value) {
+      data.add(key);
+      data.add(value.length);
+      data.addAll(value);
+    });
+    return Uint8List.fromList(data);
+  }
+
   /// Get Mbb data to be sent to headphones
-  static Uint8List getPayload(int serviceId, int commandId, List<int> data) {
+  static Uint8List getPayload(
+      int serviceId, int commandId, Map<int, List<int>> args) {
     assert(serviceId >= 0 && serviceId <= 255);
     assert(commandId >= 0 && commandId <= 255);
+    final data = _getDataFromArgs(args);
     final byteLength = data.length + 2 + 1; // +2->checksums +1->*because*
     assert(byteLength <= 255);
     final bytesList = [
@@ -71,13 +89,13 @@ class Mbb {
 class MbbCommand {
   final int serviceId;
   final int commandId;
-  final List<int> dataBytes;
+  final Map<int, List<int>> args;
 
-  const MbbCommand(this.serviceId, this.commandId, this.dataBytes);
+  const MbbCommand(this.serviceId, this.commandId, this.args);
 
   @override
   String toString() => 'MbbCommand(serviceId: $serviceId, '
-      'commandId: $commandId, dataBytes: $dataBytes)';
+      'commandId: $commandId, dataArgs: $args)';
 
   @override
   bool operator ==(Object other) =>
@@ -86,14 +104,13 @@ class MbbCommand {
           runtimeType == other.runtimeType &&
           serviceId == other.serviceId &&
           commandId == other.commandId &&
-          dataBytes.elementsEqual(other.dataBytes);
+          args.elementsEqual(other.args);
 
   @override
-  int get hashCode =>
-      serviceId.hashCode ^ commandId.hashCode ^ dataBytes.hashCode;
+  int get hashCode => serviceId.hashCode ^ commandId.hashCode ^ args.hashCode;
 
   /// Convert to binary data to be sent to headphones
-  Uint8List toPayload() => Mbb.getPayload(serviceId, commandId, dataBytes);
+  Uint8List toPayload() => Mbb.getPayload(serviceId, commandId, args);
 
   static List<MbbCommand> fromPayload(
     Uint8List payload, {
@@ -125,14 +142,31 @@ class MbbCommand {
       final serviceId = divPay[4];
       final commandId = divPay[5];
       final dataBytes = divPay.sublist(6, divPay.length - 2);
-      cmds.add(MbbCommand(serviceId, commandId, dataBytes));
+
+      final args = <int, List<int>>{};
+      var offset = 0;
+      while (offset < dataBytes.length) {
+        final argId = dataBytes[offset];
+        final argLength = dataBytes[offset + 1];
+        // TODO: Check if argLength is valid and not too big
+        final argData = dataBytes.sublist(offset + 2, offset + 2 + argLength);
+        offset += 2 + argLength;
+        args[argId] = argData;
+      }
+      cmds.add(MbbCommand(serviceId, commandId, args));
     }
     return cmds;
   }
 
-  static const ancNoiseCancel = MbbCommand(43, 4, [1, 2, 1, 255]);
-  static const ancOff = MbbCommand(43, 4, [1, 2, 0, 0]);
-  static const ancAware = MbbCommand(43, 4, [1, 2, 2, 255]);
-  static const requestBattery = MbbCommand(1, 8, []);
-  static const requestAnc = MbbCommand(43, 42, []);
+  static const ancNoiseCancel = MbbCommand(43, 4, {
+    1: [1, 255]
+  });
+  static const ancOff = MbbCommand(43, 4, {
+    1: [0, 0]
+  });
+  static const ancAware = MbbCommand(43, 4, {
+    1: [2, 255]
+  });
+  static const requestBattery = MbbCommand(1, 8, {});
+  static const requestAnc = MbbCommand(43, 42, {});
 }

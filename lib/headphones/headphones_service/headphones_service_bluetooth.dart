@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
@@ -30,11 +29,11 @@ class HeadphonesConnectedOpenPlugin implements HeadphonesConnectedOpen {
 
           if (comm.serviceId == 43 &&
               comm.commandId == 42 &&
-              listEquals(comm.dataBytes.sublist(0, 2), [1, 2])) {
+              comm.args.containsKey(1)) {
             late HeadphonesAncMode newMode;
             // TODO: Add some constants for this globally
             // because 0 1 and 2 seem to be constant bytes representing the modes
-            switch (comm.dataBytes[3]) {
+            switch (comm.args[1]?[1] ?? -1) {
               case 1:
                 newMode = HeadphonesAncMode.noiseCancel;
                 break;
@@ -44,20 +43,28 @@ class HeadphonesConnectedOpenPlugin implements HeadphonesConnectedOpen {
               case 2:
                 newMode = HeadphonesAncMode.awareness;
                 break;
+              default:
+                logg.e("Unknown ANC mode: ${comm.args[1]}");
+                continue;
             }
             _ancStreamCtrl.add(newMode);
           }
           if (comm.serviceId == 1 &&
               (comm.commandId == 39 || comm.commandId == 8) &&
-              comm.dataBytes.length == 13) {
-            final b = comm.dataBytes.sublist(5, 8);
+              comm.args.length == 3) {
+            final level = comm.args[2];
+            final status = comm.args[3];
+            if (level == null || status == null) {
+              logg.e("Battery data is missing level or status");
+              continue;
+            }
             _batteryStreamCtrl.add(HeadphonesBatteryData(
-              b[0] == 0 ? null : b[0],
-              b[1] == 0 ? null : b[1],
-              b[2] == 0 ? null : b[2],
-              comm.dataBytes[10] == 1,
-              comm.dataBytes[11] == 1,
-              comm.dataBytes[12] == 1,
+              level[0] == 0 ? null : level[0],
+              level[1] == 0 ? null : level[1],
+              level[2] == 0 ? null : level[2],
+              status[0] == 1,
+              status[1] == 1,
+              status[2] == 1,
             ));
           }
         }

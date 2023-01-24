@@ -34,7 +34,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
             onPressed: () {
               (headphones as HeadphonesConnectedOpenPlugin)
                   .sendCustomMbbCommand(
-                const MbbCommand(1, 8, []),
+                const MbbCommand(1, 8, {}),
               );
             },
             child: const Text("custom"),
