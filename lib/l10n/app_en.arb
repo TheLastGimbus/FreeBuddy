@@ -10,6 +10,8 @@
   "pageHomeBluetoothDisabledEnableOpenSettings": "Open bluetooth settings to enable",
   "pageHomeNotPaired": "You don't have Freebuds 4i paired to your phone :/",
   "pageHomeNotPairedPairOpenSettings": "Open bluetooth settings to pair",
+  "pageHomeConnectedClosed": "Headphones are connected, but not with FreeBuddy :/",
+  "pageHomeConnectedClosedConnect": "Connect to headphones",
   "settings": "Settings",
   "privacyPolicy": "Privacy policy",
   "privacyPolicyTitle": "\"Privacy policy\"",

@@ -10,7 +10,7 @@ import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
 
 class HeadphonesControlsWidget extends StatelessWidget {
-  final HeadphonesConnected headphones;
+  final HeadphonesConnectedOpen headphones;
 
   const HeadphonesControlsWidget({Key? key, required this.headphones})
       : super(key: key);
@@ -29,10 +29,11 @@ class HeadphonesControlsWidget extends StatelessWidget {
             filterQuality: FilterQuality.none,
           ),
         ),
-        if (kDebugMode && headphones is HeadphonesConnectedPlugin)
+        if (kDebugMode && headphones is HeadphonesConnectedOpenPlugin)
           TextButton(
             onPressed: () {
-              (headphones as HeadphonesConnectedPlugin).sendCustomMbbCommand(
+              (headphones as HeadphonesConnectedOpenPlugin)
+                  .sendCustomMbbCommand(
                 const MbbCommand(1, 8, []),
               );
             },

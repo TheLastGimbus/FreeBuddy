@@ -8,14 +8,14 @@ import '../headphones_connection_cubit.dart';
 import '../mbb.dart';
 import 'headphones_service_base.dart';
 
-class HeadphonesConnectedPlugin implements HeadphonesConnected {
+class HeadphonesConnectedOpenPlugin implements HeadphonesConnectedOpen {
   final BluetoothConnection connection;
 
   final _ancStreamCtrl = StreamController<HeadphonesAncMode>.broadcast();
   final _batteryStreamCtrl =
       StreamController<HeadphonesBatteryData>.broadcast();
 
-  HeadphonesConnectedPlugin(this.connection) {
+  HeadphonesConnectedOpenPlugin(this.connection) {
     connection.io.stream.listen(
       (event) {
         List<MbbCommand>? comms;

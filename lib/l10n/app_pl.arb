@@ -10,6 +10,8 @@
   "pageHomeBluetoothDisabledEnableOpenSettings": "Otwórz ustawienia żeby włączyć",
   "pageHomeNotPaired": "Nie ma sparowanych Huawei Freebuds 4i :/",
   "pageHomeNotPairedPairOpenSettings": "Otwórz ustawienia bluetooth żeby sparować",
+  "pageHomeConnectedClosed": "Słuchawki są połączone, ale nie z FreeBuddy :/",
+  "pageHomeConnectedClosedConnect": "Połącz ze słuchawkami",
   "settings": "Ustawienia",
   "privacyPolicy": "Polityka prywatności",
   "privacyPolicyTitle": "\"Polityka prywatności\"",

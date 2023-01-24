@@ -33,21 +33,46 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
         otter =
             devices.firstWhere((d) => Otter.btDevNameRegex.hasMatch(d.name));
       } on StateError catch (_) {}
-      emit(otter == null ? HeadphonesNotPaired() : HeadphonesDisconnected());
-      if (otter != null && !otter.isConnected) return;
+      if (otter == null) emit(HeadphonesNotPaired());
+      if (!(otter?.isConnected ?? false)) {
+        // not connected to device at all
+        emit(HeadphonesDisconnected());
+        return;
+      }
       emit(HeadphonesConnecting());
       _connection = await bluetooth.connectRfcomm(otter!, sppUuid);
-      emit(HeadphonesConnectedPlugin(_connection!));
+      emit(HeadphonesConnectedOpenPlugin(_connection!));
       logg.d(
           "connected to otter: isBroadcast: ${_connection!.io.stream.isBroadcast}");
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
+      // so that it nicely goes again and we emit HeadphonesDisconnected()
       _connection = null;
-      emit(HeadphonesDisconnected());
-      // note: now, when rfcomm closes for example because of huawei app,
-      // users get "disconnected" screen. TODO: Give them a "connect" button
+      emit(HeadphonesConnectedClosed());
     });
+  }
+
+  Future<bool> connect([List<BluetoothDevice>? devices]) async {
+    devices ??= await bluetooth.pairedDevices;
+    if (_connection != null) {
+      // already connected and working, skip
+      emit(HeadphonesConnectedOpenPlugin(_connection!));
+      return true;
+    }
+    BluetoothDevice? otter;
+    try {
+      otter = devices.firstWhere((d) => Otter.btDevNameRegex.hasMatch(d.name));
+    } on StateError catch (_) {}
+    if (otter == null) emit(HeadphonesNotPaired());
+    if (!(otter?.isConnected ?? false)) {
+      emit(HeadphonesDisconnected());
+      return false;
+    }
+    emit(HeadphonesConnecting());
+    _connection = await bluetooth.connectRfcomm(otter!, sppUuid);
+    emit(HeadphonesConnectedOpenPlugin(_connection!));
+    return true;
   }
 
   HeadphonesConnectionCubit({required this.bluetooth})
@@ -72,10 +97,12 @@ class HeadphonesDisconnected extends HeadphonesObject {}
 
 class HeadphonesConnecting extends HeadphonesObject {}
 
-abstract class HeadphonesConnected extends HeadphonesObject {
+abstract class HeadphonesConnectedOpen extends HeadphonesObject {
   Stream<HeadphonesBatteryData> get batteryData;
 
   Stream<HeadphonesAncMode> get ancMode;
 
   Future<void> setAncMode(HeadphonesAncMode mode);
 }
+
+class HeadphonesConnectedClosed extends HeadphonesObject {}

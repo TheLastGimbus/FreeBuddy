@@ -5,6 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../headphones/headphones_connection_cubit.dart';
 import '../../app_settings.dart';
 import 'bluetooth_disabled_info_widget.dart';
+import 'connected_closed_widget.dart';
 import 'headphones_controls_widget.dart';
 import 'not_paired_info_widget.dart';
 
@@ -53,10 +54,15 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: BlocBuilder<HeadphonesConnectionCubit, HeadphonesObject>(
           builder: (context, state) {
-            if (state is HeadphonesConnected) {
+            if (state is HeadphonesConnectedOpen) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: HeadphonesControlsWidget(headphones: state),
+              );
+            } else if (state is HeadphonesConnectedClosed) {
+              return const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: ConnectedClosedWidget(),
               );
             } else if (state is HeadphonesConnecting) {
               return Text(l.pageHomeConnecting);
