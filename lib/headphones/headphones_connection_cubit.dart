@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import 'headphones_service/headphones_service_base.dart';
-import 'headphones_service/headphones_service_bluetooth.dart';
+import 'huawei/otter/headphones_impl_otter.dart';
 import 'huawei/otter/otter_constants.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {

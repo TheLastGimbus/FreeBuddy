@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import '../../../headphones/headphones_connection_cubit.dart';
 import '../../../headphones/headphones_service/headphones_service_base.dart';
-import '../../../headphones/headphones_service/headphones_service_bluetooth.dart';
 import '../../../headphones/huawei/mbb.dart';
+import '../../../headphones/huawei/otter/headphones_impl_otter.dart';
 import '../pretty_rounded_container_widget.dart';
 import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
