@@ -24,7 +24,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
       children: [
         Expanded(
           child: Image.asset(
-            'sluchaweczki.png',
+            'assets/sluchaweczki.png',
             fit: BoxFit.contain,
             filterQuality: FilterQuality.none,
           ),
