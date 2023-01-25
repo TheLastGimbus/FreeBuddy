@@ -30,6 +30,13 @@ So I got mad and decided to make my own... and here it is 🌈
 | Windoza  | TODO: Windoza build |
 | Linux    | TODO: L00nix build  |
 
+### Donating
+
+I've spent a lot of time and love making this app 💖 if you like it, you can give me a tip 😇
+
+[![Donate using ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A6HO71P)
+[![Donate using Liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/TheLastGimbus/donate)
+[![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=B8LS5DS92EPQE)
 
 ## Feedback and contact
 
@@ -37,11 +44,5 @@ If you have *ANY* questions, suggestions, or just want to chat, feel free to con
 
 - Twitter 🐦: [@TheLastGimbus](https://twitter.com/TheLastGimbus)
 - Reddit 🤡: [/u/TheLastGimbus](https://www.reddit.com/u/TheLastGimbus)
-
-### Donating
-
-I've spent a lot of time and love making this app 💖 if you like it, you can give me small tip on paypal: https://www.paypal.me/TheLastGimbus
-
-
 
 <sub>Google Play and the Google Play logo are trademarks of Google LLC.</sub>
