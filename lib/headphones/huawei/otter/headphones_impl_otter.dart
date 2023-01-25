@@ -86,13 +86,8 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
     await _sendMbb(MbbCommand.requestAnc);
   }
 
-  // TODO: some .flush() for those two
-
+  // TODO: some .flush() for this
   Future<void> _sendMbb(MbbCommand comm) async {
-    connection.sink.add(comm.toPayload());
-  }
-
-  Future<void> sendCustomMbbCommand(MbbCommand comm) async {
     connection.sink.add(comm.toPayload());
   }
 
