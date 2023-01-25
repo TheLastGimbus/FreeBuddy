@@ -28,6 +28,9 @@ class _HomePageState extends State<HomePage> {
     // TODO: Get settings async then open intro if needed
     final settings = context.read<AppSettings>();
     if (!(await settings.seenIntroduction.first)) {
+      // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+      // ignore: use_build_context_synchronously
+      if (!context.mounted) return;
       // true from this route means all success and we can set the flag
       // false means user exited otherwise or smth - anyway, don't set the flag
       final success =

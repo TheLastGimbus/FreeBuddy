@@ -50,7 +50,7 @@ class BatteryCircleWidget extends StatelessWidget {
         const SizedBox(height: 4),
         Text(
           '${level ?? ' - '}%${isCharging ? '⚡' : ''}',
-          style: tt.subtitle1,
+          style: tt.titleMedium,
         ),
       ],
     );
