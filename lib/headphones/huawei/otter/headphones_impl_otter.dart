@@ -1,21 +1,22 @@
 import 'dart:async';
+import 'dart:typed_data';
 
-import 'package:the_last_bluetooth/the_last_bluetooth.dart';
+import 'package:stream_channel/stream_channel.dart';
 
 import '../../../logger.dart';
 import '../../headphones_connection_cubit.dart';
 import '../../headphones_service/headphones_service_base.dart';
 import '../mbb.dart';
 
-class HeadphonesConnectedOpenPlugin implements HeadphonesConnectedOpen {
-  final BluetoothConnection connection;
+class HeadphonesImplOtter implements HeadphonesConnectedOpen {
+  final StreamChannel<Uint8List> connection;
 
   final _ancStreamCtrl = StreamController<HeadphonesAncMode>.broadcast();
   final _batteryStreamCtrl =
       StreamController<HeadphonesBatteryData>.broadcast();
 
-  HeadphonesConnectedOpenPlugin(this.connection) {
-    connection.io.stream.listen((event) {
+  HeadphonesImplOtter(this.connection) {
+    connection.stream.listen((event) {
       List<MbbCommand>? commands;
       try {
         commands = MbbCommand.fromPayload(event);
@@ -80,11 +81,11 @@ class HeadphonesConnectedOpenPlugin implements HeadphonesConnectedOpen {
   // TODO: some .flush() for those two
 
   Future<void> _sendMbb(MbbCommand comm) async {
-    connection.io.sink.add(comm.toPayload());
+    connection.sink.add(comm.toPayload());
   }
 
   Future<void> sendCustomMbbCommand(MbbCommand comm) async {
-    connection.io.sink.add(comm.toPayload());
+    connection.sink.add(comm.toPayload());
   }
 
   @override

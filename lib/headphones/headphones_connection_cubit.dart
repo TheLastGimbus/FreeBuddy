@@ -36,7 +36,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
     emit(HeadphonesConnecting());
     try {
       _connection = await bluetooth.connectRfcomm(otter!, sppUuid);
-      emit(HeadphonesConnectedOpenPlugin(_connection!));
+      emit(HeadphonesImplOtter(_connection!.io));
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷

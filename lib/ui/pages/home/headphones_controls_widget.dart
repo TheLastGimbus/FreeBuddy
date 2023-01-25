@@ -29,11 +29,10 @@ class HeadphonesControlsWidget extends StatelessWidget {
             filterQuality: FilterQuality.none,
           ),
         ),
-        if (kDebugMode && headphones is HeadphonesConnectedOpenPlugin)
+        if (kDebugMode && headphones is HeadphonesImplOtter)
           TextButton(
             onPressed: () {
-              (headphones as HeadphonesConnectedOpenPlugin)
-                  .sendCustomMbbCommand(
+              (headphones as HeadphonesImplOtter).sendCustomMbbCommand(
                 const MbbCommand(1, 8, {}),
               );
             },
