@@ -11,6 +11,11 @@ import '../mbb.dart';
 class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   final StreamChannel<Uint8List> connection;
 
+  // IMPORTANT: Because those are broadcasts, we need to use expectLater()
+  // in tests. We also don't get the latest element when listening to this in
+  // new screen/whatever ://
+  // TODO: Maybe use https://pub.dev/packages/rxdart for better broadcast
+  // https://stackoverflow.com/a/56640595
   final _ancStreamCtrl = StreamController<HeadphonesAncMode>.broadcast();
   final _batteryStreamCtrl =
       StreamController<HeadphonesBatteryData>.broadcast();
@@ -32,6 +37,9 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
               'Error while parsing mbb cmd - (probably missing bytes)', e, s);
         }
       }
+    }, onDone: () async {
+      _ancStreamCtrl.close();
+      _batteryStreamCtrl.close();
     });
     _initRequestInfo();
   }

@@ -62,7 +62,6 @@ void main() {
       }
       expect(
         otter.ancMode,
-        // TODO: make impl close stream so we can use proper matcher
         emitsInOrder([
           HeadphonesAncMode.noiseCancel,
           HeadphonesAncMode.off,
@@ -79,8 +78,19 @@ void main() {
       }).toPayload());
       expect(
         otter.batteryData,
-        emitsThrough(HeadphonesBatteryData(35, 70, 99, true, false, true)),
+        emits(HeadphonesBatteryData(35, 70, 99, true, false, true)),
       );
+    });
+    test("Properly closes", () async {
+      expectLater(
+        otter.ancMode,
+        emitsInOrder([HeadphonesAncMode.noiseCancel, emitsDone]),
+      );
+      expectLater(otter.batteryData, emitsDone);
+      inputCtrl.add(const MbbCommand(43, 42, {
+        1: [4, 1]
+      }).toPayload());
+      await inputCtrl.close();
     });
   });
 }
