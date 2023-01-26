@@ -52,8 +52,8 @@ class AboutPage extends StatelessWidget {
             smallSpace(),
             Text(l.pageAboutMeAnyQuestions),
             smallSpace(),
-            RichText(
-              text: TextSpan(
+            Text.rich(
+              TextSpan(
                 children: [
                   const TextSpan(text: "Email 📧: "),
                   _link("mateusz.soszynski.2003@gmail.com",
@@ -73,8 +73,8 @@ class AboutPage extends StatelessWidget {
               ),
             ),
             smallSpace(),
-            RichText(
-              text: TextSpan(
+            Text.rich(
+              TextSpan(
                 children: [
                   TextSpan(text: l.pageAboutMeOpenSource),
                   newline(),
@@ -84,15 +84,14 @@ class AboutPage extends StatelessWidget {
                   // TextSpan(text: l.pageAboutMeBlog),
                   // _link("https://the.lastgimbus.com/blog/"),
                 ],
-                style: tt.bodyMedium,
               ),
             ),
             divider(),
             Text(l.pageAboutMentionsHeader, style: tt.headlineMedium),
             smallSpace(),
             Text(l.pageAboutMentionsPeopleHeader, style: tt.headlineSmall),
-            RichText(
-              text: TextSpan(
+            Text.rich(
+              TextSpan(
                 children: [
                   TextSpan(text: " - ${l.pageAboutMentionsPeopleStreet}"),
                   newline(),
@@ -102,8 +101,8 @@ class AboutPage extends StatelessWidget {
             ),
             smallSpace(),
             Text(l.pageAboutMentionsTechHeader, style: tt.headlineSmall),
-            RichText(
-              text: TextSpan(
+            Text.rich(
+              TextSpan(
                 children: [
                   const TextSpan(text: " - Flutter 🐦"),
                   newline(),
@@ -114,14 +113,13 @@ class AboutPage extends StatelessWidget {
             divider(),
             Text(l.privacyPolicyTitle, style: t.textTheme.headlineSmall),
             smallSpace(),
-            RichText(
-              text: TextSpan(
+            Text.rich(
+              TextSpan(
                 children: [
                   TextSpan(text: l.privacyPolicyText),
                   newline(),
                   _link(l.privacyPolicyUrl),
                 ],
-                style: tt.bodyMedium,
               ),
             ),
             divider(),
