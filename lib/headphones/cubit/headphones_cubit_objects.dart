@@ -10,6 +10,18 @@ class HeadphonesDisconnected extends HeadphonesObject {}
 
 class HeadphonesConnecting extends HeadphonesObject {}
 
+/// Base class for interacting with headphones. UI/other logic shout *not*
+/// care what underlying class is implementing it so we can test nicely with
+/// mocks
+///
+/// All data - about battery, modes, settings etc should be a separate stream,
+/// so we can nicely use [StreamBuildes]s everywhere
+///
+/// Moreover, all of those streams should be implemented with
+/// [rxdart](https://pub.dev/packages/rxdart#rx-observables-vs-dart-streams)'s
+/// [BehaviorSubject]s, so latest value is always available for all listeners
+// (Previously, there were often grayed out values because we had to wait for
+// stream to emit again)
 abstract class HeadphonesConnectedOpen extends HeadphonesObject {
   Stream<HeadphonesBatteryData> get batteryData;
 

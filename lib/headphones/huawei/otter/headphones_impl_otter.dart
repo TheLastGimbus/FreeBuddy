@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';
 
 import '../../../logger.dart';
@@ -16,10 +17,9 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   // new screen/whatever ://
   // TODO: Maybe use https://pub.dev/packages/rxdart for better broadcast
   // https://stackoverflow.com/a/56640595
-  final _ancStreamCtrl = StreamController<HeadphonesAncMode>.broadcast();
-  final _batteryStreamCtrl =
-      StreamController<HeadphonesBatteryData>.broadcast();
-  final _autoPauseStreamCtrl = StreamController<bool>.broadcast();
+  final _ancStreamCtrl = BehaviorSubject<HeadphonesAncMode>();
+  final _batteryStreamCtrl = BehaviorSubject<HeadphonesBatteryData>();
+  final _autoPauseStreamCtrl = BehaviorSubject<bool>();
 
   HeadphonesImplOtter(this.connection) {
     connection.stream.listen((event) {

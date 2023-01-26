@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rxdart/rxdart.dart';
 
 import '../headphones_service/headphones_service_base.dart';
 import 'headphones_connection_cubit.dart';
@@ -21,9 +22,9 @@ class HeadphonesMockCubit extends Cubit<HeadphonesObject>
 }
 
 class HeadphonesMock implements HeadphonesConnectedOpen {
-  final _batteryData = StreamController<HeadphonesBatteryData>.broadcast();
-  final _ancMode = StreamController<HeadphonesAncMode>.broadcast();
-  final _autoPause = StreamController<bool>.broadcast();
+  final _batteryData = BehaviorSubject<HeadphonesBatteryData>();
+  final _ancMode = BehaviorSubject<HeadphonesAncMode>();
+  final _autoPause = BehaviorSubject<bool>();
 
   HeadphonesMock() {
     Stream.periodic(
