@@ -12,13 +12,8 @@ import '../mbb.dart';
 class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   final StreamChannel<Uint8List> connection;
 
-  // IMPORTANT: Because those are broadcasts, we need to use expectLater()
-  // in tests. We also don't get the latest element when listening to this in
-  // new screen/whatever ://
-  // TODO: Maybe use https://pub.dev/packages/rxdart for better broadcast
-  // https://stackoverflow.com/a/56640595
-  final _ancStreamCtrl = BehaviorSubject<HeadphonesAncMode>();
   final _batteryStreamCtrl = BehaviorSubject<HeadphonesBatteryData>();
+  final _ancStreamCtrl = BehaviorSubject<HeadphonesAncMode>();
   final _autoPauseStreamCtrl = BehaviorSubject<bool>();
 
   HeadphonesImplOtter(this.connection) {
@@ -39,8 +34,8 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
         }
       }
     }, onDone: () async {
-      _ancStreamCtrl.close();
       _batteryStreamCtrl.close();
+      _ancStreamCtrl.close();
       _autoPauseStreamCtrl.close();
     });
     _initRequestInfo();
@@ -99,10 +94,10 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   }
 
   @override
-  Stream<HeadphonesAncMode> get ancMode => _ancStreamCtrl.stream;
+  Stream<HeadphonesBatteryData> get batteryData => _batteryStreamCtrl.stream;
 
   @override
-  Stream<HeadphonesBatteryData> get batteryData => _batteryStreamCtrl.stream;
+  Stream<HeadphonesAncMode> get ancMode => _ancStreamCtrl.stream;
 
   @override
   Future<void> setAncMode(HeadphonesAncMode mode) async {
