@@ -11,7 +11,7 @@ import '../huawei/otter/otter_constants.dart';
 import 'headphones_cubit_objects.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
-  final TheLastBluetooth bluetooth;
+  final TheLastBluetooth _bluetooth;
   BluetoothConnection? _connection;
   StreamSubscription? _devStream;
 
@@ -19,8 +19,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
 
   Future<void> connect([List<BluetoothDevice>? devices]) async {
-    devices ??= await bluetooth.pairedDevices;
-    if (!await bluetooth.isEnabled()) {
+    devices ??= await _bluetooth.pairedDevices;
+    if (!await _bluetooth.isEnabled()) {
       emit(HeadphonesBluetoothDisabled());
       return;
     }
@@ -35,7 +35,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
     }
     emit(HeadphonesConnecting());
     try {
-      _connection = await bluetooth.connectRfcomm(otter!, sppUuid);
+      _connection = await _bluetooth.connectRfcomm(otter!, sppUuid);
       emit(HeadphonesImplOtter(_connection!.io));
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
@@ -46,7 +46,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       await _connection?.io.sink.close();
       _connection = null;
       emit(
-        ((await bluetooth.pairedDevices)
+        ((await _bluetooth.pairedDevices)
                     .firstWhereOrNull(
                         (d) => OtterConst.btDevNameRegex.hasMatch(d.name))
                     ?.isConnected ??
@@ -57,10 +57,11 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
     }
   }
 
-  HeadphonesConnectionCubit({required this.bluetooth})
-      : super(HeadphonesNotPaired()) {
+  HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
+      : _bluetooth = bluetooth,
+        super(HeadphonesNotPaired()) {
     // logic of connect() is so universal we can use it on every change
-    _devStream = bluetooth.pairedDevicesStream.listen(connect);
+    _devStream = _bluetooth.pairedDevicesStream.listen(connect);
   }
 
   // TODO:
