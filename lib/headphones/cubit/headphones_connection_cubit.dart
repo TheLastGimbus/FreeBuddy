@@ -6,9 +6,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
-import 'headphones_service/headphones_service_base.dart';
-import 'huawei/otter/headphones_impl_otter.dart';
-import 'huawei/otter/otter_constants.dart';
+import '../huawei/otter/headphones_impl_otter.dart';
+import '../huawei/otter/otter_constants.dart';
+import 'headphones_cubit_objects.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
   final TheLastBluetooth bluetooth;
@@ -75,27 +75,3 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
     super.close();
   }
 }
-
-abstract class HeadphonesObject {}
-
-class HeadphonesBluetoothDisabled extends HeadphonesObject {}
-
-class HeadphonesNotPaired extends HeadphonesObject {}
-
-class HeadphonesDisconnected extends HeadphonesObject {}
-
-class HeadphonesConnecting extends HeadphonesObject {}
-
-abstract class HeadphonesConnectedOpen extends HeadphonesObject {
-  Stream<HeadphonesBatteryData> get batteryData;
-
-  Stream<HeadphonesAncMode> get ancMode;
-
-  Future<void> setAncMode(HeadphonesAncMode mode);
-
-  Stream<bool> get autoPause;
-
-  Future<void> setAutoPause(bool enabled);
-}
-
-class HeadphonesConnectedClosed extends HeadphonesObject {}

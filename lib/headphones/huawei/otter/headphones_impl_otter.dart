@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:stream_channel/stream_channel.dart';
 
 import '../../../logger.dart';
-import '../../headphones_connection_cubit.dart';
+import '../../cubit/headphones_cubit_objects.dart';
 import '../../headphones_service/headphones_service_base.dart';
 import '../mbb.dart';
 

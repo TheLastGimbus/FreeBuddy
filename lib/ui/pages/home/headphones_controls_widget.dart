@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../gen/fms.dart';
-import '../../../headphones/headphones_connection_cubit.dart';
+import '../../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../../headphones/headphones_service/headphones_service_base.dart';
 import '../pretty_rounded_container_widget.dart';
 import 'anc_button_widget.dart';

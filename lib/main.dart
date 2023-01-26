@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
-import 'headphones/headphones_connection_cubit.dart';
+import 'headphones/cubit/headphones_connection_cubit.dart';
 import 'ui/app_settings.dart';
 import 'ui/pages/about/about_page.dart';
 import 'ui/pages/home/home_page.dart';
