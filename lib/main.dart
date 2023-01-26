@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -6,6 +9,7 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import 'headphones/cubit/headphones_connection_cubit.dart';
+import 'headphones/cubit/headphones_mock_cubit.dart';
 import 'ui/app_settings.dart';
 import 'ui/pages/about/about_page.dart';
 import 'ui/pages/home/home_page.dart';
@@ -22,8 +26,13 @@ void main() {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<HeadphonesConnectionCubit>(
-              create: (_) => HeadphonesConnectionCubit(
-                  bluetooth: TheLastBluetooth.instance)),
+            // need to use kIsWeb because Platform is from dart:io
+            create: (_) => (!kIsWeb && Platform.isAndroid)
+                ? HeadphonesConnectionCubit(
+                    bluetooth: TheLastBluetooth.instance,
+                  )
+                : HeadphonesMockCubit(),
+          ),
         ],
         child: const MyApp(),
       ),
