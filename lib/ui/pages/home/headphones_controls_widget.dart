@@ -5,6 +5,7 @@ import '../../../gen/fms.dart';
 import '../../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../../headphones/headphones_service/headphones_service_base.dart';
 import '../../app_settings.dart';
+import '../disabled.dart';
 import '../pretty_rounded_container_widget.dart';
 import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
@@ -33,13 +34,30 @@ class HeadphonesControlsWidget extends StatelessWidget {
           children: [
             Expanded(child: _SleepModeSwitch(headphones)),
             const SizedBox(width: 16),
-            Expanded(child: _AutoPauseSwitch(headphones)),
+            // TODO: another reason to clean up the settings ;_;
+            StreamBuilder(
+              initialData: false,
+              stream: context.read<AppSettings>().sleepMode,
+              builder: (_, snap) => Disabled(
+                disabled: (snap.data ?? false),
+                coveringWidget: const Text('Sleep mode 😴'),
+                child: _AutoPauseSwitch(headphones),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 16.0),
         _BatteryInfoRow(headphones),
         const SizedBox(height: 16.0),
-        _AncControlRow(headphones),
+        StreamBuilder(
+          initialData: false,
+          stream: context.read<AppSettings>().sleepMode,
+          builder: (_, snap) => Disabled(
+            disabled: (snap.data ?? false),
+            coveringWidget: const Text('Sleep mode 😴'),
+            child: _AncControlRow(headphones),
+          ),
+        ),
       ],
     );
   }
@@ -176,8 +194,6 @@ class _SleepModeSwitch extends StatelessWidget {
                   );
                 }
                 settings.setSleepMode(value);
-                // TODO: Disable widgets below when sleep mode
-                // and tell user whats going on
               },
             ),
           ),
