@@ -18,8 +18,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
 
-  Future<void> connect([List<BluetoothDevice>? devices]) async {
-    devices ??= await _bluetooth.pairedDevices;
+  Future<void> connect() async => _connect(await _bluetooth.pairedDevices);
+
+  Future<void> _connect(List<BluetoothDevice> devices) async {
     if (!await _bluetooth.isEnabled()) {
       emit(HeadphonesBluetoothDisabled());
       return;
@@ -61,7 +62,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
       : _bluetooth = bluetooth,
         super(HeadphonesNotPaired()) {
     // logic of connect() is so universal we can use it on every change
-    _devStream = _bluetooth.pairedDevicesStream.listen(connect);
+    _devStream = _bluetooth.pairedDevicesStream.listen(_connect);
   }
 
   // TODO:
