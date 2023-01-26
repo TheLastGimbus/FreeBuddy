@@ -149,6 +149,13 @@ class MbbCommand {
   });
   static const requestBattery = MbbCommand(1, 8, {});
   static const requestAnc = MbbCommand(43, 42, {});
+  static const requestAutoPause = MbbCommand(43, 17, {});
+  static const autoPauseOn = MbbCommand(43, 16, {
+    1: [1]
+  });
+  static const autoPauseOff = MbbCommand(43, 16, {
+    1: [0]
+  });
 }
 
 extension _ListUtils on List {

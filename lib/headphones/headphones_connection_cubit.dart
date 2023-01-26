@@ -92,6 +92,10 @@ abstract class HeadphonesConnectedOpen extends HeadphonesObject {
   Stream<HeadphonesAncMode> get ancMode;
 
   Future<void> setAncMode(HeadphonesAncMode mode);
+
+  Stream<bool> get autoPause;
+
+  Future<void> setAutoPause(bool enabled);
 }
 
 class HeadphonesConnectedClosed extends HeadphonesObject {}

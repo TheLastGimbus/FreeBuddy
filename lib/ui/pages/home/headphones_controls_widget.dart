@@ -26,6 +26,40 @@ class HeadphonesControlsWidget extends StatelessWidget {
             filterQuality: FilterQuality.none,
           ),
         ),
+        Row(
+          children: [
+            Expanded(
+              child: PrettyRoundedContainerWidget(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: const [
+                    Text('More settings\n(coming soon)'),
+                    IconButton(onPressed: null, icon: Icon(Icons.settings)),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: PrettyRoundedContainerWidget(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    const Text("Auto pause"),
+                    StreamBuilder<bool>(
+                      stream: headphones.autoPause,
+                      builder: (context, snapshot) => Switch(
+                        value: snapshot.data ?? false,
+                        onChanged: headphones.setAutoPause,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16.0),
         PrettyRoundedContainerWidget(
           child: StreamBuilder<HeadphonesBatteryData>(
             initialData:

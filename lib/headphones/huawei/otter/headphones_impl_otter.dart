@@ -19,6 +19,7 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   final _ancStreamCtrl = StreamController<HeadphonesAncMode>.broadcast();
   final _batteryStreamCtrl =
       StreamController<HeadphonesBatteryData>.broadcast();
+  final _autoPauseStreamCtrl = StreamController<bool>.broadcast();
 
   HeadphonesImplOtter(this.connection) {
     connection.stream.listen((event) {
@@ -40,6 +41,7 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
     }, onDone: () async {
       _ancStreamCtrl.close();
       _batteryStreamCtrl.close();
+      _autoPauseStreamCtrl.close();
     });
     _initRequestInfo();
   }
@@ -78,12 +80,17 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
         status[1] == 1,
         status[2] == 1,
       ));
+    } else if (cmd.serviceId == 43 &&
+        cmd.commandId == 17 &&
+        cmd.args.containsKey(1)) {
+      _autoPauseStreamCtrl.add(cmd.args[1]![0] == 1);
     }
   }
 
   Future<void> _initRequestInfo() async {
     await _sendMbb(MbbCommand.requestBattery);
     await _sendMbb(MbbCommand.requestAnc);
+    await _sendMbb(MbbCommand.requestAutoPause);
   }
 
   // TODO: some .flush() for this
@@ -112,5 +119,14 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
         break;
     }
     await _sendMbb(comm);
+  }
+
+  @override
+  Stream<bool> get autoPause => _autoPauseStreamCtrl.stream;
+
+  @override
+  Future<void> setAutoPause(bool enabled) async {
+    await _sendMbb(enabled ? MbbCommand.autoPauseOn : MbbCommand.autoPauseOff);
+    await _sendMbb(MbbCommand.requestAutoPause);
   }
 }
