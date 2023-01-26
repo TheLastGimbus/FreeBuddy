@@ -22,7 +22,7 @@ class AncButtonWidget extends StatelessWidget {
         shape: MaterialStateProperty.all<CircleBorder>(const CircleBorder()),
       ),
       onPressed: onPressed,
-      child: Icon(icon),
+      child: Icon(icon, size: 32),
     );
   }
 }

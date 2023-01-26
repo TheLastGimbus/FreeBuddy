@@ -1,0 +1,12 @@
+# Config file for https://pub.dev/packages/fms generator for Google Material Symbols
+# Whenever you add some icons, just run:
+# $ flutter pub run fms build assets/fms_config.yml
+# Note: this requires node.js>=11 🤒
+family: Fms
+output:
+  flutter: lib/gen/fms.dart
+  font: assets/fonts/fms.ttf
+symbols:
+  noise_control_off: "Noise Control Off"
+  noise_aware: "Noise Aware"
+  noise_control_on: "Noise Control On"

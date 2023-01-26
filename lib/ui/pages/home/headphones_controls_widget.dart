@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../gen/fms.dart';
 import '../../../headphones/headphones_connection_cubit.dart';
 import '../../../headphones/headphones_service/headphones_service_base.dart';
 import '../pretty_rounded_container_widget.dart';
@@ -91,19 +92,19 @@ class HeadphonesControlsWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   AncButtonWidget(
-                    icon: Icons.hearing_disabled,
+                    icon: Fms.noise_control_on,
                     isSelected: snapshot.data == HeadphonesAncMode.noiseCancel,
                     onPressed: () =>
                         headphones.setAncMode(HeadphonesAncMode.noiseCancel),
                   ),
                   AncButtonWidget(
-                    icon: Icons.highlight_off,
+                    icon: Fms.noise_control_off,
                     isSelected: snapshot.data == HeadphonesAncMode.off,
                     onPressed: () =>
                         headphones.setAncMode(HeadphonesAncMode.off),
                   ),
                   AncButtonWidget(
-                    icon: Icons.hearing,
+                    icon: Fms.noise_aware,
                     isSelected: snapshot.data == HeadphonesAncMode.awareness,
                     onPressed: () =>
                         headphones.setAncMode(HeadphonesAncMode.awareness),
