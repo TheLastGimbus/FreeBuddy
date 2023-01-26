@@ -18,6 +18,7 @@ So I got mad and decided to make my own... and here it is 🌈
 
 - [x] Switch ANC modes
 - [x] Show battery levels
+- [x] Sleep mode - disables gestures/anc/smart wear for nice sleeping
 - [ ] Change settings (smart wear etc)
 - [ ] Find lost
 

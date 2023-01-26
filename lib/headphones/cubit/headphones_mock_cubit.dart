@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -57,4 +58,22 @@ class HeadphonesMock implements HeadphonesConnectedOpen {
 
   @override
   Future<void> setAutoPause(bool enabled) async => _autoPause.add(enabled);
+
+  @override
+  Future<String> dumpSettings() async => json.encode({
+        'ancMode': _ancMode.value.index,
+        'autoPause': _autoPause.value,
+      });
+
+  @override
+  Future<void> restoreSettings(String settings) async {
+    final json = jsonDecode(settings) as Map;
+    for (final i in json.entries) {
+      if (i.key == 'ancMode') {
+        await setAncMode(HeadphonesAncMode.values[i.value]);
+      } else if (i.key == 'autoPause') {
+        await setAutoPause(i.value);
+      }
+    }
+  }
 }

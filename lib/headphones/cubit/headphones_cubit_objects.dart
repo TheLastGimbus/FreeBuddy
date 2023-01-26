@@ -32,6 +32,13 @@ abstract class HeadphonesConnectedOpen extends HeadphonesObject {
   Stream<bool> get autoPause;
 
   Future<void> setAutoPause(bool enabled);
+
+  // TODO: We're duplicating this between impl and mock
+  // for now it's fine, but in future we should replace with some clever stuff
+  // like doing this on level of abstract class
+  Future<String> dumpSettings();
+
+  Future<void> restoreSettings(String settings);
 }
 
 class HeadphonesConnectedClosed extends HeadphonesObject {}

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../gen/fms.dart';
 import '../../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../../headphones/headphones_service/headphones_service_base.dart';
+import '../../app_settings.dart';
 import '../pretty_rounded_container_widget.dart';
 import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
@@ -33,9 +35,36 @@ class HeadphonesControlsWidget extends StatelessWidget {
               child: PrettyRoundedContainerWidget(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: const [
-                    Text('More settings\n(coming soon)'),
-                    IconButton(onPressed: null, icon: Icon(Icons.settings)),
+                  children: [
+                    const Text('Sleep mode'),
+                    StreamBuilder<bool>(
+                      stream: context.read<AppSettings>().sleepMode,
+                      builder: (context, snapshot) => Switch(
+                        value: snapshot.data ?? false,
+                        onChanged: (value) async {
+                          // TODO: move this logic somewhere else 🙏
+                          // currently have no idea where
+                          // maybe some "CoolModes" class 0_o
+                          final settings = context.read<AppSettings>();
+                          if (value) {
+                            settings.setSleepModePreviousSettings(
+                              await headphones.dumpSettings(),
+                            );
+                            await headphones.setAncMode(HeadphonesAncMode.off);
+                            await headphones.setAutoPause(false);
+                            // TODO: Disable gestures
+                            // TODO #2 electric boogaloo: implement gestures
+                          } else {
+                            await headphones.restoreSettings(
+                              await settings.sleepModePreviousSettings.first,
+                            );
+                          }
+                          settings.setSleepMode(value);
+                          // TODO: Disable widgets below when sleep mode
+                          // and tell user whats going on
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),

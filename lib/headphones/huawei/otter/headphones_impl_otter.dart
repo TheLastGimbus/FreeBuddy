@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:rxdart/rxdart.dart';
@@ -123,5 +124,23 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   Future<void> setAutoPause(bool enabled) async {
     await _sendMbb(enabled ? MbbCommand.autoPauseOn : MbbCommand.autoPauseOff);
     await _sendMbb(MbbCommand.requestAutoPause);
+  }
+
+  @override
+  Future<String> dumpSettings() async => json.encode({
+        'ancMode': _ancStreamCtrl.value.index,
+        'autoPause': _autoPauseStreamCtrl.value,
+      });
+
+  @override
+  Future<void> restoreSettings(String settings) async {
+    final json = jsonDecode(settings) as Map;
+    for (final i in json.entries) {
+      if (i.key == 'ancMode') {
+        await setAncMode(HeadphonesAncMode.values[i.value]);
+      } else if (i.key == 'autoPause') {
+        await setAutoPause(i.value);
+      }
+    }
   }
 }
