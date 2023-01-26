@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:rxdart/rxdart.dart';
@@ -10,7 +9,7 @@ import '../../cubit/headphones_cubit_objects.dart';
 import '../../headphones_service/headphones_service_base.dart';
 import '../mbb.dart';
 
-class HeadphonesImplOtter implements HeadphonesConnectedOpen {
+class HeadphonesImplOtter extends HeadphonesConnectedOpen {
   final StreamChannel<Uint8List> connection;
 
   final _batteryStreamCtrl = BehaviorSubject<HeadphonesBatteryData>();
@@ -95,10 +94,11 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   }
 
   @override
-  Stream<HeadphonesBatteryData> get batteryData => _batteryStreamCtrl.stream;
+  ValueStream<HeadphonesBatteryData> get batteryData =>
+      _batteryStreamCtrl.stream;
 
   @override
-  Stream<HeadphonesAncMode> get ancMode => _ancStreamCtrl.stream;
+  ValueStream<HeadphonesAncMode> get ancMode => _ancStreamCtrl.stream;
 
   @override
   Future<void> setAncMode(HeadphonesAncMode mode) async {
@@ -118,29 +118,11 @@ class HeadphonesImplOtter implements HeadphonesConnectedOpen {
   }
 
   @override
-  Stream<bool> get autoPause => _autoPauseStreamCtrl.stream;
+  ValueStream<bool> get autoPause => _autoPauseStreamCtrl.stream;
 
   @override
   Future<void> setAutoPause(bool enabled) async {
     await _sendMbb(enabled ? MbbCommand.autoPauseOn : MbbCommand.autoPauseOff);
     await _sendMbb(MbbCommand.requestAutoPause);
-  }
-
-  @override
-  Future<String> dumpSettings() async => json.encode({
-        'ancMode': _ancStreamCtrl.value.index,
-        'autoPause': _autoPauseStreamCtrl.value,
-      });
-
-  @override
-  Future<void> restoreSettings(String settings) async {
-    final json = jsonDecode(settings) as Map;
-    for (final i in json.entries) {
-      if (i.key == 'ancMode') {
-        await setAncMode(HeadphonesAncMode.values[i.value]);
-      } else if (i.key == 'autoPause') {
-        await setAutoPause(i.value);
-      }
-    }
   }
 }

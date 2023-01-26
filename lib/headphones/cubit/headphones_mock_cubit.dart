@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
@@ -22,7 +21,7 @@ class HeadphonesMockCubit extends Cubit<HeadphonesObject>
   Future<void> openBluetoothSettings() async {}
 }
 
-class HeadphonesMock implements HeadphonesConnectedOpen {
+class HeadphonesMock extends HeadphonesConnectedOpen {
   final _batteryData = BehaviorSubject<HeadphonesBatteryData>();
   final _ancMode = BehaviorSubject<HeadphonesAncMode>();
   final _autoPause = BehaviorSubject<bool>();
@@ -45,35 +44,17 @@ class HeadphonesMock implements HeadphonesConnectedOpen {
   }
 
   @override
-  Stream<HeadphonesBatteryData> get batteryData => _batteryData.stream;
+  ValueStream<HeadphonesBatteryData> get batteryData => _batteryData.stream;
 
   @override
-  Stream<HeadphonesAncMode> get ancMode => _ancMode.stream;
+  ValueStream<HeadphonesAncMode> get ancMode => _ancMode.stream;
 
   @override
   Future<void> setAncMode(HeadphonesAncMode mode) async => _ancMode.add(mode);
 
   @override
-  Stream<bool> get autoPause => _autoPause.stream;
+  ValueStream<bool> get autoPause => _autoPause.stream;
 
   @override
   Future<void> setAutoPause(bool enabled) async => _autoPause.add(enabled);
-
-  @override
-  Future<String> dumpSettings() async => json.encode({
-        'ancMode': _ancMode.value.index,
-        'autoPause': _autoPause.value,
-      });
-
-  @override
-  Future<void> restoreSettings(String settings) async {
-    final json = jsonDecode(settings) as Map;
-    for (final i in json.entries) {
-      if (i.key == 'ancMode') {
-        await setAncMode(HeadphonesAncMode.values[i.value]);
-      } else if (i.key == 'autoPause') {
-        await setAutoPause(i.value);
-      }
-    }
-  }
 }

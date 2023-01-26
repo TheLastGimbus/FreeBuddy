@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:rxdart/rxdart.dart';
+
 import '../headphones_service/headphones_service_base.dart';
 
 abstract class HeadphonesObject {}
@@ -23,22 +27,41 @@ class HeadphonesConnecting extends HeadphonesObject {}
 // (Previously, there were often grayed out values because we had to wait for
 // stream to emit again)
 abstract class HeadphonesConnectedOpen extends HeadphonesObject {
-  Stream<HeadphonesBatteryData> get batteryData;
+  ValueStream<HeadphonesBatteryData> get batteryData;
 
-  Stream<HeadphonesAncMode> get ancMode;
+  ValueStream<HeadphonesAncMode> get ancMode;
 
   Future<void> setAncMode(HeadphonesAncMode mode);
 
-  Stream<bool> get autoPause;
+  ValueStream<bool> get autoPause;
 
   Future<void> setAutoPause(bool enabled);
 
-  // TODO: We're duplicating this between impl and mock
-  // for now it's fine, but in future we should replace with some clever stuff
-  // like doing this on level of abstract class
-  Future<String> dumpSettings();
+  /// Dumps all settings to JSON/whatever-you-like stream
+  /// (format shouldn't matter because only place where this string should be
+  /// parsed is [restoreSettings])
+  ///
+  /// Use this when using something like sleep mode, where you want to change
+  /// multiple settings, then restore previous ones when disabling
+  Future<String> dumpSettings() async => json.encode({
+        'ancMode': ancMode.valueOrNull?.index,
+        'autoPause': autoPause.valueOrNull,
+      });
 
-  Future<void> restoreSettings(String settings);
+  /// Restore all settings from string got from [dumpSettings]
+  ///
+  /// Missing data/keys shouldn't bother this function
+  Future<void> restoreSettings(String settings) async {
+    final json = jsonDecode(settings) as Map;
+    for (final i in json.entries) {
+      if (i.value == null) continue;
+      if (i.key == 'ancMode') {
+        await setAncMode(HeadphonesAncMode.values[i.value]);
+      } else if (i.key == 'autoPause') {
+        await setAutoPause(i.value);
+      }
+    }
+  }
 }
 
 class HeadphonesConnectedClosed extends HeadphonesObject {}
