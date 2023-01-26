@@ -34,30 +34,15 @@ class HeadphonesControlsWidget extends StatelessWidget {
           children: [
             Expanded(child: _SleepModeSwitch(headphones)),
             const SizedBox(width: 16),
-            // TODO: another reason to clean up the settings ;_;
-            StreamBuilder(
-              initialData: false,
-              stream: context.read<AppSettings>().sleepMode,
-              builder: (_, snap) => Disabled(
-                disabled: (snap.data ?? false),
-                coveringWidget: const Text('Sleep mode 😴'),
-                child: _AutoPauseSwitch(headphones),
-              ),
+            Expanded(
+              child: _SleepDisablable(child: _AutoPauseSwitch(headphones)),
             ),
           ],
         ),
         const SizedBox(height: 16.0),
         _BatteryInfoRow(headphones),
         const SizedBox(height: 16.0),
-        StreamBuilder(
-          initialData: false,
-          stream: context.read<AppSettings>().sleepMode,
-          builder: (_, snap) => Disabled(
-            disabled: (snap.data ?? false),
-            coveringWidget: const Text('Sleep mode 😴'),
-            child: _AncControlRow(headphones),
-          ),
-        ),
+        _SleepDisablable(child: _AncControlRow(headphones)),
       ],
     );
   }
@@ -198,6 +183,26 @@ class _SleepModeSwitch extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _SleepDisablable extends StatelessWidget {
+  final Widget child;
+
+  const _SleepDisablable({required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    // TODO: another reason to clean up the settings ;_;
+    return StreamBuilder(
+      initialData: false,
+      stream: context.read<AppSettings>().sleepMode,
+      builder: (_, snap) => Disabled(
+        disabled: (snap.data ?? false),
+        coveringWidget: const Text('Sleep mode 😴'),
+        child: child,
       ),
     );
   }
