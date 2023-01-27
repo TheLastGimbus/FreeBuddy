@@ -16,6 +16,9 @@ class HeadphonesImplOtter extends HeadphonesConnectedOpen {
   final _ancStreamCtrl = BehaviorSubject<HeadphonesAncMode>();
   final _autoPauseStreamCtrl = BehaviorSubject<bool>();
 
+  /// This watches if we are still missing any info and re-requests it
+  late StreamSubscription _watchdogStreamSub;
+
   HeadphonesImplOtter(this.connection) {
     connection.stream.listen((event) {
       List<MbbCommand>? commands;
@@ -37,8 +40,16 @@ class HeadphonesImplOtter extends HeadphonesConnectedOpen {
       _batteryStreamCtrl.close();
       _ancStreamCtrl.close();
       _autoPauseStreamCtrl.close();
+      _watchdogStreamSub.cancel();
     });
     _initRequestInfo();
+    _watchdogStreamSub =
+        Stream.periodic(const Duration(seconds: 3)).listen((_) {
+      if ([batteryData.valueOrNull, ancMode.valueOrNull, autoPause.valueOrNull]
+          .any((e) => e == null)) {
+        _initRequestInfo();
+      }
+    });
   }
 
   void _evalMbbCommand(MbbCommand cmd) {
