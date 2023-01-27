@@ -18,18 +18,35 @@ class HeadphonesControlsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = Theme.of(context);
+    final tt = t.textTheme;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
+        // TODO: Display their alias here
         Expanded(
-          child: Image.asset(
-            'assets/sluchaweczki.png',
-            fit: BoxFit.contain,
-            filterQuality: FilterQuality.none,
+          flex: 4,
+          child: Center(
+            child: Text(
+              "FreeBuds 4i",
+              style: tt.headlineMedium?.copyWith(fontWeight: FontWeight.w200),
+            ),
           ),
         ),
+        Expanded(
+          flex: 20,
+          child: Container(
+            margin: const EdgeInsets.symmetric(horizontal: 64.0),
+            child: Image.asset(
+              'assets/app_icons/ic_launcher.png',
+              fit: BoxFit.contain,
+              filterQuality: FilterQuality.none,
+            ),
+          ),
+        ),
+        const Spacer(flex: 1),
         Row(
           children: [
             Expanded(child: _SleepModeSwitch(headphones)),
