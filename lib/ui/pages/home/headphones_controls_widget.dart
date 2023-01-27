@@ -187,20 +187,20 @@ class _SleepModeSwitch extends StatelessWidget {
                 final settings = context.read<AppSettings>();
                 if (value) {
                   settings.setSleepModePreviousSettings(
-                        await headphones.dumpSettings(),
-                      );
-                      await headphones.setAncMode(HeadphonesAncMode.off);
-                      await headphones.setAutoPause(false);
-                      // TODO: Disable gestures
-                      // TODO #2 electric boogaloo: implement gestures
-                    } else {
-                      await headphones.restoreSettings(
-                        await settings.sleepModePreviousSettings.first,
-                      );
-                    }
-                    settings.setSleepMode(value);
-                  },
-                ),
+                    await headphones.dumpSettings(),
+                  );
+                  await headphones.setAncMode(HeadphonesAncMode.off);
+                  await headphones.setAutoPause(false);
+                  // TODO: Disable gestures
+                  // TODO #2 electric boogaloo: implement gestures
+                } else {
+                  await headphones.restoreSettings(
+                    await settings.sleepModePreviousSettings.first,
+                  );
+                }
+                settings.setSleepMode(value);
+              },
+            ),
           ),
         ],
       ),
