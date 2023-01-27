@@ -16,7 +16,7 @@ class SettingsPage extends StatelessWidget {
             ElevatedButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed('/settings/about'),
-              child: const Text('About app'),
+              child: Text(l.pageAboutTitle),
             )
           ],
         ),

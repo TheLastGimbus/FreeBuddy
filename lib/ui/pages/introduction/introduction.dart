@@ -70,7 +70,7 @@ class FreebuddyIntroduction extends StatelessWidget {
                   const Spacer(),
                   TextButton(
                     onPressed: () => Navigator.of(context).pop<bool>(true),
-                    child: const Text('Okay!'),
+                    child: Text(l.pageIntroQuit),
                   ),
                 ],
               ),
