@@ -13,10 +13,13 @@ class SettingsPage extends StatelessWidget {
         child: ListView(
           padding: const EdgeInsets.all(16.0),
           children: [
-            ElevatedButton(
+            FilledButton(
               onPressed: () =>
                   Navigator.of(context).pushNamed('/settings/about'),
-              child: Text(l.pageAboutTitle),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(l.pageAboutTitle),
+              ),
             )
           ],
         ),
