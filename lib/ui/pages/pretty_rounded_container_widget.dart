@@ -16,9 +16,8 @@ class PrettyRoundedContainerWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 10,
-            spreadRadius: 5,
+            color: t.colorScheme.shadow,
+            blurRadius: 8,
           ),
         ],
       ),

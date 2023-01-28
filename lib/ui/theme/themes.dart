@@ -45,10 +45,11 @@ ThemeData _customize(ThemeData theme) {
 ThemeData get lightTheme {
   return _customize(_light).copyWith(
     colorScheme: _light.colorScheme.copyWith(
-        // Leaving this so you see how you can customize colors individually
-        // primary: const Color(0xFF1E88E5),
-        // secondary: const Color(0xFF1E88E5),
-        ),
+      shadow: const Color(0x80808080),
+      // Leaving this so you see how you can customize colors individually
+      // primary: const Color(0xFF1E88E5),
+      // secondary: const Color(0xFF1E88E5),
+    ),
   );
 }
 
