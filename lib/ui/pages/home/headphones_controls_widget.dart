@@ -185,7 +185,7 @@ class _SleepModeSwitch extends StatelessWidget {
                 // currently have no idea where
                 // maybe some "CoolModes" class 0_o
                 // TODO 2: move this snackbar somewhere else too
-                if (!value) {
+                if (value) {
                   ScaffoldMessenger.maybeOf(context)?.showSnackBar(
                     SnackBar(content: Text(l.sleepModeExplanation)),
                   );
