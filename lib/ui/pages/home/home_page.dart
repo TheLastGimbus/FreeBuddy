@@ -93,7 +93,10 @@ class _HomePageState extends State<HomePage> {
                 return Disabled(
                   disabled: h == null,
                   // TODO: Bigger text
-                  coveringWidget: overlay,
+                  coveringWidget: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: overlay,
+                  ),
                   // Looks like, because it's same widget tree, the non-null
                   // headphones get cached (?) and we see last battery level
                   // when they get disconnected
