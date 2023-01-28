@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.1.0 (2023-01-29)
+
+- Huuuuuge refactors ⚙:
+  - Migration to my own [`the_last_bluetooth`](https://github.com/TheLastGimbus/the_last_bluetooth/) plugin 🥳 - this should make it work on Android >= 12 🎉
+  - Better handling of bt disabled/enabled/connected/disconnected etc
+  - Tests 🧪
+  - Flutter 3.7
+- Prettier ui:
+  - Nicer Material3 style
+  - Nicer showing state - pretty animations instead of 1mm text
+  - Animations ✨
+- Features 🔨:⏸
+  - Smart wear switch
+  - Sleep mode 😴 - disables smart wear and anc
+- Other:
+  - Demo mode - available at https://freebuddy-web-demo.netlify.app/
+
 ## 0.0.5 (2022-10-03)
 
 - Add introduction page on first launch
