@@ -9,28 +9,29 @@ ThemeData get _dark => ThemeData.dark(useMaterial3: useMaterial3);
 
 /// This allows us to override both themes
 ThemeData _customize(ThemeData theme) {
+  final tt = theme.textTheme;
   return theme.copyWith(
-    textTheme: theme.textTheme.copyWith(
-      displayMedium: theme.textTheme.displayMedium!.copyWith(
-        color: theme.textTheme.bodyMedium!.color,
+    textTheme: tt.copyWith(
+      displayMedium: tt.displayMedium!.copyWith(
+        color: tt.bodyMedium!.color,
       ),
       // Body
-      bodyMedium: theme.textTheme.bodyMedium!.copyWith(
+      bodyMedium: tt.bodyMedium!.copyWith(
         fontSize: 15.0,
       ),
-      bodyLarge: theme.textTheme.bodyLarge!.copyWith(
+      bodyLarge: tt.bodyLarge!.copyWith(
         fontSize: 17.0,
       ),
       // Headlines
-      headlineSmall: theme.textTheme.headlineSmall!.copyWith(
+      headlineSmall: tt.headlineSmall!.copyWith(
         fontSize: 20.0,
       ),
-      headlineMedium: theme.textTheme.headlineMedium!.copyWith(
-        color: theme.textTheme.bodyMedium!.color,
+      headlineMedium: tt.headlineMedium!.copyWith(
+        color: tt.bodyMedium!.color,
         fontSize: 28.0,
       ),
-      headlineLarge: theme.textTheme.headlineLarge!.copyWith(
-        color: theme.textTheme.bodyMedium!.color,
+      headlineLarge: tt.headlineLarge!.copyWith(
+        color: tt.bodyMedium!.color,
         fontSize: 32.0,
       ),
     ),
