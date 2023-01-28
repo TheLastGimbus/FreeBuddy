@@ -18,6 +18,7 @@
   "pageHomeConnectedClosedConnect": "Connect to headphones",
   "autoPause": "Auto pause ⏸",
   "sleepMode": "Sleep mode 😴",
+  "sleepModeExplanation": "Sleep mode disables auto-pause and anc 🛏",
   "sleepModeOverlay": "Snoozing 😴🎶",
   "settings": "Settings",
   "privacyPolicy": "Privacy policy",

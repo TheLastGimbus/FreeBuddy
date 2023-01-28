@@ -18,6 +18,7 @@
   "pageHomeConnectedClosedConnect": "Połącz ze słuchawkami",
   "autoPause": "Auto pauza ⏸",
   "sleepMode": "Tryb spanka 😴",
+  "sleepModeExplanation": "Tryb spanka wyłącza auto-pauze i anc 🛏",
   "sleepModeOverlay": "Spanko 😴🎶",
   "settings": "Ustawienia",
   "privacyPolicy": "Polityka prywatności",
