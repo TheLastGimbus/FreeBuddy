@@ -6,6 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
+import '../../logger.dart';
 import '../huawei/otter/headphones_impl_otter.dart';
 import '../huawei/otter/otter_constants.dart';
 import 'headphones_cubit_objects.dart';
@@ -15,6 +16,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   BluetoothConnection? _connection;
   StreamSubscription? _btStream;
   StreamSubscription? _devStream;
+  bool _btEnabledCache = false;
+  static const connectTries = 3;
 
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
@@ -43,31 +46,31 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
       // so that it nicely goes again and we emit HeadphonesDisconnected()
-    } on PlatformException catch (_) {
-    } finally {
-      await _connection?.io.sink.close();
-      _connection = null;
-      emit(
-        ((await _bluetooth.pairedDevices)
-                    .firstWhereOrNull(
-                        (d) => OtterConst.btDevNameRegex.hasMatch(d.name))
-                    ?.isConnected ??
-                false)
-            ? HeadphonesConnectedClosed()
-            : HeadphonesDisconnected(),
-      );
+    } on PlatformException catch (e, s) {
+      logg.e("PlatformError while connecting to socket", e, s);
     }
+    await _connection?.io.sink.close();
+    _connection = null;
+    // if disconnected because of bluetooth, don't emit
+    // this is because we made async gap when awaiting stream close
+    if (!_btEnabledCache) return;
+    emit(
+      ((await _bluetooth.pairedDevices)
+                  .firstWhereOrNull(
+                      (d) => OtterConst.btDevNameRegex.hasMatch(d.name))
+                  ?.isConnected ??
+              false)
+          ? HeadphonesConnectedClosed()
+          : HeadphonesDisconnected(),
+    );
   }
 
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
         super(HeadphonesNotPaired()) {
-    _btStream = _bluetooth.adapterInfoStream.listen((event) async {
-      if (event.isEnabled) {
-        _connect(await _bluetooth.pairedDevices);
-      } else {
-        emit(HeadphonesBluetoothDisabled());
-      }
+    _btStream = _bluetooth.adapterInfoStream.listen((event) {
+      _btEnabledCache = event.isEnabled;
+      if (!event.isEnabled) emit(HeadphonesBluetoothDisabled());
     });
     // logic of connect() is so universal we can use it on every change
     _devStream = _bluetooth.pairedDevicesStream.listen(_connect);
