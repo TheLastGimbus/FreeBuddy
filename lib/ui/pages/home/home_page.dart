@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child:
               BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
             builder: (context, state) {
