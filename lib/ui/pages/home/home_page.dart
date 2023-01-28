@@ -4,7 +4,10 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
 import '../../../headphones/cubit/headphones_cubit_objects.dart';
+import '../../../headphones/headphones_base.dart';
+import '../../../headphones/headphones_mocks.dart';
 import '../../app_settings.dart';
+import '../disabled.dart';
 import 'bluetooth_disabled_info_widget.dart';
 import 'connected_closed_widget.dart';
 import 'headphones_controls_widget.dart';
@@ -56,41 +59,53 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Center(
-        child:
-            BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
-          builder: (context, state) {
-            if (state is HeadphonesConnectedOpen) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: HeadphonesControlsWidget(headphones: state.headphones),
-              );
-            } else if (state is HeadphonesConnectedClosed) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: ConnectedClosedWidget(),
-              );
-            } else if (state is HeadphonesConnecting) {
-              return Text(l.pageHomeConnecting);
-            } else if (state is HeadphonesDisconnected) {
-              return Text(l.pageHomeDisconnected);
-            } else if (state is HeadphonesNotPaired) {
-              return const Padding(
-                padding: EdgeInsets.all(16.0),
-                child: NotPairedInfoWidget(),
-              );
-            } else if (state is HeadphonesBluetoothDisabled) {
-              final cbt = context.read<HeadphonesConnectionCubit>();
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: BluetoothDisabledInfoWidget(
-                  onEnable: () => cbt.enableBluetooth(),
-                  onOpenSettings: () => cbt.openBluetoothSettings(),
-                ),
-              );
-            } else {
-              return Text(l.pageHomeUnknown);
-            }
-          },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child:
+              BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
+            builder: (context, state) {
+              if (state is! HeadphonesNotPaired &&
+                  state is! HeadphonesBluetoothDisabled)
+              // We know that we *have* the headphones, but not connected
+              {
+                Widget? overlay;
+                HeadphonesBase? h;
+                if (state is HeadphonesDisconnected) {
+                  // TODO: Add a button to bt settings
+                  overlay = Text(l.pageHomeDisconnected);
+                } else if (state is HeadphonesConnecting) {
+                  // TODO: Cool animation
+                  overlay = Text(l.pageHomeConnecting);
+                } else if (state is HeadphonesConnectedClosed) {
+                  overlay = const ConnectedClosedWidget();
+                } else if (state is HeadphonesConnectedOpen) {
+                  h = state.headphones;
+                }
+                // TODO: maybe little more fade and gray out?
+                return Disabled(
+                  disabled: h == null,
+                  // TODO: Bigger text
+                  coveringWidget: overlay,
+                  // Looks like, because it's same widget tree, the non-null
+                  // headphones get cached (?) and we see last battery level
+                  // when they get disconnected
+                  // ...
+                  // I actually like this! Official "feature, not a bug"
+                  child: HeadphonesControlsWidget(
+                    headphones: h ?? HeadphonesMockNever(),
+                  ),
+                );
+              }
+              // We're not sure we have headphones - don't display them pretty
+              else if (state is HeadphonesNotPaired) {
+                return const NotPairedInfoWidget();
+              } else if (state is HeadphonesBluetoothDisabled) {
+                return const BluetoothDisabledInfoWidget();
+              } else {
+                return Text(l.pageHomeUnknown);
+              }
+            },
+          ),
         ),
       ),
     );

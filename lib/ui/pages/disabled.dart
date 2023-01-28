@@ -32,6 +32,7 @@ class Disabled extends StatelessWidget {
         ),
         if (coveringWidget != null)
           IgnorePointer(
+            ignoring: !disabled,
             child: AnimatedOpacity(
               opacity: disabled ? 1 : 0,
               duration: _fadeDuration,
