@@ -1,8 +1,13 @@
-# FreeBuddy
+# FreeBuddy 🎧💞
+
+[![total Github Releases downloads](https://img.shields.io/github/downloads/TheLastGimbus/FreeBuddy/total?label=total%20Github%20Releases%20downloads)](https://github.com/TheLastGimbus/FreeBuddy/releases/)
+[![latest version downloads](https://img.shields.io/github/downloads/TheLastGimbus/FreeBuddy/latest/total?label=latest%20version%20downloads)](https://github.com/TheLastGimbus/FreeBuddy/releases/latest)
+[![resolved Github issues](https://img.shields.io/github/issues-closed/TheLastGimbus/FreeBuddy?label=resolved%20issues)](https://github.com/TheLastGimbus/FreeBuddy/issues)
+[![commit activity](https://img.shields.io/github/commit-activity/y/TheLastGimbus/FreeBuddy)](https://github.com/TheLastGimbus/FreeBuddy/graphs/contributors)
 
 Free and open source app for Huawei Freebuds 4i headphones 🎧
 
-## Why?
+## Why 🧐
 
 I wanted to quickly switch ANC modes on my headphones...
 
@@ -14,15 +19,15 @@ So I got mad and decided to make my own... and here it is 🌈
 
 <img src="https://user-images.githubusercontent.com/40139196/190339164-64086d10-8c73-46f7-81f9-fe8aa0c62849.png"  width=250px> <img src="https://user-images.githubusercontent.com/40139196/190339172-a46e817b-8bd1-4a34-ac3d-9a99a7685782.png" width=250px>
 
-## Features
+## Features 🔨
 
 - [x] Switch ANC modes
 - [x] Show battery levels
 - [x] Sleep mode - disables gestures/anc/smart wear for nice sleeping
-- [ ] Change settings (smart wear etc)
+- [x] Change settings (smart wear etc) - partial (only smart wear) (more soon 🙏)
 - [ ] Find lost
 
-## Download
+## Download 📦
 
 | Platform | Installation        |
 |----------|---------------------|
@@ -31,7 +36,7 @@ So I got mad and decided to make my own... and here it is 🌈
 | Windoza  | TODO: Windoza build |
 | Linux    | TODO: L00nix build  |
 
-### Donating
+## Donating 👛
 
 I've spent a lot of time and love making this app 💖 if you like it, you can give me a tip 😇
 
@@ -39,11 +44,12 @@ I've spent a lot of time and love making this app 💖 if you like it, you can g
 [![Donate using Liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/TheLastGimbus/donate)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=B8LS5DS92EPQE)
 
-## Feedback and contact
+## Feedback and contact 📞
 
 If you have *ANY* questions, suggestions, or just want to chat, feel free to contact me on any of below:
 
 - Twitter 🐦: [@TheLastGimbus](https://twitter.com/TheLastGimbus)
 - Reddit 🤡: [/u/TheLastGimbus](https://www.reddit.com/u/TheLastGimbus)
+- Discord 🎮: [Official FreeBuddy server](https://discord.gg/fYS98UE5Cu)
 
 <sub>Google Play and the Google Play logo are trademarks of Google LLC.</sub>
