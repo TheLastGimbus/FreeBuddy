@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../gen/fms.dart';
-import '../../../headphones/cubit/headphones_cubit_objects.dart';
+import '../../../headphones/headphones_base.dart';
 import '../../../headphones/headphones_service/headphones_service_base.dart';
 import '../../app_settings.dart';
 import '../disabled.dart';
@@ -12,7 +12,7 @@ import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
 
 class HeadphonesControlsWidget extends StatelessWidget {
-  final HeadphonesConnectedOpen headphones;
+  final HeadphonesBase headphones;
 
   const HeadphonesControlsWidget({Key? key, required this.headphones})
       : super(key: key);
@@ -67,7 +67,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
 }
 
 class _BatteryInfoRow extends StatelessWidget {
-  final HeadphonesConnectedOpen headphones;
+  final HeadphonesBase headphones;
 
   const _BatteryInfoRow(this.headphones);
 
@@ -99,7 +99,7 @@ class _BatteryInfoRow extends StatelessWidget {
 }
 
 class _AncControlRow extends StatelessWidget {
-  final HeadphonesConnectedOpen headphones;
+  final HeadphonesBase headphones;
 
   const _AncControlRow(this.headphones);
 
@@ -138,7 +138,7 @@ class _AncControlRow extends StatelessWidget {
 }
 
 class _AutoPauseSwitch extends StatelessWidget {
-  final HeadphonesConnectedOpen headphones;
+  final HeadphonesBase headphones;
 
   const _AutoPauseSwitch(this.headphones);
 
@@ -164,7 +164,7 @@ class _AutoPauseSwitch extends StatelessWidget {
 }
 
 class _SleepModeSwitch extends StatelessWidget {
-  final HeadphonesConnectedOpen headphones;
+  final HeadphonesBase headphones;
 
   const _SleepModeSwitch(this.headphones);
 

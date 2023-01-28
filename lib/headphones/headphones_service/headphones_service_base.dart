@@ -1,12 +1,16 @@
 import 'dart:math';
 
-enum HeadphonesConnectionState {
-  connected,
-  connecting,
-  disconnected,
-  disconnecting,
-  notPaired,
-}
+// Potentially, some day, make cubit emit this enum + headphones object to use.
+// It could emit fake headphones on "not paired" or "last known state"
+// headphoens on "disconnected"
+// commenting it now since it collides with headphones_base.dart
+// enum HeadphonesConnectionState {
+//   connected,
+//   connecting,
+//   disconnected,
+//   disconnecting,
+//   notPaired,
+// }
 
 class HeadphonesBatteryData {
   final int? levelLeft;
@@ -59,12 +63,4 @@ enum HeadphonesAncMode {
   noiseCancel,
   off,
   awareness,
-}
-
-abstract class HeadphonesServiceBase {
-  Future<void> init();
-
-  Stream<HeadphonesConnectionState> get connectionState;
-
-  Future<void> dispose();
 }

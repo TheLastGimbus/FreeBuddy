@@ -56,12 +56,13 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Center(
-        child: BlocBuilder<HeadphonesConnectionCubit, HeadphonesObject>(
+        child:
+            BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
           builder: (context, state) {
             if (state is HeadphonesConnectedOpen) {
               return Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: HeadphonesControlsWidget(headphones: state),
+                child: HeadphonesControlsWidget(headphones: state.headphones),
               );
             } else if (state is HeadphonesConnectedClosed) {
               return const Padding(

@@ -3,13 +3,14 @@ import 'dart:async';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
+import '../headphones_base.dart';
 import '../headphones_service/headphones_service_base.dart';
 import 'headphones_connection_cubit.dart';
 import 'headphones_cubit_objects.dart';
 
-class HeadphonesMockCubit extends Cubit<HeadphonesObject>
+class HeadphonesMockCubit extends Cubit<HeadphonesConnectionState>
     implements HeadphonesConnectionCubit {
-  HeadphonesMockCubit() : super(HeadphonesMock());
+  HeadphonesMockCubit() : super(HeadphonesConnectedOpen(HeadphonesMock()));
 
   @override
   Future<void> connect() async {}
@@ -21,7 +22,7 @@ class HeadphonesMockCubit extends Cubit<HeadphonesObject>
   Future<void> openBluetoothSettings() async {}
 }
 
-class HeadphonesMock extends HeadphonesConnectedOpen {
+class HeadphonesMock extends HeadphonesBase {
   final _batteryData = BehaviorSubject<HeadphonesBatteryData>();
   final _ancMode = BehaviorSubject<HeadphonesAncMode>();
   final _autoPause = BehaviorSubject<bool>();

@@ -5,11 +5,11 @@ import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';
 
 import '../../../logger.dart';
-import '../../cubit/headphones_cubit_objects.dart';
+import '../../headphones_base.dart';
 import '../../headphones_service/headphones_service_base.dart';
 import '../mbb.dart';
 
-class HeadphonesImplOtter extends HeadphonesConnectedOpen {
+class HeadphonesImplOtter extends HeadphonesBase {
   final StreamChannel<Uint8List> connection;
 
   final _batteryStreamCtrl = BehaviorSubject<HeadphonesBatteryData>();

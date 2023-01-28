@@ -10,7 +10,7 @@ import '../huawei/otter/headphones_impl_otter.dart';
 import '../huawei/otter/otter_constants.dart';
 import 'headphones_cubit_objects.dart';
 
-class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
+class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final TheLastBluetooth _bluetooth;
   BluetoothConnection? _connection;
   StreamSubscription? _devStream;
@@ -37,7 +37,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesObject> {
     emit(HeadphonesConnecting());
     try {
       _connection = await _bluetooth.connectRfcomm(otter!, sppUuid);
-      emit(HeadphonesImplOtter(_connection!.io));
+      emit(HeadphonesConnectedOpen(HeadphonesImplOtter(_connection!.io)));
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
