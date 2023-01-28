@@ -10,6 +10,7 @@ import '../../app_settings.dart';
 import '../disabled.dart';
 import 'bluetooth_disabled_info_widget.dart';
 import 'connected_closed_widget.dart';
+import 'disconnected_info_widget.dart';
 import 'headphones_controls_widget.dart';
 import 'not_paired_info_widget.dart';
 
@@ -73,8 +74,7 @@ class _HomePageState extends State<HomePage> {
                 Widget? overlay;
                 HeadphonesBase? h;
                 if (state is HeadphonesDisconnected) {
-                  // TODO: Add a button to bt settings
-                  overlay = Text(l.pageHomeDisconnected);
+                  overlay = const DisconnectedInfoWidget();
                 } else if (state is HeadphonesConnecting) {
                   overlay = Column(
                     mainAxisSize: MainAxisSize.min,
@@ -92,7 +92,8 @@ class _HomePageState extends State<HomePage> {
                 // TODO: maybe little more fade and gray out?
                 return Disabled(
                   disabled: h == null,
-                  // TODO: Bigger text
+                  // idea: potentially override theme here to make all text
+                  // center with Theme(child: ...)
                   coveringWidget: Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: overlay,
