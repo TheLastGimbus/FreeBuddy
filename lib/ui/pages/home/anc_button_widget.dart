@@ -14,15 +14,17 @@ class AncButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ButtonStyle(
-        foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
-        backgroundColor: MaterialStateProperty.all<Color>(
-            isSelected ? Colors.blue : Colors.grey),
-        shape: MaterialStateProperty.all<CircleBorder>(const CircleBorder()),
+    const p = 8.0;
+    final child = Padding(
+      // shit: google material symbols are not centered :/
+      padding: const EdgeInsets.fromLTRB(p, p - 4, p, p),
+      child: Icon(
+        icon,
+        size: 40,
       ),
-      onPressed: onPressed,
-      child: Icon(icon, size: 32),
     );
+    return isSelected
+        ? FilledButton(onPressed: onPressed, child: child)
+        : ElevatedButton(onPressed: onPressed, child: child);
   }
 }
