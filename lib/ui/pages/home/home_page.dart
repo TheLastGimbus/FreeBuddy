@@ -64,6 +64,8 @@ class _HomePageState extends State<HomePage> {
           child:
               BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
             builder: (context, state) {
+              final t = Theme.of(context);
+              final tt = t.textTheme;
               if (state is! HeadphonesNotPaired &&
                   state is! HeadphonesBluetoothDisabled)
               // We know that we *have* the headphones, but not connected
@@ -74,8 +76,14 @@ class _HomePageState extends State<HomePage> {
                   // TODO: Add a button to bt settings
                   overlay = Text(l.pageHomeDisconnected);
                 } else if (state is HeadphonesConnecting) {
-                  // TODO: Cool animation
-                  overlay = Text(l.pageHomeConnecting);
+                  overlay = Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(l.pageHomeConnecting, style: tt.displaySmall),
+                      const SizedBox(height: 16),
+                      const CircularProgressIndicator(),
+                    ],
+                  );
                 } else if (state is HeadphonesConnectedClosed) {
                   overlay = const ConnectedClosedWidget();
                 } else if (state is HeadphonesConnectedOpen) {
