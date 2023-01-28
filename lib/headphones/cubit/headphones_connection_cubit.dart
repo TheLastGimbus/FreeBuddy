@@ -40,7 +40,16 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     }
     emit(HeadphonesConnecting());
     try {
-      _connection = await _bluetooth.connectRfcomm(otter!, sppUuid);
+      // when Ai Life takes over our socket, the connecting always succeeds at
+      // 2'nd try 🤔
+      for (var i = 0; i < connectTries; i++) {
+        try {
+          _connection = await _bluetooth.connectRfcomm(otter!, sppUuid);
+        } on PlatformException catch (_) {
+          logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
+          if (i + 1 >= connectTries) rethrow;
+        }
+      }
       emit(HeadphonesConnectedOpen(HeadphonesImplOtter(_connection!.io)));
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
