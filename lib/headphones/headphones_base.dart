@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:rxdart/rxdart.dart';
 
-import 'headphones_service/headphones_service_base.dart';
+import 'headphones_data_objects.dart';
 
 /// Base class for interacting with headphones. UI/other logic shout *not*
 /// care what underlying class is implementing it so we can test nicely with

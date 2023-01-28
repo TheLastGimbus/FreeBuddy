@@ -6,7 +6,7 @@ import 'package:stream_channel/stream_channel.dart';
 
 import '../../../logger.dart';
 import '../../headphones_base.dart';
-import '../../headphones_service/headphones_service_base.dart';
+import '../../headphones_data_objects.dart';
 import '../mbb.dart';
 
 class HeadphonesImplOtter extends HeadphonesBase {

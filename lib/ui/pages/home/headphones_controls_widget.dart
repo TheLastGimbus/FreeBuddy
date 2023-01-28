@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../gen/fms.dart';
 import '../../../headphones/headphones_base.dart';
-import '../../../headphones/headphones_service/headphones_service_base.dart';
+import '../../../headphones/headphones_data_objects.dart';
 import '../../app_settings.dart';
 import '../disabled.dart';
 import '../pretty_rounded_container_widget.dart';

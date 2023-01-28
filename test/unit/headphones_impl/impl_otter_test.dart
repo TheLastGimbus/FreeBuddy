@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:freebuddy/headphones/headphones_service/headphones_service_base.dart';
+import 'package:freebuddy/headphones/headphones_data_objects.dart';
 import 'package:freebuddy/headphones/huawei/mbb.dart';
 import 'package:freebuddy/headphones/huawei/otter/headphones_impl_otter.dart';
 import 'package:stream_channel/stream_channel.dart';

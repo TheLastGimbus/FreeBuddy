@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rxdart/rxdart.dart';
 
 import '../headphones_base.dart';
-import '../headphones_service/headphones_service_base.dart';
+import '../headphones_data_objects.dart';
 import 'headphones_connection_cubit.dart';
 import 'headphones_cubit_objects.dart';
 
