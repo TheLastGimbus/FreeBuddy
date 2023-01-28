@@ -13,6 +13,7 @@ import 'headphones_cubit_objects.dart';
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final TheLastBluetooth _bluetooth;
   BluetoothConnection? _connection;
+  StreamSubscription? _btStream;
   StreamSubscription? _devStream;
 
   // todo: make this professional
@@ -61,6 +62,13 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
         super(HeadphonesNotPaired()) {
+    _btStream = _bluetooth.adapterInfoStream.listen((event) async {
+      if (event.isEnabled) {
+        _connect(await _bluetooth.pairedDevices);
+      } else {
+        emit(HeadphonesBluetoothDisabled());
+      }
+    });
     // logic of connect() is so universal we can use it on every change
     _devStream = _bluetooth.pairedDevicesStream.listen(_connect);
   }
@@ -73,6 +81,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   @override
   Future<void> close() async {
+    await _btStream?.cancel();
     await _devStream?.cancel();
     super.close();
   }
