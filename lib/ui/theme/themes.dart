@@ -12,6 +12,7 @@ ThemeData _customize(ThemeData theme) {
   final tt = theme.textTheme;
   return theme.copyWith(
     textTheme: tt.copyWith(
+      // Display
       displaySmall: tt.displaySmall!.copyWith(
         fontSize: 24,
       ),
