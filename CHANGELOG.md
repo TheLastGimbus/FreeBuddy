@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.3 (2023-01-29)
+
+- Remove twitter/reddit links so maybe google happy
+
 ## 0.1.2 (2023-01-29)
 
 - **Actually** make it work >=12
