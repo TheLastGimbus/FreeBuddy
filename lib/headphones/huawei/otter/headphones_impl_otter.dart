@@ -19,7 +19,7 @@ class HeadphonesImplOtter extends HeadphonesBase {
   /// This watches if we are still missing any info and re-requests it
   late StreamSubscription _watchdogStreamSub;
 
-  HeadphonesImplOtter(this.connection) {
+  HeadphonesImplOtter(this.connection, [this.alias]) {
     connection.stream.listen((event) {
       List<MbbCommand>? commands;
       try {
@@ -103,6 +103,9 @@ class HeadphonesImplOtter extends HeadphonesBase {
   Future<void> _sendMbb(MbbCommand comm) async {
     connection.sink.add(comm.toPayload());
   }
+
+  @override
+  final String? alias;
 
   @override
   ValueStream<HeadphonesBatteryData> get batteryData =>

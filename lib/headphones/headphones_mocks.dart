@@ -6,6 +6,9 @@ import 'headphones_data_objects.dart';
 /// Headphones that never have any data
 class HeadphonesMockNever extends HeadphonesBase {
   @override
+  String? get alias => null;
+
+  @override
   ValueStream<HeadphonesBatteryData> get batteryData =>
       NeverStream<HeadphonesBatteryData>().shareValue();
 
@@ -45,6 +48,9 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
     _ancMode.add(HeadphonesAncMode.off);
     _autoPause.add(false);
   }
+
+  @override
+  String? get alias => "Freebuds 4i😺";
 
   @override
   ValueStream<HeadphonesBatteryData> get batteryData => _batteryData.stream;

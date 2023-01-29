@@ -31,7 +31,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
           flex: 4,
           child: Center(
             child: Text(
-              "FreeBuds 4i",
+              headphones.alias ?? "FreeBuds 4i",
               style: tt.headlineMedium?.copyWith(fontWeight: FontWeight.w200),
             ),
           ),

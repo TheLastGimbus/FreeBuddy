@@ -17,6 +17,9 @@ import 'headphones_data_objects.dart';
 // (Previously, there were often grayed out values because we had to wait for
 // stream to emit again)
 abstract class HeadphonesBase {
+  // TODO: Stream/whatever - this doesn't self update
+  String? get alias;
+
   ValueStream<HeadphonesBatteryData> get batteryData;
 
   ValueStream<HeadphonesAncMode> get ancMode;
@@ -34,9 +37,9 @@ abstract class HeadphonesBase {
   /// Use this when using something like sleep mode, where you want to change
   /// multiple settings, then restore previous ones when disabling
   Future<String> dumpSettings() async => json.encode({
-        'ancMode': ancMode.valueOrNull?.index,
-        'autoPause': autoPause.valueOrNull,
-      });
+    'ancMode': ancMode.valueOrNull?.index,
+    'autoPause': autoPause.valueOrNull,
+  });
 
   /// Restore all settings from string got from [dumpSettings]
   ///

@@ -53,7 +53,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           if (i + 1 >= connectTries) rethrow;
         }
       }
-      emit(HeadphonesConnectedOpen(HeadphonesImplOtter(_connection!.io)));
+      emit(HeadphonesConnectedOpen(
+          HeadphonesImplOtter(_connection!.io, otter.alias)));
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
