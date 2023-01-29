@@ -1,0 +1,35 @@
+# This is quick action to build apk and share it with artifacts
+# It's for convenience and nightly-testing with people
+name: Build apk
+
+on:
+  workflow_dispatch:
+
+env:
+  flutter_channel: "any"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Parse fvm to set flutter version
+        run: echo "flutter_version=$(cat .fvm/fvm_config.json | jq -r .flutterSdkVersion)" >> $GITHUB_ENV
+      - name: Cache Flutter
+        uses: actions/cache@v1
+        with:
+          path: /opt/hostedtoolcache/flutter
+          key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ env.flutter_channel }}
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.flutter_version }}
+          channel: ${{ env.flutter_channel }}
+      - name: Build apk
+        run: flutter build apk --target-platform android-arm64
+      - name: Rename apk
+        # Clean branch name: https://stackoverflow.com/a/58034787
+        run: mv build/app/outputs/flutter-apk/app-release.apk ./FreeBuddy-nightly-${GITHUB_REF##*/}.apk
+      - name: Upload apk as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          path: ./FreeBuddy-nightly-${GITHUB_REF##*/}.apk
