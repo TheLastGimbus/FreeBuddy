@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.2 (2023-01-29)
+
+- **Actually** make it work >=12
+
 ## 0.1.1 (2023-01-29)
 
 - Fix "not paired" not displaying incident
