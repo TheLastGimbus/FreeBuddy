@@ -32,8 +32,11 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     if (_connection != null) return; // already connected and working, skip
     final otter = devices
         .firstWhereOrNull((d) => OtterConst.btDevNameRegex.hasMatch(d.name));
-    if (otter == null) emit(HeadphonesNotPaired());
-    if (!(otter?.isConnected ?? false)) {
+    if (otter == null) {
+      emit(HeadphonesNotPaired());
+      return;
+    }
+    if (!otter.isConnected) {
       // not connected to device at all
       emit(HeadphonesDisconnected());
       return;
@@ -44,7 +47,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       // 2'nd try 🤔
       for (var i = 0; i < connectTries; i++) {
         try {
-          _connection = await _bluetooth.connectRfcomm(otter!, sppUuid);
+          _connection = await _bluetooth.connectRfcomm(otter, sppUuid);
         } on PlatformException catch (_) {
           logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
           if (i + 1 >= connectTries) rethrow;
