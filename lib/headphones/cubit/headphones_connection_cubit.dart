@@ -23,6 +23,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
 
+  // quic test
+  final free5iReg = RegExp(r'^(?=(HUAWEI FreeBuds 5i))', caseSensitive: true);
+
   Future<void> connect() async => _connect(await _bluetooth.pairedDevices);
 
   Future<void> _connect(List<BluetoothDevice> devices) async {
@@ -31,8 +34,11 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       return;
     }
     if (_connection != null) return; // already connected and working, skip
-    final otter = devices
-        .firstWhereOrNull((d) => OtterConst.btDevNameRegex.hasMatch(d.name));
+    final otter = devices.firstWhereOrNull(
+      (d) =>
+          OtterConst.btDevNameRegex.hasMatch(d.name) ||
+          free5iReg.hasMatch(d.name),
+    );
     if (otter == null) {
       emit(HeadphonesNotPaired());
       return;
