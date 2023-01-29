@@ -30,8 +30,10 @@ class NotPairedInfoWidget extends StatelessWidget {
           const SizedBox(height: 16),
           TextButton(
             child: Text(l.pageHomeNotPairedPairOpenDemo),
-            onPressed: () =>
-                launchUrlString('https://freebuddy-web-demo.netlify.app/'),
+            onPressed: () => launchUrlString(
+              'https://freebuddy-web-demo.netlify.app/',
+              mode: LaunchMode.externalApplication,
+            ),
           )
         ],
       ),
