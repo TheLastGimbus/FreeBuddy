@@ -55,19 +55,11 @@ class AboutPage extends StatelessWidget {
             Text.rich(
               TextSpan(
                 children: [
-                  const TextSpan(text: "Email 📧: "),
-                  _link("mateusz.soszynski.2003@gmail.com",
-                      "mailto:mateusz.soszynski.2003@gmail.com"),
-                  newline(),
-                  const TextSpan(text: "Twitter 🐦: "),
-                  _link("@TheLastGimbus", "https://twitter.com/TheLastGimbus"),
-                  newline(),
-                  const TextSpan(text: "Reddit 🤡: "),
-                  _link("/u/TheLastGimbus",
-                      "https://www.reddit.com/u/TheLastGimbus"),
-                  newline(),
                   const TextSpan(text: "Discord 🎮: "),
                   _link("FreeBuddy server", "https://discord.gg/fYS98UE5Cu"),
+                  newline(),
+                  const TextSpan(text: "Email 📧: "),
+                  _link("4i05wllh@anonaddy.me", "mailto:4i05wllh@anonaddy.me"),
                 ],
                 style: tt.bodyLarge,
               ),
