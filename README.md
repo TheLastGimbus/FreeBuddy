@@ -21,11 +21,15 @@ So I got mad and decided to make my own... and here it is 🌈
 
 ## Features 🔨
 
-- [x] Switch ANC modes
 - [x] Show battery levels
-- [x] Sleep mode - disables gestures/anc/smart wear for nice sleeping
-- [x] Change settings (smart wear etc) - partial (only smart wear) (more soon 🙏)
-- [ ] Find lost
+- [x] Switch ANC modes
+- [ ] Change settings
+  - [x] Smart wear
+  - [ ] Tap actions
+- [x] Cool features:
+  - [x] Sleep mode - disables gestures/anc/smart wear for nice sleeping
+  - [ ] ANC lock - lock on certain ANC mode no matter what
+  - [ ] Find lost
 
 ## Download 📦
 
@@ -36,6 +40,14 @@ So I got mad and decided to make my own... and here it is 🌈
 | Windoza  | TODO: Windoza build |
 | Linux    | TODO: L00nix build  |
 
+## Feedback and contact 📞
+
+If you have *ANY* questions, suggestions, or just want to chat, feel free to join FreeBuddy Discord and chat!
+
+[![Discord](https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/fYS98UE5Cu)
+
+If something doesn't work, you can report it at [the issues tab](https://github.com/TheLastGimbus/FreeBuddy/issues/) 👍
+
 ## Donating 👛
 
 I've spent a lot of time and love making this app 💖 if you like it, you can give me a tip 😇
@@ -43,13 +55,5 @@ I've spent a lot of time and love making this app 💖 if you like it, you can g
 [![Donate using ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A6HO71P)
 [![Donate using Liberapay](https://liberapay.com/assets/widgets/donate.svg)](https://liberapay.com/TheLastGimbus/donate)
 [![Donate](https://img.shields.io/badge/Donate-PayPal-blue.svg?logo=paypal&style=for-the-badge)](https://www.paypal.com/donate/?hosted_button_id=B8LS5DS92EPQE)
-
-## Feedback and contact 📞
-
-If you have *ANY* questions, suggestions, or just want to chat, feel free to contact me on any of below:
-
-- Twitter 🐦: [@TheLastGimbus](https://twitter.com/TheLastGimbus)
-- Reddit 🤡: [/u/TheLastGimbus](https://www.reddit.com/u/TheLastGimbus)
-- Discord 🎮: [Official FreeBuddy server](https://discord.gg/fYS98UE5Cu)
 
 <sub>Google Play and the Google Play logo are trademarks of Google LLC.</sub>
