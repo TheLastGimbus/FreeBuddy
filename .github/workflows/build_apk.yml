@@ -28,9 +28,10 @@ jobs:
         run: flutter build apk --target-platform android-arm64
       - name: Rename apk
         # Clean branch name: https://stackoverflow.com/a/58034787
-        run: mv ./build/app/outputs/flutter-apk/app-release.apk ./FreeBuddy-nightly.apk
+        run: mv ./build/app/outputs/flutter-apk/app-release.apk ./freebuddy-nightly.apk
       - name: Upload apk as artifact
         uses: actions/upload-artifact@v3
         with:
-          path: ./FreeBuddy-nightly.apk
+          name: freebuddy-nightly
+          path: ./freebuddy-nightly.apk
           if-no-files-found: error
