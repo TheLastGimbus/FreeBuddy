@@ -12,6 +12,7 @@ import 'bluetooth_disabled_info_widget.dart';
 import 'connected_closed_widget.dart';
 import 'disconnected_info_widget.dart';
 import 'headphones_controls_widget.dart';
+import 'no_permission_info_widget.dart';
 import 'not_paired_info_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -67,7 +68,8 @@ class _HomePageState extends State<HomePage> {
             builder: (context, state) {
               final t = Theme.of(context);
               final tt = t.textTheme;
-              if (state is! HeadphonesNotPaired &&
+              if (state is! HeadphonesNoPermission &&
+                  state is! HeadphonesNotPaired &&
                   state is! HeadphonesBluetoothDisabled)
               // We know that we *have* the headphones, but not connected
               {
@@ -109,7 +111,9 @@ class _HomePageState extends State<HomePage> {
                 );
               }
               // We're not sure we have headphones - don't display them pretty
-              else if (state is HeadphonesNotPaired) {
+              else if (state is HeadphonesNoPermission) {
+                return const NoPermissionInfoWidget();
+              } else if (state is HeadphonesNotPaired) {
                 return const NotPairedInfoWidget();
               } else if (state is HeadphonesBluetoothDisabled) {
                 return const BluetoothDisabledInfoWidget();

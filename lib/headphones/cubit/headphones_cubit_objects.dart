@@ -2,6 +2,8 @@ import '../headphones_base.dart';
 
 abstract class HeadphonesConnectionState {}
 
+class HeadphonesNoPermission extends HeadphonesConnectionState {}
+
 class HeadphonesBluetoothDisabled extends HeadphonesConnectionState {}
 
 class HeadphonesNotPaired extends HeadphonesConnectionState {}

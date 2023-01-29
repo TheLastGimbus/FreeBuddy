@@ -19,4 +19,7 @@ class HeadphonesMockCubit extends Cubit<HeadphonesConnectionState>
 
   @override
   Future<void> openBluetoothSettings() async {}
+
+  @override
+  Future<void> requestPermission() async {}
 }

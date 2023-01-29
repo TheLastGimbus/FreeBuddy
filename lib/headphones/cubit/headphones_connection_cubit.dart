@@ -4,6 +4,7 @@ import 'package:app_settings/app_settings.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
@@ -81,6 +82,15 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
         super(HeadphonesNotPaired()) {
+    _init();
+  }
+
+  Future<void> _init() async {
+    // it's down here to be sure that we do have device connected so
+    if (!await Permission.bluetoothConnect.isGranted) {
+      emit(HeadphonesNoPermission());
+      return;
+    }
     _btStream = _bluetooth.adapterInfoStream.listen((event) {
       _btEnabledCache = event.isEnabled;
       if (!event.isEnabled) emit(HeadphonesBluetoothDisabled());
@@ -94,6 +104,11 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   Future<void> openBluetoothSettings() =>
       AppSettings.openBluetoothSettings(asAnotherTask: true);
+
+  Future<void> requestPermission() async {
+    await Permission.bluetoothConnect.request();
+    await _init();
+  }
 
   @override
   Future<void> close() async {
