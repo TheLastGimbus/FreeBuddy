@@ -37,9 +37,9 @@ abstract class HeadphonesBase {
   /// Use this when using something like sleep mode, where you want to change
   /// multiple settings, then restore previous ones when disabling
   Future<String> dumpSettings() async => json.encode({
-    'ancMode': ancMode.valueOrNull?.index,
-    'autoPause': autoPause.valueOrNull,
-  });
+        'ancMode': ancMode.valueOrNull?.index,
+        'autoPause': autoPause.valueOrNull,
+      });
 
   /// Restore all settings from string got from [dumpSettings]
   ///
