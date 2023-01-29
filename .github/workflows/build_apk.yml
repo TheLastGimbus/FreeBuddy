@@ -33,3 +33,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           path: ./FreeBuddy-nightly-${GITHUB_REF#refs/heads/}.apk
+          if-no-files-found: error
