@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.1 (2023-01-29)
+
+- Fix "not paired" not displaying incident
+- Add alias display 💅
+
 ## 0.1.0 (2023-01-29)
 
 - Huuuuuge refactors ⚙:
