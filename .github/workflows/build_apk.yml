@@ -12,11 +12,11 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Parse fvm to set flutter version
         run: echo "flutter_version=$(cat .fvm/fvm_config.json | jq -r .flutterSdkVersion)" >> $GITHUB_ENV
       - name: Cache Flutter
-        uses: actions/cache@v1
+        uses: actions/cache@v3
         with:
           path: /opt/hostedtoolcache/flutter
           key: ${{ runner.OS }}-flutter-install-cache-${{ env.flutter_version }}-${{ env.flutter_channel }}
@@ -28,8 +28,8 @@ jobs:
         run: flutter build apk --target-platform android-arm64
       - name: Rename apk
         # Clean branch name: https://stackoverflow.com/a/58034787
-        run: mv build/app/outputs/flutter-apk/app-release.apk ./FreeBuddy-nightly-${GITHUB_REF##*/}.apk
+        run: mv build/app/outputs/flutter-apk/app-release.apk ./FreeBuddy-nightly-${GITHUB_REF#refs/heads/}.apk
       - name: Upload apk as artifact
         uses: actions/upload-artifact@v3
         with:
-          path: ./FreeBuddy-nightly-${GITHUB_REF##*/}.apk
+          path: ./FreeBuddy-nightly-${GITHUB_REF#refs/heads/}.apk
