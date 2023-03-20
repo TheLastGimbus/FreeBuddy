@@ -12,6 +12,7 @@ import 'headphones/cubit/headphones_connection_cubit.dart';
 import 'headphones/cubit/headphones_mock_cubit.dart';
 import 'ui/app_settings.dart';
 import 'ui/pages/about/about_page.dart';
+import 'ui/pages/gesture_settings/gesture_settings_page.dart';
 import 'ui/pages/home/home_page.dart';
 import 'ui/pages/introduction/introduction.dart';
 import 'ui/pages/settings/settings_page.dart';
@@ -54,6 +55,7 @@ class MyApp extends StatelessWidget {
       themeMode: ThemeMode.system,
       routes: {
         '/': (context) => const HomePage(),
+        '/gesture_settings': (context) => const GestureSettingsPage(),
         '/introduction': (context) => const FreebuddyIntroduction(),
         '/settings': (context) => const SettingsPage(),
         '/settings/about': (context) => const AboutPage(),

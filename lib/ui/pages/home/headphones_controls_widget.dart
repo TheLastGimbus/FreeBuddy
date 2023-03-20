@@ -50,17 +50,28 @@ class HeadphonesControlsWidget extends StatelessWidget {
         const Spacer(flex: 1),
         Row(
           children: [
-            Expanded(child: _SleepModeSwitch(headphones)),
+            Expanded(
+              child: PrettyRoundedContainerWidget(
+                child: ElevatedButton(
+                  onPressed: () =>
+                      Navigator.of(context).pushNamed('/gesture_settings'),
+                  child: const Padding(
+                    padding: EdgeInsets.all(10.0),
+                    child: Text('Gesture settings ⚙'),
+                  ),
+                ),
+              ),
+            ),
             const SizedBox(width: 16),
             Expanded(
-              child: _SleepDisablable(child: _AutoPauseSwitch(headphones)),
+              child: _AutoPauseSwitch(headphones),
             ),
           ],
         ),
         const SizedBox(height: 16.0),
         _BatteryInfoRow(headphones),
         const SizedBox(height: 16.0),
-        _SleepDisablable(child: _AncControlRow(headphones)),
+        _AncControlRow(headphones),
       ],
     );
   }
@@ -163,6 +174,7 @@ class _AutoPauseSwitch extends StatelessWidget {
   }
 }
 
+// suspended for now
 class _SleepModeSwitch extends StatelessWidget {
   final HeadphonesBase headphones;
 
@@ -214,6 +226,7 @@ class _SleepModeSwitch extends StatelessWidget {
   }
 }
 
+// suspended for now
 class _SleepDisablable extends StatelessWidget {
   final Widget child;
 
