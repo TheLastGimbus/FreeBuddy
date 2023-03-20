@@ -139,4 +139,15 @@ class HeadphonesImplOtter extends HeadphonesBase {
     await _sendMbb(enabled ? MbbCommand.autoPauseOn : MbbCommand.autoPauseOff);
     await _sendMbb(MbbCommand.requestAutoPause);
   }
+
+  @override
+  // TODO: implement gestureSettings
+  ValueStream<HeadphonesGestureSettings> get gestureSettings =>
+      throw UnimplementedError();
+
+  @override
+  Future<void> setGestureSettings(HeadphonesGestureSettings settings) {
+    // TODO: implement setGestureSettings
+    throw UnimplementedError();
+  }
 }

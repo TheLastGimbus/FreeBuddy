@@ -24,6 +24,13 @@ class HeadphonesMockNever extends HeadphonesBase {
 
   @override
   Future<void> setAutoPause(bool enabled) async {}
+
+  @override
+  ValueStream<HeadphonesGestureSettings> get gestureSettings =>
+      NeverStream<HeadphonesGestureSettings>().shareValue();
+
+  @override
+  Future<void> setGestureSettings(HeadphonesGestureSettings settings) async {}
 }
 
 /// Pretty faked headphones that emit some different fake values over time
@@ -31,6 +38,7 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
   final _batteryData = BehaviorSubject<HeadphonesBatteryData>();
   final _ancMode = BehaviorSubject<HeadphonesAncMode>();
   final _autoPause = BehaviorSubject<bool>();
+  final _gestureSettings = BehaviorSubject<HeadphonesGestureSettings>();
 
   HeadphonesMockPrettyFake() {
     Stream.periodic(
@@ -47,6 +55,13 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
     _batteryData.add(HeadphonesBatteryData(100, 100, 100, true, true, true));
     _ancMode.add(HeadphonesAncMode.off);
     _autoPause.add(false);
+    _gestureSettings.add(
+      const HeadphonesGestureSettings(
+        HeadphonesGestureDoubleTap.playPause,
+        HeadphonesGestureDoubleTap.next,
+        {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness},
+      ),
+    );
   }
 
   @override
@@ -66,4 +81,12 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
 
   @override
   Future<void> setAutoPause(bool enabled) async => _autoPause.add(enabled);
+
+  @override
+  ValueStream<HeadphonesGestureSettings> get gestureSettings =>
+      _gestureSettings.stream;
+
+  @override
+  Future<void> setGestureSettings(HeadphonesGestureSettings settings) async =>
+      _gestureSettings.add(settings);
 }

@@ -21,6 +21,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
+    final l = AppLocalizations.of(context)!;
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.max,
@@ -55,9 +56,9 @@ class HeadphonesControlsWidget extends StatelessWidget {
                 child: ElevatedButton(
                   onPressed: () =>
                       Navigator.of(context).pushNamed('/gesture_settings'),
-                  child: const Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: Text('Gesture settings ⚙'),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text(l.gestureSettings),
                   ),
                 ),
               ),

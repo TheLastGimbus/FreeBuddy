@@ -64,3 +64,66 @@ enum HeadphonesAncMode {
   off,
   awareness,
 }
+
+class HeadphonesGestureSettings {
+  final HeadphonesGestureDoubleTap? doubleTapLeft;
+  final HeadphonesGestureDoubleTap? doubleTapRight;
+  final Set<HeadphonesAncMode>? holdBothToggledAncModes;
+
+  const HeadphonesGestureSettings(
+    this.doubleTapLeft,
+    this.doubleTapRight,
+    this.holdBothToggledAncModes,
+  );
+}
+
+enum HeadphonesGestureDoubleTap {
+  nothing(-1),
+  voiceAssistant(0),
+  playPause(1),
+  next(2),
+  previous(7);
+
+  // this kinda mixes the protocol into pure abstraction layer 🤔
+  // hmm.... i dont care 😎
+  final int mbbValue;
+
+  const HeadphonesGestureDoubleTap(this.mbbValue);
+}
+
+// TODO: Move this to mbb class
+// class HeadphonesGestureHold {
+//   final Set<HeadphonesAncMode> toggledModes;
+//
+//   const HeadphonesGestureHold(this.toggledModes);
+//
+//   int get mbbValue {
+//     if (toggledModes.isEmpty) return 1;
+//     if (toggledModes.length == 3) return 2;
+//     if (toggledModes ==
+//         {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness}) {
+//       return 3;
+//     }
+//     if (toggledModes == {HeadphonesAncMode.off, HeadphonesAncMode.awareness}) {
+//       return 4;
+//     }
+//     throw Exception("Unknown mbbValue for $toggledModes");
+//   }
+//
+//   static HeadphonesGestureHold fromMbbValue(int mbbValue) {
+//     switch (mbbValue) {
+//       case 1:
+//         return const HeadphonesGestureHold({});
+//       case 2:
+//         return HeadphonesGestureHold(HeadphonesAncMode.values.toSet());
+//       case 3:
+//         return const HeadphonesGestureHold(
+//             {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness});
+//       case 4:
+//         return const HeadphonesGestureHold(
+//             {HeadphonesAncMode.off, HeadphonesAncMode.awareness});
+//       default:
+//         throw Exception("Unknown mbbValue for $mbbValue");
+//     }
+//   }
+// }

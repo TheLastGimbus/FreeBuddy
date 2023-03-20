@@ -30,6 +30,10 @@ abstract class HeadphonesBase {
 
   Future<void> setAutoPause(bool enabled);
 
+  ValueStream<HeadphonesGestureSettings> get gestureSettings;
+
+  Future<void> setGestureSettings(HeadphonesGestureSettings settings);
+
   /// Dumps all settings to JSON/whatever-you-like stream
   /// (format shouldn't matter because only place where this string should be
   /// parsed is [restoreSettings])
@@ -45,6 +49,7 @@ abstract class HeadphonesBase {
   ///
   /// Missing data/keys shouldn't bother this function
   Future<void> restoreSettings(String settings) async {
+    // TODO: This is missing gesture settings, but we don't use this for now
     final json = jsonDecode(settings) as Map;
     for (final i in json.entries) {
       if (i.value == null) continue;
