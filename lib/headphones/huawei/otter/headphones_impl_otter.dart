@@ -104,36 +104,27 @@ class HeadphonesImplOtter extends HeadphonesBase {
     } else if (cmd.serviceId == 1 && cmd.commandId == 32) {
       // TODO: double tap not quite working
       _gestureSettingsStreamCtrl.add(
-        HeadphonesGestureSettings(
-          cmd.args[1] != null
+        lastGestures.copyWith(
+          doubleTapLeft: cmd.args[1] != null
               ? HeadphonesGestureDoubleTap.fromMbbValue(cmd.args[1]![0])
               : lastGestures.doubleTapLeft,
-          cmd.args[2] != null
+          doubleTapRight: cmd.args[2] != null
               ? HeadphonesGestureDoubleTap.fromMbbValue(cmd.args[2]![0])
               : lastGestures.doubleTapRight,
-          lastGestures.holdBoth,
-          lastGestures.holdBothToggledAncModes,
         ),
       );
     } else if ((cmd.serviceId == 43 && cmd.commandId == 23)) {
       _gestureSettingsStreamCtrl.add(
-        HeadphonesGestureSettings(
-          lastGestures.doubleTapLeft,
-          lastGestures.doubleTapRight,
-          // 10 equals switch ANC - if it's not that then it's disabled
-          (cmd.args[1] != null)
+        lastGestures.copyWith(
+          holdBoth: (cmd.args[1] != null)
               ? HeadphonesGestureHold.fromMbbValue(cmd.args[1]![0])
               : lastGestures.holdBoth,
-          lastGestures.holdBothToggledAncModes,
         ),
       );
     } else if (cmd.serviceId == 43 && cmd.commandId == 25) {
       _gestureSettingsStreamCtrl.add(
-        HeadphonesGestureSettings(
-          lastGestures.doubleTapLeft,
-          lastGestures.doubleTapRight,
-          lastGestures.holdBoth,
-          (cmd.args[1] != null)
+        lastGestures.copyWith(
+          holdBothToggledAncModes: (cmd.args[1] != null)
               ? gestureHoldFromMbbValue(cmd.args[1]![0])
               : lastGestures.holdBothToggledAncModes,
         ),

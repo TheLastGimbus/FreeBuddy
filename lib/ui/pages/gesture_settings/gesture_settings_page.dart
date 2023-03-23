@@ -69,22 +69,6 @@ class _ActualSettings extends StatelessWidget {
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
-            ElevatedButton(
-              onPressed: () {
-                headphones.setGestureSettings(
-                  HeadphonesGestureSettings(
-                    data.doubleTapLeft,
-                    data.doubleTapRight,
-                    HeadphonesGestureHold.cycleAnc,
-                    {
-                      HeadphonesAncMode.noiseCancel,
-                      HeadphonesAncMode.awareness
-                    },
-                  ),
-                );
-              },
-              child: Text('japierdole xd'),
-            ),
             Text(
               'Double tap',
               style: tt.titleMedium,
@@ -100,28 +84,16 @@ class _ActualSettings extends StatelessWidget {
                   child: _DoubleTapSetting(
                     title: const Text('Left bud'),
                     value: data.doubleTapLeft,
-                    onChanged: (v) => headphones.setGestureSettings(
-                      HeadphonesGestureSettings(
-                        v,
-                        data.doubleTapRight,
-                        data.holdBoth,
-                        data.holdBothToggledAncModes,
-                      ),
-                    ),
+                    onChanged: (v) => headphones
+                        .setGestureSettings(data.copyWith(doubleTapLeft: v)),
                   ),
                 ),
                 Expanded(
                   child: _DoubleTapSetting(
                     title: const Text('Right bud'),
                     value: data.doubleTapRight,
-                    onChanged: (v) => headphones.setGestureSettings(
-                      HeadphonesGestureSettings(
-                        data.doubleTapLeft,
-                        v,
-                        data.holdBoth,
-                        data.holdBothToggledAncModes,
-                      ),
-                    ),
+                    onChanged: (v) => headphones
+                        .setGestureSettings(data.copyWith(doubleTapRight: v)),
                   ),
                 )
               ],
@@ -139,11 +111,9 @@ class _ActualSettings extends StatelessWidget {
               enabledModes:
                   MapEntry(data.holdBoth, data.holdBothToggledAncModes),
               onChanged: (m) => headphones.setGestureSettings(
-                HeadphonesGestureSettings(
-                  data.doubleTapLeft,
-                  data.doubleTapRight,
-                  m.key,
-                  m.value,
+                data.copyWith(
+                  holdBoth: m.key,
+                  holdBothToggledAncModes: m.value,
                 ),
               ),
             ),

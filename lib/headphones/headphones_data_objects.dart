@@ -79,6 +79,19 @@ class HeadphonesGestureSettings {
   );
 
   static const empty = HeadphonesGestureSettings(null, null, null, null);
+
+  HeadphonesGestureSettings copyWith({
+    HeadphonesGestureDoubleTap? doubleTapLeft,
+    HeadphonesGestureDoubleTap? doubleTapRight,
+    HeadphonesGestureHold? holdBoth,
+    Set<HeadphonesAncMode>? holdBothToggledAncModes,
+  }) =>
+      HeadphonesGestureSettings(
+        doubleTapLeft ?? this.doubleTapLeft,
+        doubleTapRight ?? this.doubleTapRight,
+        holdBoth ?? this.holdBoth,
+        holdBothToggledAncModes ?? this.holdBothToggledAncModes,
+      );
 }
 
 enum HeadphonesGestureDoubleTap {
@@ -127,6 +140,7 @@ extension MbbStuff on Set<HeadphonesAncMode> {
 
 Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
   switch (mbbValue) {
+  // For some reason this is also 0 not 1 🤷
     case 0:
     case 1:
       return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
