@@ -29,8 +29,11 @@ class HeadphonesImplOtter extends HeadphonesBase {
       } catch (e, s) {
         logg.e("mbb parsing error", e, s);
       }
-      for (final cmd in commands ?? []) {
-        logg.v("Received mbb cmd: $cmd");
+      for (final cmd in commands ?? <MbbCommand>[]) {
+        // FILTER THE SHIT OUT
+        if (!(cmd.serviceId == 10 && cmd.commandId == 13)) {
+          logg.v("📥 Received mbb cmd: $cmd");
+        }
         try {
           _evalMbbCommand(cmd);
         } on RangeError catch (e, s) {
@@ -143,6 +146,7 @@ class HeadphonesImplOtter extends HeadphonesBase {
 
   // TODO: some .flush() for this
   Future<void> _sendMbb(MbbCommand comm) async {
+    logg.v("⬆ Sending mbb cmd: $comm");
     connection.sink.add(comm.toPayload());
   }
 
