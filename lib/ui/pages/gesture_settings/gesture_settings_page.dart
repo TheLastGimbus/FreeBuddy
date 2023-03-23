@@ -63,12 +63,28 @@ class _ActualSettings extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return StreamBuilder<HeadphonesGestureSettings>(
       stream: headphones.gestureSettings,
-      initialData: const HeadphonesGestureSettings(null, null, null),
+      initialData: HeadphonesGestureSettings.empty,
       builder: (context, snap) {
         final data = snap.data!;
         return ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            ElevatedButton(
+              onPressed: () {
+                headphones.setGestureSettings(
+                  HeadphonesGestureSettings(
+                    data.doubleTapLeft,
+                    data.doubleTapRight,
+                    HeadphonesGestureHold.cycleAnc,
+                    {
+                      HeadphonesAncMode.noiseCancel,
+                      HeadphonesAncMode.awareness
+                    },
+                  ),
+                );
+              },
+              child: Text('japierdole xd'),
+            ),
             Text(
               'Double tap',
               style: tt.titleMedium,
@@ -88,6 +104,7 @@ class _ActualSettings extends StatelessWidget {
                       HeadphonesGestureSettings(
                         v,
                         data.doubleTapRight,
+                        data.holdBoth,
                         data.holdBothToggledAncModes,
                       ),
                     ),
@@ -101,6 +118,7 @@ class _ActualSettings extends StatelessWidget {
                       HeadphonesGestureSettings(
                         data.doubleTapLeft,
                         v,
+                        data.holdBoth,
                         data.holdBothToggledAncModes,
                       ),
                     ),
@@ -118,12 +136,14 @@ class _ActualSettings extends StatelessWidget {
               style: tt.labelMedium,
             ),
             _HoldSettings(
-              enabledModes: data.holdBothToggledAncModes,
+              enabledModes:
+                  MapEntry(data.holdBoth, data.holdBothToggledAncModes),
               onChanged: (m) => headphones.setGestureSettings(
                 HeadphonesGestureSettings(
                   data.doubleTapLeft,
                   data.doubleTapRight,
-                  m,
+                  m.key,
+                  m.value,
                 ),
               ),
             ),
@@ -196,8 +216,9 @@ class _DoubleTapSetting extends StatelessWidget {
 }
 
 class _HoldSettings extends StatelessWidget {
-  final Set<HeadphonesAncMode>? enabledModes;
-  final void Function(Set<HeadphonesAncMode>)? onChanged;
+  final MapEntry<HeadphonesGestureHold?, Set<HeadphonesAncMode>?> enabledModes;
+  final void Function(
+      MapEntry<HeadphonesGestureHold?, Set<HeadphonesAncMode>?>)? onChanged;
 
   const _HoldSettings({Key? key, required this.enabledModes, this.onChanged})
       : super(key: key);
@@ -206,19 +227,43 @@ class _HoldSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        Switch(
+          value: enabledModes.key == HeadphonesGestureHold.cycleAnc,
+          onChanged: onChanged != null
+              ? (newVal) {
+                  onChanged!(
+                    MapEntry(
+                      newVal
+                          ? HeadphonesGestureHold.cycleAnc
+                          : HeadphonesGestureHold.nothing,
+                      enabledModes.value,
+                    ),
+                  );
+                }
+              : null,
+        ),
         ListTile(
           title: const Text('Noise canceling'),
           subtitle: const Text('Reduces noise around you'),
           trailing: Checkbox(
             value:
-                enabledModes?.contains(HeadphonesAncMode.noiseCancel) ?? false,
-            onChanged: (onChanged != null && enabledModes != null)
+                enabledModes.value?.contains(HeadphonesAncMode.noiseCancel) ??
+                    false,
+            onChanged: (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
+                    onChanged != null &&
+                    enabledModes.value != null)
                 ? (val) {
                     onChanged!(
-                      val!
-                          ? ({...enabledModes!, HeadphonesAncMode.noiseCancel})
-                          : ({...enabledModes!}
-                            ..remove(HeadphonesAncMode.noiseCancel)),
+                      MapEntry(
+                        enabledModes.key,
+                        val!
+                            ? ({
+                                ...enabledModes.value!,
+                                HeadphonesAncMode.noiseCancel
+                              })
+                            : ({...enabledModes.value!}
+                              ..remove(HeadphonesAncMode.noiseCancel)),
+                      ),
                     );
                   }
                 : null,
@@ -228,13 +273,19 @@ class _HoldSettings extends StatelessWidget {
           title: const Text('Off'),
           subtitle: const Text('Turns ANC off'),
           trailing: Checkbox(
-            value: enabledModes?.contains(HeadphonesAncMode.off) ?? false,
-            onChanged: (onChanged != null && enabledModes != null)
+            value: enabledModes.value?.contains(HeadphonesAncMode.off) ?? false,
+            onChanged: (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
+                    onChanged != null &&
+                    enabledModes.value != null)
                 ? (val) {
                     onChanged!(
-                      val!
-                          ? ({...enabledModes!, HeadphonesAncMode.off})
-                          : ({...enabledModes!}..remove(HeadphonesAncMode.off)),
+                      MapEntry(
+                        enabledModes.key,
+                        val!
+                            ? ({...enabledModes.value!, HeadphonesAncMode.off})
+                            : ({...enabledModes.value!}
+                              ..remove(HeadphonesAncMode.off)),
+                      ),
                     );
                   }
                 : null,
@@ -244,14 +295,23 @@ class _HoldSettings extends StatelessWidget {
           title: const Text('Awareness'),
           subtitle: const Text('Allows you to hear your surroundings'),
           trailing: Checkbox(
-            value: enabledModes?.contains(HeadphonesAncMode.awareness) ?? false,
-            onChanged: (onChanged != null && enabledModes != null)
+            value: enabledModes.value?.contains(HeadphonesAncMode.awareness) ??
+                false,
+            onChanged: (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
+                    onChanged != null &&
+                    enabledModes.value != null)
                 ? (val) {
                     onChanged!(
-                      val!
-                          ? ({...enabledModes!, HeadphonesAncMode.awareness})
-                          : ({...enabledModes!}
-                            ..remove(HeadphonesAncMode.awareness)),
+                      MapEntry(
+                        enabledModes.key,
+                        val!
+                            ? ({
+                                ...enabledModes.value!,
+                                HeadphonesAncMode.awareness
+                              })
+                            : ({...enabledModes.value!}
+                              ..remove(HeadphonesAncMode.awareness)),
+                      ),
                     );
                   }
                 : null,

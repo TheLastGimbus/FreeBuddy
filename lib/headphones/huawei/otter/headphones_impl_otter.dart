@@ -15,6 +15,8 @@ class HeadphonesImplOtter extends HeadphonesBase {
   final _batteryStreamCtrl = BehaviorSubject<HeadphonesBatteryData>();
   final _ancStreamCtrl = BehaviorSubject<HeadphonesAncMode>();
   final _autoPauseStreamCtrl = BehaviorSubject<bool>();
+  final _gestureSettingsStreamCtrl =
+      BehaviorSubject<HeadphonesGestureSettings>();
 
   /// This watches if we are still missing any info and re-requests it
   late StreamSubscription _watchdogStreamSub;
@@ -40,19 +42,28 @@ class HeadphonesImplOtter extends HeadphonesBase {
       _batteryStreamCtrl.close();
       _ancStreamCtrl.close();
       _autoPauseStreamCtrl.close();
+      _gestureSettingsStreamCtrl.close();
       _watchdogStreamSub.cancel();
     });
     _initRequestInfo();
     _watchdogStreamSub =
         Stream.periodic(const Duration(seconds: 3)).listen((_) {
-      if ([batteryData.valueOrNull, ancMode.valueOrNull, autoPause.valueOrNull]
-          .any((e) => e == null)) {
+      if ([
+        batteryData.valueOrNull,
+        ancMode.valueOrNull,
+        autoPause.valueOrNull,
+        gestureSettings.valueOrNull?.doubleTapLeft,
+        gestureSettings.valueOrNull?.doubleTapRight,
+        gestureSettings.valueOrNull?.holdBothToggledAncModes,
+      ].any((e) => e == null)) {
         _initRequestInfo();
       }
     });
   }
 
   void _evalMbbCommand(MbbCommand cmd) {
+    final lastGestures = _gestureSettingsStreamCtrl.valueOrNull ??
+        HeadphonesGestureSettings.empty;
     if (cmd.serviceId == 43 && cmd.commandId == 42 && cmd.args.containsKey(1)) {
       late HeadphonesAncMode newMode;
       // TODO: Add some constants for this globally
@@ -90,6 +101,43 @@ class HeadphonesImplOtter extends HeadphonesBase {
         cmd.commandId == 17 &&
         cmd.args.containsKey(1)) {
       _autoPauseStreamCtrl.add(cmd.args[1]![0] == 1);
+    } else if (cmd.serviceId == 1 && cmd.commandId == 32) {
+      // TODO: double tap not quite working
+      _gestureSettingsStreamCtrl.add(
+        HeadphonesGestureSettings(
+          cmd.args[1] != null
+              ? HeadphonesGestureDoubleTap.fromMbbValue(cmd.args[1]![0])
+              : lastGestures.doubleTapLeft,
+          cmd.args[2] != null
+              ? HeadphonesGestureDoubleTap.fromMbbValue(cmd.args[2]![0])
+              : lastGestures.doubleTapRight,
+          lastGestures.holdBoth,
+          lastGestures.holdBothToggledAncModes,
+        ),
+      );
+    } else if ((cmd.serviceId == 43 && cmd.commandId == 23)) {
+      _gestureSettingsStreamCtrl.add(
+        HeadphonesGestureSettings(
+          lastGestures.doubleTapLeft,
+          lastGestures.doubleTapRight,
+          // 10 equals switch ANC - if it's not that then it's disabled
+          (cmd.args[1] != null)
+              ? HeadphonesGestureHold.fromMbbValue(cmd.args[1]![0])
+              : lastGestures.holdBoth,
+          lastGestures.holdBothToggledAncModes,
+        ),
+      );
+    } else if (cmd.serviceId == 43 && cmd.commandId == 25) {
+      _gestureSettingsStreamCtrl.add(
+        HeadphonesGestureSettings(
+          lastGestures.doubleTapLeft,
+          lastGestures.doubleTapRight,
+          lastGestures.holdBoth,
+          (cmd.args[1] != null)
+              ? gestureHoldFromMbbValue(cmd.args[1]![0])
+              : lastGestures.holdBothToggledAncModes,
+        ),
+      );
     }
   }
 
@@ -97,6 +145,9 @@ class HeadphonesImplOtter extends HeadphonesBase {
     await _sendMbb(MbbCommand.requestBattery);
     await _sendMbb(MbbCommand.requestAnc);
     await _sendMbb(MbbCommand.requestAutoPause);
+    await _sendMbb(MbbCommand.requestGestureDoubleTap);
+    await _sendMbb(MbbCommand.requestGestureHold);
+    await _sendMbb(MbbCommand.requestGestureHoldToggledAncModes);
   }
 
   // TODO: some .flush() for this
@@ -141,13 +192,27 @@ class HeadphonesImplOtter extends HeadphonesBase {
   }
 
   @override
-  // TODO: implement gestureSettings
   ValueStream<HeadphonesGestureSettings> get gestureSettings =>
-      throw UnimplementedError();
+      _gestureSettingsStreamCtrl.stream;
 
   @override
-  Future<void> setGestureSettings(HeadphonesGestureSettings settings) {
-    // TODO: implement setGestureSettings
-    throw UnimplementedError();
+  Future<void> setGestureSettings(HeadphonesGestureSettings settings) async {
+    if (settings.doubleTapLeft != null) {
+      await _sendMbb(MbbCommand.gestureDoubleTapLeft(settings.doubleTapLeft!));
+    }
+    if (settings.doubleTapRight != null) {
+      await _sendMbb(
+          MbbCommand.gestureDoubleTapRight(settings.doubleTapRight!));
+    }
+    if (settings.holdBoth != null) {
+      await _sendMbb(MbbCommand.gestureHold(settings.holdBoth!));
+    }
+    if (settings.holdBothToggledAncModes != null) {
+      await _sendMbb(MbbCommand.gestureHoldToggledAncModes(
+          settings.holdBothToggledAncModes!));
+    }
+    await _sendMbb(MbbCommand.requestGestureDoubleTap);
+    await _sendMbb(MbbCommand.requestGestureHold);
+    await _sendMbb(MbbCommand.requestGestureHoldToggledAncModes);
   }
 }

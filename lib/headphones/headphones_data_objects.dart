@@ -68,17 +68,21 @@ enum HeadphonesAncMode {
 class HeadphonesGestureSettings {
   final HeadphonesGestureDoubleTap? doubleTapLeft;
   final HeadphonesGestureDoubleTap? doubleTapRight;
+  final HeadphonesGestureHold? holdBoth;
   final Set<HeadphonesAncMode>? holdBothToggledAncModes;
 
   const HeadphonesGestureSettings(
     this.doubleTapLeft,
     this.doubleTapRight,
+    this.holdBoth,
     this.holdBothToggledAncModes,
   );
+
+  static const empty = HeadphonesGestureSettings(null, null, null, null);
 }
 
 enum HeadphonesGestureDoubleTap {
-  nothing(-1),
+  nothing(255), // should be -1 but our implementation doesn't see negative
   voiceAssistant(0),
   playPause(1),
   next(2),
@@ -89,41 +93,52 @@ enum HeadphonesGestureDoubleTap {
   final int mbbValue;
 
   const HeadphonesGestureDoubleTap(this.mbbValue);
+
+  static fromMbbValue(int mbbValue) => HeadphonesGestureDoubleTap.values
+      .firstWhere((e) => e.mbbValue == mbbValue);
 }
 
-// TODO: Move this to mbb class
-// class HeadphonesGestureHold {
-//   final Set<HeadphonesAncMode> toggledModes;
-//
-//   const HeadphonesGestureHold(this.toggledModes);
-//
-//   int get mbbValue {
-//     if (toggledModes.isEmpty) return 1;
-//     if (toggledModes.length == 3) return 2;
-//     if (toggledModes ==
-//         {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness}) {
-//       return 3;
-//     }
-//     if (toggledModes == {HeadphonesAncMode.off, HeadphonesAncMode.awareness}) {
-//       return 4;
-//     }
-//     throw Exception("Unknown mbbValue for $toggledModes");
-//   }
-//
-//   static HeadphonesGestureHold fromMbbValue(int mbbValue) {
-//     switch (mbbValue) {
-//       case 1:
-//         return const HeadphonesGestureHold({});
-//       case 2:
-//         return HeadphonesGestureHold(HeadphonesAncMode.values.toSet());
-//       case 3:
-//         return const HeadphonesGestureHold(
-//             {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness});
-//       case 4:
-//         return const HeadphonesGestureHold(
-//             {HeadphonesAncMode.off, HeadphonesAncMode.awareness});
-//       default:
-//         throw Exception("Unknown mbbValue for $mbbValue");
-//     }
-//   }
-// }
+enum HeadphonesGestureHold {
+  nothing(255), // should be -1 but our implementation doesn't see negative
+  cycleAnc(10);
+
+  final int mbbValue;
+
+  const HeadphonesGestureHold(this.mbbValue);
+
+  static fromMbbValue(int mbbValue) =>
+      HeadphonesGestureHold.values.firstWhere((e) => e.mbbValue == mbbValue);
+}
+
+// TODO: Move this to mbb class or smth
+extension MbbStuff on Set<HeadphonesAncMode> {
+  int get mbbValue {
+    if (isEmpty) return 1;
+    if (length == 3) return 2;
+    if (this == {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness}) {
+      return 3;
+    }
+    if (this == {HeadphonesAncMode.off, HeadphonesAncMode.awareness}) {
+      return 4;
+    }
+    throw Exception("Unknown mbbValue for $this");
+  }
+}
+
+Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
+  switch (mbbValue) {
+    case 0:
+    case 1:
+      return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
+    case 2:
+      return HeadphonesAncMode.values.toSet();
+    case 3:
+      return const {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness};
+    case 4:
+      return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
+    case 255:
+      return {};
+    default:
+      throw Exception("Unknown mbbValue for $mbbValue");
+  }
+}

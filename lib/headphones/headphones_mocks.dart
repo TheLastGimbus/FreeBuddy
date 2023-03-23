@@ -59,6 +59,7 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
       const HeadphonesGestureSettings(
         HeadphonesGestureDoubleTap.playPause,
         HeadphonesGestureDoubleTap.next,
+        HeadphonesGestureHold.cycleAnc,
         {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness},
       ),
     );

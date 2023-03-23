@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:crclib/catalog.dart';
 
+import '../headphones_data_objects.dart';
+
 /// Helper class for Mbb protocol used to communicate with headphones
 class MbbUtils {
   // plus 3 magic bytes + 2 command bytes
@@ -156,6 +158,52 @@ class MbbCommand {
   static const autoPauseOff = MbbCommand(43, 16, {
     1: [0]
   });
+  static const requestGestureDoubleTap = MbbCommand(1, 32, {});
+
+  static gestureDoubleTapLeft(HeadphonesGestureDoubleTap left) =>
+      MbbCommand(1, 31, {
+        1: [left.mbbValue],
+      });
+
+  static gestureDoubleTapRight(HeadphonesGestureDoubleTap right) =>
+      MbbCommand(1, 31, {
+        2: [right.mbbValue],
+      });
+
+  static const requestGestureHold = MbbCommand(43, 23, {});
+
+  static gestureHold(HeadphonesGestureHold gestureHold) => MbbCommand(43, 22, {
+        1: [gestureHold.mbbValue],
+      });
+
+  static const requestGestureHoldToggledAncModes = MbbCommand(43, 25, {});
+
+  static gestureHoldToggledAncModes(Set<HeadphonesAncMode> toggledModes) {
+    int? mbbValue;
+    const se = SetEquality();
+    if (![2, 3].contains(toggledModes.length)) {
+      throw Exception(
+          "toggledModes must have 2 or 3 elements, not ${toggledModes.length}}");
+    }
+    if (toggledModes.length == 3) mbbValue = 2;
+    if (se.equals(
+        toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel})) {
+      mbbValue = 0;
+    }
+    if (se.equals(toggledModes,
+        {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness})) {
+      mbbValue = 3;
+    }
+    if (se.equals(
+        toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.awareness})) {
+      mbbValue = 4;
+    }
+    if (mbbValue == null) throw Exception("Unknown mbbValue for $toggledModes");
+    return MbbCommand(43, 24, {
+      1: [mbbValue],
+      2: [mbbValue]
+    });
+  }
 }
 
 extension _ListUtils on List {
