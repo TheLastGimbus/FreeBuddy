@@ -13,7 +13,15 @@ class MbbUtils {
   /// Get Crc16Xmodem checksum of [data] as Uin8List of two bytes
   static Uint8List checksum(List<int> data) {
     final crc = Crc16Xmodem().convert(data);
-    final str = crc.toRadixString(16);
+    // NOTE: There was a fat-ass bug here: crc didn't pad the first number with
+    // 0, so every time byte was like this, whole message was rejected :/
+    //
+    // Because of this, app couldn't get info about gestures when left bud was
+    // "play/pause" and right was "voice assist" - it was just blank :/
+    //
+    // Why I'm saying this - we need some unit tests for all of this
+    // even at those early stages
+    final str = crc.toRadixString(16).padLeft(4, '0');
     final hexes = [str.substring(0, 2), str.substring(2)];
     final bytes = hexes.map((hex) => int.parse(hex, radix: 16));
     return Uint8List.fromList(bytes.toList());
