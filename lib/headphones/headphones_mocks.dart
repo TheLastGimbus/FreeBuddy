@@ -92,5 +92,12 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
 
   @override
   Future<void> setGestureSettings(HeadphonesGestureSettings settings) async =>
-      _gestureSettings.add(settings);
+      _gestureSettings.add(
+        _gestureSettings.value.copyWith(
+          doubleTapLeft: settings.doubleTapLeft,
+          doubleTapRight: settings.doubleTapRight,
+          holdBoth: settings.holdBoth,
+          holdBothToggledAncModes: settings.holdBothToggledAncModes,
+        ),
+      );
 }
