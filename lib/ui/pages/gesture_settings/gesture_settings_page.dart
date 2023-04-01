@@ -26,7 +26,7 @@ class _GestureSettingsPageState extends State<GestureSettingsPage> {
       appBar: AppBar(title: Text(l.pageGestureSettingsTitle)),
       body: BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
         builder: (_, state) {
-          // state = HeadphonesNoPermission();
+          // TODO: Unify this with whole big-ass machine from home_page.dart
           HeadphonesBase? h;
           if (state is HeadphonesConnectedOpen) {
             h = state.headphones;
