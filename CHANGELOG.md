@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.4 (2023-04-02)
+
+- Remove sleep mode because noone knows what it's for 🙈
+- Fully implement all gesture settings 🥳 - now you can uninstall Ai Life for good 😇
+
 ## 0.1.3 (2023-01-29)
 
 - Remove twitter/reddit links so maybe google happy
