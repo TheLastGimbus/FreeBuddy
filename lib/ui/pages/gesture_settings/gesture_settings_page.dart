@@ -63,7 +63,7 @@ class _ActualSettings extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return StreamBuilder<HeadphonesGestureSettings>(
       stream: headphones.gestureSettings,
-      initialData: HeadphonesGestureSettings.empty,
+      initialData: const HeadphonesGestureSettings(),
       builder: (context, snap) {
         final data = snap.data!;
         return ListView(
@@ -84,16 +84,18 @@ class _ActualSettings extends StatelessWidget {
                   child: _DoubleTapSetting(
                     title: const Text('Left bud'),
                     value: data.doubleTapLeft,
-                    onChanged: (v) => headphones
-                        .setGestureSettings(data.copyWith(doubleTapLeft: v)),
+                    onChanged: (v) => headphones.setGestureSettings(
+                      HeadphonesGestureSettings(doubleTapLeft: v),
+                    ),
                   ),
                 ),
                 Expanded(
                   child: _DoubleTapSetting(
                     title: const Text('Right bud'),
                     value: data.doubleTapRight,
-                    onChanged: (v) => headphones
-                        .setGestureSettings(data.copyWith(doubleTapRight: v)),
+                    onChanged: (v) => headphones.setGestureSettings(
+                      HeadphonesGestureSettings(doubleTapRight: v),
+                    ),
                   ),
                 )
               ],
@@ -111,7 +113,7 @@ class _ActualSettings extends StatelessWidget {
               enabledModes:
                   MapEntry(data.holdBoth, data.holdBothToggledAncModes),
               onChanged: (m) => headphones.setGestureSettings(
-                data.copyWith(
+                HeadphonesGestureSettings(
                   holdBoth: m.key,
                   holdBothToggledAncModes: m.value,
                 ),

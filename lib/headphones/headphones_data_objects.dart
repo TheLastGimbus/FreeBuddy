@@ -71,14 +71,12 @@ class HeadphonesGestureSettings {
   final HeadphonesGestureHold? holdBoth;
   final Set<HeadphonesAncMode>? holdBothToggledAncModes;
 
-  const HeadphonesGestureSettings(
+  const HeadphonesGestureSettings({
     this.doubleTapLeft,
     this.doubleTapRight,
     this.holdBoth,
     this.holdBothToggledAncModes,
-  );
-
-  static const empty = HeadphonesGestureSettings(null, null, null, null);
+  });
 
   HeadphonesGestureSettings copyWith({
     HeadphonesGestureDoubleTap? doubleTapLeft,
@@ -87,10 +85,11 @@ class HeadphonesGestureSettings {
     Set<HeadphonesAncMode>? holdBothToggledAncModes,
   }) =>
       HeadphonesGestureSettings(
-        doubleTapLeft ?? this.doubleTapLeft,
-        doubleTapRight ?? this.doubleTapRight,
-        holdBoth ?? this.holdBoth,
-        holdBothToggledAncModes ?? this.holdBothToggledAncModes,
+        doubleTapLeft: doubleTapLeft ?? this.doubleTapLeft,
+        doubleTapRight: doubleTapRight ?? this.doubleTapRight,
+        holdBoth: holdBoth ?? this.holdBoth,
+        holdBothToggledAncModes:
+            holdBothToggledAncModes ?? this.holdBothToggledAncModes,
       );
 }
 

@@ -66,7 +66,7 @@ class HeadphonesImplOtter extends HeadphonesBase {
 
   void _evalMbbCommand(MbbCommand cmd) {
     final lastGestures = _gestureSettingsStreamCtrl.valueOrNull ??
-        HeadphonesGestureSettings.empty;
+        const HeadphonesGestureSettings();
     if (cmd.serviceId == 43 && cmd.commandId == 42 && cmd.args.containsKey(1)) {
       late HeadphonesAncMode newMode;
       // TODO: Add some constants for this globally
@@ -190,6 +190,9 @@ class HeadphonesImplOtter extends HeadphonesBase {
   ValueStream<HeadphonesGestureSettings> get gestureSettings =>
       _gestureSettingsStreamCtrl.stream;
 
+  /// This function welcomes you to send [settings] object with null values -
+  /// it will only send headphones commands for non-null values, so we don't
+  /// waste time 👍
   @override
   Future<void> setGestureSettings(HeadphonesGestureSettings settings) async {
     // double tap
