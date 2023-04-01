@@ -192,6 +192,7 @@ class HeadphonesImplOtter extends HeadphonesBase {
 
   @override
   Future<void> setGestureSettings(HeadphonesGestureSettings settings) async {
+    // double tap
     if (settings.doubleTapLeft != null) {
       await _sendMbb(MbbCommand.gestureDoubleTapLeft(settings.doubleTapLeft!));
     }
@@ -199,15 +200,18 @@ class HeadphonesImplOtter extends HeadphonesBase {
       await _sendMbb(
           MbbCommand.gestureDoubleTapRight(settings.doubleTapRight!));
     }
+    if (settings.doubleTapLeft != null || settings.doubleTapRight != null) {
+      await _sendMbb(MbbCommand.requestGestureDoubleTap);
+    }
+    // hold
     if (settings.holdBoth != null) {
       await _sendMbb(MbbCommand.gestureHold(settings.holdBoth!));
+      await _sendMbb(MbbCommand.requestGestureHold);
     }
     if (settings.holdBothToggledAncModes != null) {
       await _sendMbb(MbbCommand.gestureHoldToggledAncModes(
           settings.holdBothToggledAncModes!));
+      await _sendMbb(MbbCommand.requestGestureHoldToggledAncModes);
     }
-    await _sendMbb(MbbCommand.requestGestureDoubleTap);
-    await _sendMbb(MbbCommand.requestGestureHold);
-    await _sendMbb(MbbCommand.requestGestureHoldToggledAncModes);
   }
 }
