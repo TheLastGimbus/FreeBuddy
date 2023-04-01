@@ -101,13 +101,38 @@ class _ActualSettings extends StatelessWidget {
               ],
             ),
             const Divider(height: 32),
-            Text(
-              'Touch and hold',
-              style: tt.titleMedium,
-            ),
-            Text(
-              'Holding a bud will toggle these ANC modes:',
-              style: tt.labelMedium,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // this lets text break
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Touch and hold',
+                        style: tt.titleMedium,
+                      ),
+                      Text(
+                        'Holding a bud will toggle these ANC modes:',
+                        style: tt.labelMedium,
+                      ),
+                    ],
+                  ),
+                ),
+                Switch(
+                  value: data.holdBoth == HeadphonesGestureHold.cycleAnc,
+                  onChanged: (newVal) {
+                    headphones.setGestureSettings(
+                      HeadphonesGestureSettings(
+                        holdBoth: newVal
+                            ? HeadphonesGestureHold.cycleAnc
+                            : HeadphonesGestureHold.nothing,
+                      ),
+                    );
+                  },
+                ),
+              ],
             ),
             _HoldSettings(
               enabledModes:
@@ -232,21 +257,6 @@ class _HoldSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Switch(
-          value: enabledModes.key == HeadphonesGestureHold.cycleAnc,
-          onChanged: onChanged != null
-              ? (newVal) {
-                  onChanged!(
-                    MapEntry(
-                      newVal
-                          ? HeadphonesGestureHold.cycleAnc
-                          : HeadphonesGestureHold.nothing,
-                      enabledModes.value,
-                    ),
-                  );
-                }
-              : null,
-        ),
         modeCheckbox(
           'Noise canceling',
           'Reduces noise around you',
