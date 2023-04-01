@@ -23,9 +23,7 @@ class _GestureSettingsPageState extends State<GestureSettingsPage> {
     final tt = t.textTheme;
     final l = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Gesture Settings'),
-      ),
+      appBar: AppBar(title: Text(l.pageGestureSettingsTitle)),
       body: BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
         builder: (_, state) {
           // state = HeadphonesNoPermission();
@@ -70,11 +68,11 @@ class _ActualSettings extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           children: [
             Text(
-              'Double tap',
+              l.pageGestureSettingsDoubleTap,
               style: tt.titleMedium,
             ),
             Text(
-              'Tap a bud twice to:',
+              l.pageGestureSettingsDoubleTapDesc,
               style: tt.labelMedium,
             ),
             const SizedBox(height: 6),
@@ -82,7 +80,7 @@ class _ActualSettings extends StatelessWidget {
               children: [
                 Expanded(
                   child: _DoubleTapSetting(
-                    title: const Text('Left bud'),
+                    title: Text(l.pageGestureSettingsLeftBud),
                     value: data.doubleTapLeft,
                     onChanged: (v) => headphones.setGestureSettings(
                       HeadphonesGestureSettings(doubleTapLeft: v),
@@ -93,7 +91,7 @@ class _ActualSettings extends StatelessWidget {
                 // https://github.com/flutter/flutter/issues/27293
                 Expanded(
                   child: _DoubleTapSetting(
-                    title: const Text('Right bud'),
+                    title: Text(l.pageGestureSettingsRightBud),
                     value: data.doubleTapRight,
                     onChanged: (v) => headphones.setGestureSettings(
                       HeadphonesGestureSettings(doubleTapRight: v),
@@ -112,11 +110,11 @@ class _ActualSettings extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Touch and hold',
+                        l.pageGestureSettingsHold,
                         style: tt.titleMedium,
                       ),
                       Text(
-                        'Holding a bud will toggle these ANC modes:',
+                        l.pageGestureSettingsHoldDesc,
                         style: tt.labelMedium,
                       ),
                     ],
@@ -164,13 +162,12 @@ class _DoubleTapSetting extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context);
-    final tt = t.textTheme;
+    final l = AppLocalizations.of(context)!;
     return Column(
       children: [
         if (title != null) title!,
         ListTile(
-          title: const Text('Play/Pause'),
+          title: Text(l.pageGestureSettingsDoubleTapPlayPause),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.playPause,
             groupValue: value,
@@ -178,7 +175,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: const Text('Next song'),
+          title: Text(l.pageGestureSettingsDoubleTapNextSong),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.next,
             groupValue: value,
@@ -186,7 +183,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: const Text('Previous song'),
+          title: Text(l.pageGestureSettingsDoubleTapPrevSong),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.previous,
             groupValue: value,
@@ -194,7 +191,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: const Text('Voice assistant'),
+          title: Text(l.pageGestureSettingsDoubleTapAssist),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.voiceAssistant,
             groupValue: value,
@@ -202,7 +199,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: const Text('None'),
+          title: Text(l.pageGestureSettingsDoubleTapNone),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.nothing,
             groupValue: value,
@@ -257,21 +254,22 @@ class _HoldSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context)!;
     return Column(
       children: [
         modeCheckbox(
-          'Noise canceling',
-          'Reduces noise around you',
+          l.ancNoiseCancel,
+          l.ancNoiseCancelDesc,
           HeadphonesAncMode.noiseCancel,
         ),
         modeCheckbox(
-          'Off',
-          'Turns ANC off',
+          l.ancOff,
+          l.ancOffDesc,
           HeadphonesAncMode.off,
         ),
         modeCheckbox(
-          'Awareness',
-          'Allows you to hear your surroundings',
+          l.ancAwareness,
+          l.ancAwarenessDesc,
           HeadphonesAncMode.awareness,
         ),
       ],

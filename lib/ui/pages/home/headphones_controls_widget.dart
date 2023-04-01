@@ -58,7 +58,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
                       Navigator.of(context).pushNamed('/gesture_settings'),
                   child: Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: Text(l.gestureSettings),
+                    child: Text(l.pageGestureSettingsTitle),
                   ),
                 ),
               ),
