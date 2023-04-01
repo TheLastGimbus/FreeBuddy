@@ -139,7 +139,7 @@ extension MbbStuff on Set<HeadphonesAncMode> {
 
 Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
   switch (mbbValue) {
-  // For some reason this is also 0 not 1 🤷
+    // For some reason this is also 0 not 1 🤷
     case 0:
     case 1:
       return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};

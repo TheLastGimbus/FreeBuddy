@@ -30,8 +30,8 @@ jobs:
           flutter-version: ${{ env.flutter_version }}
           channel: ${{ env.flutter_channel }}
       - run: flutter pub get
-      - name: flutter format
-        run: flutter format --set-exit-if-changed lib test
+      - name: dart format
+        run: dart format --set-exit-if-changed lib test
       - run: flutter analyze lib test
       - name: flutter test
         run: flutter test --no-pub --coverage
