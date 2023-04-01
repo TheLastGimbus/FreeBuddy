@@ -89,6 +89,8 @@ class _ActualSettings extends StatelessWidget {
                     ),
                   ),
                 ),
+                // TODO: Put divider between them once this gets closed:
+                // https://github.com/flutter/flutter/issues/27293
                 Expanded(
                   child: _DoubleTapSetting(
                     title: const Text('Right bud'),
