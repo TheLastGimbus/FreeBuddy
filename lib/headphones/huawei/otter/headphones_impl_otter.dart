@@ -105,7 +105,6 @@ class HeadphonesImplOtter extends HeadphonesBase {
         cmd.args.containsKey(1)) {
       _autoPauseStreamCtrl.add(cmd.args[1]![0] == 1);
     } else if (cmd.serviceId == 1 && cmd.commandId == 32) {
-      // TODO: double tap not quite working
       _gestureSettingsStreamCtrl.add(
         lastGestures.copyWith(
           doubleTapLeft: cmd.args[1] != null
