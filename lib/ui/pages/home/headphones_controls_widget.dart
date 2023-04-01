@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../gen/fms.dart';
 import '../../../headphones/headphones_base.dart';
 import '../../../headphones/headphones_data_objects.dart';
-import '../../app_settings.dart';
-import '../disabled.dart';
 import '../pretty_rounded_container_widget.dart';
 import 'anc_button_widget.dart';
 import 'battery_circle_widget.dart';
@@ -170,80 +167,6 @@ class _AutoPauseSwitch extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-// suspended for now
-class _SleepModeSwitch extends StatelessWidget {
-  final HeadphonesBase headphones;
-
-  const _SleepModeSwitch(this.headphones);
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
-    return PrettyRoundedContainerWidget(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Text(l.sleepMode),
-          StreamBuilder<bool>(
-            stream: context.read<AppSettings>().sleepMode,
-            builder: (context, snapshot) => Switch(
-              value: snapshot.data ?? false,
-              onChanged: (value) async {
-                // TODO: move this logic somewhere else 🙏
-                // currently have no idea where
-                // maybe some "CoolModes" class 0_o
-                // TODO 2: move this snackbar somewhere else too
-                if (value) {
-                  ScaffoldMessenger.maybeOf(context)?.showSnackBar(
-                    SnackBar(content: Text(l.sleepModeExplanation)),
-                  );
-                }
-                final settings = context.read<AppSettings>();
-                if (value) {
-                  settings.setSleepModePreviousSettings(
-                    await headphones.dumpSettings(),
-                  );
-                  await headphones.setAncMode(HeadphonesAncMode.off);
-                  await headphones.setAutoPause(false);
-                  // TODO: Disable gestures
-                  // TODO #2 electric boogaloo: implement gestures
-                } else {
-                  await headphones.restoreSettings(
-                    await settings.sleepModePreviousSettings.first,
-                  );
-                }
-                settings.setSleepMode(value);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-// suspended for now
-class _SleepDisablable extends StatelessWidget {
-  final Widget child;
-
-  const _SleepDisablable({required this.child});
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context)!;
-    // TODO: another reason to clean up the settings ;_;
-    return StreamBuilder(
-      initialData: false,
-      stream: context.read<AppSettings>().sleepMode,
-      builder: (_, snap) => Disabled(
-        disabled: (snap.data ?? false),
-        coveringWidget: Text(l.sleepModeOverlay),
-        child: child,
       ),
     );
   }
