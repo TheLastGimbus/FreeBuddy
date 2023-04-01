@@ -195,6 +195,39 @@ class _HoldSettings extends StatelessWidget {
   const _HoldSettings({Key? key, required this.enabledModes, this.onChanged})
       : super(key: key);
 
+  bool checkboxChecked(HeadphonesAncMode mode) =>
+      enabledModes.value?.contains(mode) ?? false;
+
+  bool checkboxEnabled(bool enabled) =>
+      (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
+          onChanged != null &&
+          enabledModes.value != null &&
+          // either all modes are enabled, or this is the disabled one
+          (enabledModes.value!.length > 2 || !enabled));
+
+  Widget modeCheckbox(String title, String desc, HeadphonesAncMode mode) {
+    final checked = checkboxChecked(mode);
+    return ListTile(
+      title: Text(title),
+      subtitle: Text(desc),
+      trailing: Checkbox(
+        value: checked,
+        onChanged: checkboxEnabled(checked)
+            ? (val) {
+                onChanged!(
+                  MapEntry(
+                    enabledModes.key,
+                    val!
+                        ? ({...enabledModes.value!, mode})
+                        : ({...enabledModes.value!}..remove(mode)),
+                  ),
+                );
+              }
+            : null,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -205,89 +238,29 @@ class _HoldSettings extends StatelessWidget {
               ? (newVal) {
                   onChanged!(
                     MapEntry(
-                      newVal
-                          ? HeadphonesGestureHold.cycleAnc
-                          : HeadphonesGestureHold.nothing,
-                      enabledModes.value,
-                    ),
-                  );
-                }
+                newVal
+                    ? HeadphonesGestureHold.cycleAnc
+                    : HeadphonesGestureHold.nothing,
+                enabledModes.value,
+              ),
+            );
+          }
               : null,
         ),
-        ListTile(
-          title: const Text('Noise canceling'),
-          subtitle: const Text('Reduces noise around you'),
-          trailing: Checkbox(
-            value:
-                enabledModes.value?.contains(HeadphonesAncMode.noiseCancel) ??
-                    false,
-            onChanged: (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
-                    onChanged != null &&
-                    enabledModes.value != null)
-                ? (val) {
-                    onChanged!(
-                      MapEntry(
-                        enabledModes.key,
-                        val!
-                            ? ({
-                                ...enabledModes.value!,
-                                HeadphonesAncMode.noiseCancel
-                              })
-                            : ({...enabledModes.value!}
-                              ..remove(HeadphonesAncMode.noiseCancel)),
-                      ),
-                    );
-                  }
-                : null,
-          ),
+        modeCheckbox(
+          'Noise canceling',
+          'Reduces noise around you',
+          HeadphonesAncMode.noiseCancel,
         ),
-        ListTile(
-          title: const Text('Off'),
-          subtitle: const Text('Turns ANC off'),
-          trailing: Checkbox(
-            value: enabledModes.value?.contains(HeadphonesAncMode.off) ?? false,
-            onChanged: (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
-                    onChanged != null &&
-                    enabledModes.value != null)
-                ? (val) {
-                    onChanged!(
-                      MapEntry(
-                        enabledModes.key,
-                        val!
-                            ? ({...enabledModes.value!, HeadphonesAncMode.off})
-                            : ({...enabledModes.value!}
-                              ..remove(HeadphonesAncMode.off)),
-                      ),
-                    );
-                  }
-                : null,
-          ),
+        modeCheckbox(
+          'Off',
+          'Turns ANC off',
+          HeadphonesAncMode.off,
         ),
-        ListTile(
-          title: const Text('Awareness'),
-          subtitle: const Text('Allows you to hear your surroundings'),
-          trailing: Checkbox(
-            value: enabledModes.value?.contains(HeadphonesAncMode.awareness) ??
-                false,
-            onChanged: (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
-                    onChanged != null &&
-                    enabledModes.value != null)
-                ? (val) {
-                    onChanged!(
-                      MapEntry(
-                        enabledModes.key,
-                        val!
-                            ? ({
-                                ...enabledModes.value!,
-                                HeadphonesAncMode.awareness
-                              })
-                            : ({...enabledModes.value!}
-                              ..remove(HeadphonesAncMode.awareness)),
-                      ),
-                    );
-                  }
-                : null,
-          ),
+        modeCheckbox(
+          'Awareness',
+          'Allows you to hear your surroundings',
+          HeadphonesAncMode.awareness,
         ),
       ],
     );
