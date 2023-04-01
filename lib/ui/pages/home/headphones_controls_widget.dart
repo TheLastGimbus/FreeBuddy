@@ -155,8 +155,9 @@ class _AutoPauseSwitch extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
     return PrettyRoundedContainerWidget(
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      child: Wrap(
+        alignment: WrapAlignment.center,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           Text(l.autoPause),
           StreamBuilder<bool>(
