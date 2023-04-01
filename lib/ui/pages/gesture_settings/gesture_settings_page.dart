@@ -61,7 +61,8 @@ class _ActualSettings extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return StreamBuilder<HeadphonesGestureSettings>(
       stream: headphones.gestureSettings,
-      initialData: const HeadphonesGestureSettings(),
+      initialData: headphones.gestureSettings.valueOrNull ??
+          const HeadphonesGestureSettings(),
       builder: (context, snap) {
         final data = snap.data!;
         return ListView(
