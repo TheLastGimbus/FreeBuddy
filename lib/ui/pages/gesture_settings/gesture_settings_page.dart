@@ -238,13 +238,13 @@ class _HoldSettings extends StatelessWidget {
               ? (newVal) {
                   onChanged!(
                     MapEntry(
-                newVal
-                    ? HeadphonesGestureHold.cycleAnc
-                    : HeadphonesGestureHold.nothing,
-                enabledModes.value,
-              ),
-            );
-          }
+                      newVal
+                          ? HeadphonesGestureHold.cycleAnc
+                          : HeadphonesGestureHold.nothing,
+                      enabledModes.value,
+                    ),
+                  );
+                }
               : null,
         ),
         modeCheckbox(
