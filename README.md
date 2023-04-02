@@ -23,9 +23,9 @@ So I got mad and decided to make my own... and here it is 🌈
 
 - [x] Show battery levels
 - [x] Switch ANC modes
-- [ ] Change settings
+- [x] Change settings
   - [x] Smart wear
-  - [ ] Tap actions
+  - [x] Tap actions
 - [x] Cool features:
   - [x] Sleep mode - disables gestures/anc/smart wear for nice sleeping
   - [ ] ANC lock - lock on certain ANC mode no matter what
