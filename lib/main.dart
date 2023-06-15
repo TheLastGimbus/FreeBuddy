@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -46,22 +47,24 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.system,
-      routes: {
-        '/': (context) => const HomePage(),
-        '/gesture_settings': (context) => const GestureSettingsPage(),
-        '/introduction': (context) => const FreebuddyIntroduction(),
-        '/settings': (context) => const SettingsPage(),
-        '/settings/about': (context) => const AboutPage(),
-        '/settings/about/licenses': (context) => const LicensePage(),
-      },
-      initialRoute: '/',
+    return DynamicColorBuilder(
+      builder: (lightDynamic, darkDynamic) => MaterialApp(
+        onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        theme: lightTheme(lightDynamic),
+        darkTheme: darkTheme(darkDynamic),
+        themeMode: ThemeMode.system,
+        routes: {
+          '/': (context) => const HomePage(),
+          '/gesture_settings': (context) => const GestureSettingsPage(),
+          '/introduction': (context) => const FreebuddyIntroduction(),
+          '/settings': (context) => const SettingsPage(),
+          '/settings/about': (context) => const AboutPage(),
+          '/settings/about/licenses': (context) => const LicensePage(),
+        },
+        initialRoute: '/',
+      ),
     );
   }
 }

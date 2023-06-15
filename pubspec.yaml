@@ -40,6 +40,7 @@ dependencies:
   app_settings: ^4.2.0
   url_launcher: ^6.1.11
   permission_handler: ^10.3.0
+  dynamic_color: ^1.6.5
 
   # Logic libs
   crclib: ^3.0.0

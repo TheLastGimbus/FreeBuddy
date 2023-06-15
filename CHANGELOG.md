@@ -1,5 +1,9 @@
 # Changelog
 
+# 0.1.5 (todo)
+
+- Material You colors on Android 12
+
 ## 0.1.4 (2023-04-02)
 
 - Remove sleep mode because noone knows what it's for 🙈

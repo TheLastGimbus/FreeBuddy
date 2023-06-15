@@ -3,10 +3,6 @@ import 'package:flutter/material.dart';
 // Maybe make a check for platform version, but honestly this is nice
 bool get useMaterial3 => true;
 
-ThemeData get _light => ThemeData.light(useMaterial3: useMaterial3);
-
-ThemeData get _dark => ThemeData.dark(useMaterial3: useMaterial3);
-
 /// This allows us to override both themes
 ThemeData _customize(ThemeData theme) {
   final tt = theme.textTheme;
@@ -42,23 +38,21 @@ ThemeData _customize(ThemeData theme) {
   );
 }
 
-ThemeData get lightTheme {
-  return _customize(_light).copyWith(
-    colorScheme: _light.colorScheme.copyWith(
-      shadow: const Color(0x80808080),
-      // Leaving this so you see how you can customize colors individually
-      // primary: const Color(0xFF1E88E5),
-      // secondary: const Color(0xFF1E88E5),
-    ),
+ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
+  return _customize(ThemeData.light(useMaterial3: useMaterial3)).copyWith(
+    colorScheme: dynamicColorScheme,
+    // TODO: Do something about this shadow...
+    // colorScheme: _light.colorScheme.copyWith(
+    //   shadow: const Color(0x80808080),
+    // ),
   );
 }
 
-ThemeData get darkTheme {
-  return _customize(_dark).copyWith(
-    colorScheme: _dark.colorScheme.copyWith(
-        // Leaving this so you see how you can customize colors individually
-        // primary: const Color(0xFF1E88E5),
-        // secondary: const Color(0xFF1E88E5),
-        ),
+ThemeData darkTheme(ColorScheme? dynamicColorScheme) {
+  return _customize(ThemeData.dark(useMaterial3: useMaterial3)).copyWith(
+    colorScheme: dynamicColorScheme,
+    // colorScheme: _dark.colorScheme.copyWith(
+    //     // Leaving this so you see how you can customize colors individually
+    //     ),
   );
 }
