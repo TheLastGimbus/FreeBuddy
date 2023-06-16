@@ -81,23 +81,25 @@ class _BatteryCard extends StatelessWidget {
 
     // Don't feel like exporting this anywhere 🤷
     batteryBox(String text, int? level, bool? charging) => Expanded(
-          child: _BatteryIndicator(
-            level: level,
-            child: Wrap(
-              alignment: WrapAlignment.spaceEvenly,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              children: [
-                Text('$text • ${level ?? '-'}%', textAlign: TextAlign.center),
-                if (charging ?? false)
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 1),
-                    child: Icon(
-                      Fms.charger_filled,
-                      size: 20,
-                      color: t.colorScheme.onPrimaryContainer,
+          child: _BatteryContainer(
+            value: level != null ? level / 100 : null,
+            child: Center(
+              child: Wrap(
+                alignment: WrapAlignment.spaceEvenly,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                children: [
+                  Text('$text • ${level ?? '-'}%', textAlign: TextAlign.center),
+                  if (charging ?? false)
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 1),
+                      child: Icon(
+                        Fms.charger_filled,
+                        size: 20,
+                        color: t.colorScheme.onPrimaryContainer,
+                      ),
                     ),
-                  ),
-              ],
+                ],
+              ),
             ),
           ),
         );
@@ -224,8 +226,9 @@ class _HeadphonesSettingsButton extends StatelessWidget {
 /// https://9to5google.com/2022/09/29/pixel-battery-widget-time/
 class _BatteryContainer extends StatelessWidget {
   final double? value;
+  final Widget? child;
 
-  const _BatteryContainer({Key? key, this.value}) : super(key: key);
+  const _BatteryContainer({Key? key, this.value, this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -235,42 +238,29 @@ class _BatteryContainer extends StatelessWidget {
     final palette = TonalPalette.of(color.hue, color.chroma);
     return ClipRRect(
       borderRadius: BorderRadius.circular(12),
-      child: RotatedBox(
-        quarterTurns: -1,
-        child: LinearProgressIndicator(
-          value: value,
-          color: Color(
-            palette.get(
-              t.colorScheme.brightness == Brightness.dark ? 25 : 80,
+      child: Stack(
+        alignment: Alignment.center,
+        fit: StackFit.expand,
+        children: [
+          RotatedBox(
+            quarterTurns: -1,
+            child: LinearProgressIndicator(
+              value: value,
+              color: Color(
+                palette.get(
+                  t.colorScheme.brightness == Brightness.dark ? 25 : 80,
+                ),
+              ),
+              backgroundColor: Color(
+                palette.get(
+                  t.colorScheme.brightness == Brightness.dark ? 10 : 90,
+                ),
+              ),
             ),
           ),
-          backgroundColor: Color(
-            palette.get(
-              t.colorScheme.brightness == Brightness.dark ? 10 : 90,
-            ),
-          ),
-        ),
+          if (child != null) child!,
+        ],
       ),
-    );
-  }
-}
-
-class _BatteryIndicator extends StatelessWidget {
-  final int? level;
-  final Widget? child;
-
-  const _BatteryIndicator({Key? key, this.level, this.child}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final value = level != null ? level! / 100 : null;
-    return Stack(
-      alignment: Alignment.center,
-      fit: StackFit.expand,
-      children: [
-        _BatteryContainer(value: value),
-        Center(child: child),
-      ],
     );
   }
 }
