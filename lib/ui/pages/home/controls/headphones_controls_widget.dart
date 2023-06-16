@@ -57,6 +57,7 @@ class _HeadphonesSettingsButton extends StatelessWidget {
     final t = Theme.of(context);
     final l = AppLocalizations.of(context)!;
     return Padding(
+      // TODO: Move this to theme stuff some day
       padding: t.cardTheme.margin ?? const EdgeInsets.all(4.0),
       child: OutlinedButton(
         onPressed: () => Navigator.pushNamed(context, '/headphones_settings'),

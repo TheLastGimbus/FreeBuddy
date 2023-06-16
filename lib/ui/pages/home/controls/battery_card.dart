@@ -51,10 +51,11 @@ class BatteryCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: SizedBox(
-              height: 64,
+              height: 86,
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  // TODO: Maybe make them boxes (but with some max size)
                   batteryBox(l.leftBudShort, b?.levelLeft, b?.chargingLeft),
                   const SizedBox(width: 8),
                   batteryBox(l.rightBudShort, b?.levelRight, b?.chargingRight),
