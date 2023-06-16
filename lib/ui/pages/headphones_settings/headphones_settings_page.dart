@@ -16,10 +16,9 @@ class HeadphonesSettingsPage extends StatelessWidget {
       body: HeadphonesConnectionEnsuringOverlay(
         builder: (_, h) {
           return ListView(
-            padding: const EdgeInsets.all(0),
             children: [
               DoubleTapSection(headphones: h),
-              const Divider(),
+              const Divider(indent: 16, endIndent: 16),
               HoldSection(headphones: h),
             ],
           );
