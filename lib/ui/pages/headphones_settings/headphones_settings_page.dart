@@ -1,44 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../headphones/cubit/headphones_connection_cubit.dart';
-import '../../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../../headphones/headphones_base.dart';
 import '../../../headphones/headphones_data_objects.dart';
-import '../../../headphones/headphones_mocks.dart';
-import '../disabled.dart';
+import '../../common/headphones_connection_ensuring_overlay.dart';
 
 class HeadphonesSettingsPage extends StatelessWidget {
   const HeadphonesSettingsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context);
-    final tt = t.textTheme;
     final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(l.pageHeadphonesSettingsTitle)),
-      body: BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
-        builder: (_, state) {
-          // TODO: Unify this with whole big-ass machine from home_page.dart
-          HeadphonesBase? h;
-          if (state is HeadphonesConnectedOpen) {
-            h = state.headphones;
-          } else {}
-          return Disabled(
-            disabled: state is! HeadphonesConnectedOpen,
-            coveringWidget: Padding(
-              padding: const EdgeInsets.all(32.0),
-              child: Text(
-                l.pageHomeDisconnected,
-                style: tt.displaySmall,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            child: _ActualSettings(headphones: h ?? HeadphonesMockNever()),
-          );
-        },
+      body: HeadphonesConnectionEnsuringOverlay(
+        builder: (_, h) => _ActualSettings(headphones: h),
       ),
     );
   }

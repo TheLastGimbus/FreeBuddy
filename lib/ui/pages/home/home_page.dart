@@ -2,18 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../headphones/cubit/headphones_connection_cubit.dart';
-import '../../../headphones/cubit/headphones_cubit_objects.dart';
-import '../../../headphones/headphones_base.dart';
-import '../../../headphones/headphones_mocks.dart';
 import '../../app_settings.dart';
-import '../disabled.dart';
-import 'bluetooth_disabled_info_widget.dart';
-import 'connected_closed_widget.dart';
+import '../../common/headphones_connection_ensuring_overlay.dart';
 import 'controls/headphones_controls_widget.dart';
-import 'disconnected_info_widget.dart';
-import 'no_permission_info_widget.dart';
-import 'not_paired_info_widget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -63,64 +54,8 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child:
-              BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
-            builder: (context, state) {
-              final t = Theme.of(context);
-              final tt = t.textTheme;
-              if (state is! HeadphonesNoPermission &&
-                  state is! HeadphonesNotPaired &&
-                  state is! HeadphonesBluetoothDisabled)
-              // We know that we *have* the headphones, but not connected
-              {
-                Widget? overlay;
-                HeadphonesBase? h;
-                if (state is HeadphonesDisconnected) {
-                  overlay = const DisconnectedInfoWidget();
-                } else if (state is HeadphonesConnecting) {
-                  overlay = Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(l.pageHomeConnecting, style: tt.displaySmall),
-                      const SizedBox(height: 16),
-                      const CircularProgressIndicator(),
-                    ],
-                  );
-                } else if (state is HeadphonesConnectedClosed) {
-                  overlay = const ConnectedClosedWidget();
-                } else if (state is HeadphonesConnectedOpen) {
-                  h = state.headphones;
-                }
-                // TODO: maybe little more fade and gray out?
-                return Disabled(
-                  disabled: h == null,
-                  // idea: potentially override theme here to make all text
-                  // center with Theme(child: ...)
-                  coveringWidget: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: overlay,
-                  ),
-                  // Looks like, because it's same widget tree, the non-null
-                  // headphones get cached (?) and we see last battery level
-                  // when they get disconnected
-                  // ...
-                  // I actually like this! Official "feature, not a bug"
-                  child: HeadphonesControlsWidget(
-                    headphones: h ?? HeadphonesMockNever(),
-                  ),
-                );
-              }
-              // We're not sure we have headphones - don't display them pretty
-              else if (state is HeadphonesNoPermission) {
-                return const NoPermissionInfoWidget();
-              } else if (state is HeadphonesNotPaired) {
-                return const NotPairedInfoWidget();
-              } else if (state is HeadphonesBluetoothDisabled) {
-                return const BluetoothDisabledInfoWidget();
-              } else {
-                return Text(l.pageHomeUnknown);
-              }
-            },
+          child: HeadphonesConnectionEnsuringOverlay(
+            builder: (_, h) => HeadphonesControlsWidget(headphones: h),
           ),
         ),
       ),
