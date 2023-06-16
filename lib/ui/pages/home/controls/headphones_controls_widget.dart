@@ -17,10 +17,10 @@ class HeadphonesControlsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
-    final l = AppLocalizations.of(context)!;
     return Column(
       children: [
         Text(
+          // TODO: This hardcode
           headphones.alias ?? 'FreeBuds 4i',
           style: tt.headlineMedium,
         ),
@@ -52,6 +52,9 @@ class _HeadphonesImageCard extends StatelessWidget {
 }
 
 /// Android12-Google-Battery-Widget-style battery card
+///
+/// https://9to5google.com/2022/03/07/google-pixel-battery-widget/
+/// https://9to5google.com/2022/09/29/pixel-battery-widget-time/
 class _BatteryCard extends StatelessWidget {
   final HeadphonesBase headphones;
 
@@ -60,6 +63,30 @@ class _BatteryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
+    final l = AppLocalizations.of(context)!;
+
+    // Don't feel like exporting this anywhere 🤷
+    batteryBox(String text, int? level, bool? charging) => Expanded(
+          child: _BatteryIndicator(
+            level: level,
+            child: Wrap(
+              alignment: WrapAlignment.spaceEvenly,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              children: [
+                Text('$text • ${level ?? '-'}%', textAlign: TextAlign.center),
+                if (charging ?? false)
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 1),
+                    child: Icon(
+                      Fms.charger_filled,
+                      size: 20,
+                      color: t.colorScheme.onPrimaryContainer,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        );
     return StreamBuilder(
       stream: headphones.batteryData,
       builder: (context, snapshot) {
@@ -72,26 +99,11 @@ class _BatteryCard extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  Expanded(
-                    child: _BatteryIndicator(
-                      level: data?.levelLeft,
-                      child: Text('Left • ${data?.levelLeft ?? '-'}%'),
-                    ),
-                  ),
+                  batteryBox('Left', data?.levelLeft, data?.chargingLeft),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: _BatteryIndicator(
-                      level: data?.levelRight,
-                      child: Text('Right • ${data?.levelRight ?? '-'}%'),
-                    ),
-                  ),
+                  batteryBox('Right', data?.levelRight, data?.chargingRight),
                   const SizedBox(width: 8),
-                  Expanded(
-                    child: _BatteryIndicator(
-                      level: data?.levelCase,
-                      child: Text('Case • ${data?.levelCase ?? '-'}%'),
-                    ),
-                  ),
+                  batteryBox('Case', data?.levelCase, data?.chargingCase),
                 ],
               ),
             ),
@@ -125,7 +137,9 @@ class _AncCard extends StatelessWidget {
                 const ConstrainedSpacer(
                     constraints: BoxConstraints(maxWidth: 32)),
                 _AncButton(
-                  icon: Fms.noise_control_on,
+                  icon: mode == HeadphonesAncMode.noiseCancel
+                      ? Fms.noise_control_on_700
+                      : Fms.noise_control_on,
                   isSelected: mode == HeadphonesAncMode.noiseCancel,
                   onPressed: () =>
                       headphones.setAncMode(HeadphonesAncMode.noiseCancel),
@@ -133,14 +147,18 @@ class _AncCard extends StatelessWidget {
                 const ConstrainedSpacer(
                     constraints: BoxConstraints(maxWidth: 32)),
                 _AncButton(
-                  icon: Fms.noise_control_off,
+                  icon: mode == HeadphonesAncMode.off
+                      ? Fms.noise_control_off_700
+                      : Fms.noise_control_off,
                   isSelected: mode == HeadphonesAncMode.off,
                   onPressed: () => headphones.setAncMode(HeadphonesAncMode.off),
                 ),
                 const ConstrainedSpacer(
                     constraints: BoxConstraints(maxWidth: 32)),
                 _AncButton(
-                  icon: Fms.noise_aware,
+                  icon: mode == HeadphonesAncMode.awareness
+                      ? Fms.noise_aware_700
+                      : Fms.noise_aware,
                   isSelected: mode == HeadphonesAncMode.awareness,
                   onPressed: () =>
                       headphones.setAncMode(HeadphonesAncMode.awareness),

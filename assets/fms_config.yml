@@ -6,7 +6,21 @@ family: Fms
 output:
   flutter: lib/gen/fms.dart
   font: assets/fonts/fms.ttf
+default:
+  style: rounded
 symbols:
   noise_control_off: "Noise Control Off"
+  noise_control_off_700:
+    name: "Noise Control Off"
+    weight: 700
   noise_aware: "Noise Aware"
+  noise_aware_700:
+    name: "Noise Aware"
+    weight: 700
   noise_control_on: "Noise Control On"
+  noise_control_on_700:
+    name: "Noise Control On"
+    weight: 700
+  charger_filled:
+    name: "Charger"
+    fill: true
