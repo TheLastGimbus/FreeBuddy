@@ -25,6 +25,7 @@
   "pageHomeConnectedClosedDesc": "You probably opened another app - connect again 👀",
   "pageHomeConnectedClosedConnect": "Connect to headphones",
   "autoPause": "Auto pause ⏸",
+  "autoPauseDesc": "Music will automatically pause when you take off headphones",
 
   "pageHeadphonesSettingsTitle": "Headphones settings 🔧",
   "pageHeadphonesSettingsDoubleTap": "Double tap",

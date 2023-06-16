@@ -25,6 +25,7 @@
   "pageHomeConnectedClosedDesc": "Pewnie otworzyłeś inną apke - połącz spowrotem 👀",
   "pageHomeConnectedClosedConnect": "Połącz ze słuchawkami",
   "autoPause": "Auto pauza ⏸",
+  "autoPauseDesc": "Muzyka automatycznie się zatrzyma kiedy ściągniesz słuchawki",
 
   "pageHeadphonesSettingsTitle": "Ustawienia słuchawek 🔧",
   "pageHeadphonesSettingsDoubleTap": "Dwukrotny tap",
