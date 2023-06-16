@@ -10,8 +10,8 @@ import '../../app_settings.dart';
 import '../disabled.dart';
 import 'bluetooth_disabled_info_widget.dart';
 import 'connected_closed_widget.dart';
+import 'controls/headphones_controls_widget.dart';
 import 'disconnected_info_widget.dart';
-import 'headphones_controls_widget.dart';
 import 'no_permission_info_widget.dart';
 import 'not_paired_info_widget.dart';
 
