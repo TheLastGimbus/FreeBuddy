@@ -25,8 +25,8 @@ class HoldSection extends StatelessWidget {
         return Column(
           children: [
             ListTileSwitch(
-              title: Text('Touch and hold'),
-              subtitle: Text('Holding a bud will toggle these anc modes:'),
+              title: Text(l.pageHeadphonesSettingsHold),
+              subtitle: Text(l.pageHeadphonesSettingsHoldDesc),
               value: enabled,
               onChanged: (newVal) => headphones.setGestureSettings(
                 HeadphonesGestureSettings(
