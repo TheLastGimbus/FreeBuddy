@@ -1,6 +1,11 @@
 {
   "appTitle": "FreeBuddy",
   "helloWorld": "Hello World!",
+
+  "leftBudShort": "Left",
+  "rightBudShort": "Right",
+  "caseShort": "Case",
+
   "pageHomeConnected": "Connected",
   "pageHomeDisconnected": "Headphones not connected 🙅",
   "pageHomeDisconnectedDesc": "Your headphones are not connected to your phone 😨",

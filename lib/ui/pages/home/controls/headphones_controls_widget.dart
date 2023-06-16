@@ -90,7 +90,7 @@ class _BatteryCard extends StatelessWidget {
     return StreamBuilder(
       stream: headphones.batteryData,
       builder: (context, snapshot) {
-        final data = snapshot.data;
+        final b = snapshot.data;
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(12.0),
@@ -99,11 +99,11 @@ class _BatteryCard extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  batteryBox('Left', data?.levelLeft, data?.chargingLeft),
+                  batteryBox(l.leftBudShort, b?.levelLeft, b?.chargingLeft),
                   const SizedBox(width: 8),
-                  batteryBox('Right', data?.levelRight, data?.chargingRight),
+                  batteryBox(l.rightBudShort, b?.levelRight, b?.chargingRight),
                   const SizedBox(width: 8),
-                  batteryBox('Case', data?.levelCase, data?.chargingCase),
+                  batteryBox(l.caseShort, b?.levelCase, b?.chargingCase),
                 ],
               ),
             ),
@@ -185,18 +185,19 @@ class _HeadphonesSettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
+    final l = AppLocalizations.of(context)!;
     return Padding(
       padding: t.cardTheme.margin ?? const EdgeInsets.all(4.0),
       child: OutlinedButton(
         onPressed: () => Navigator.pushNamed(context, '/gesture_settings'),
-        child: const Padding(
-          padding: EdgeInsets.all(2.0),
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.settings_outlined, size: 20),
-              SizedBox(width: 4),
-              Text('Settings'),
+              const Icon(Icons.settings_outlined, size: 20),
+              const SizedBox(width: 4),
+              Text(l.settings),
             ],
           ),
         ),

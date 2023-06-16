@@ -1,6 +1,11 @@
 {
   "appTitle": "FreeBuddy",
   "helloWorld": "Witaj świecie!",
+
+  "leftBudShort": "Lewa",
+  "rightBudShort": "Prawa",
+  "caseShort": "Etui",
+
   "pageHomeConnected": "Połączone",
   "pageHomeDisconnected": "Słuchawki nie połączone 🙅",
   "pageHomeDisconnectedDesc": "Twoje słuchawki nie są połączone z telefonem 😨",
