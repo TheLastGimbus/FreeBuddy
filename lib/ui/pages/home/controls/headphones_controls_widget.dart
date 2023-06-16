@@ -7,6 +7,15 @@ import '../../../../headphones/headphones_base.dart';
 import '../../../../headphones/headphones_data_objects.dart';
 import '../../../common/constrained_spacer.dart';
 
+/// Main whole-screen widget with controls for headphones
+///
+/// It contains battery, anc buttons, button to settings etc - just give it
+/// the [headphones] and all done ☺
+///
+/// ...in fact, it is built so simple that you can freely hot-swap the
+/// headphones object - for example, if they disconnect for a moment,
+/// you can give it [HeadphonesMockNever] object, and previous values will stay
+/// because it won't override them
 class HeadphonesControlsWidget extends StatelessWidget {
   final HeadphonesBase headphones;
 
@@ -24,7 +33,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
           headphones.alias ?? 'FreeBuds 4i',
           style: tt.headlineMedium,
         ),
-        _HeadphonesImageCard(headphones),
+        _HeadphonesImage(headphones),
         Align(
           alignment: Alignment.centerRight,
           child: _HeadphonesSettingsButton(headphones),
@@ -39,10 +48,15 @@ class HeadphonesControlsWidget extends StatelessWidget {
 
 // ##### Key cards #####
 
-class _HeadphonesImageCard extends StatelessWidget {
+/// Image of the headphones (non-card)
+///
+/// Selects the correct image for given model
+///
+/// ...well, in the future :D
+class _HeadphonesImage extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const _HeadphonesImageCard(this.headphones, {Key? key}) : super(key: key);
+  const _HeadphonesImage(this.headphones, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,8 +129,6 @@ class _BatteryCard extends StatelessWidget {
 }
 
 /// Card with anc controls
-///
-/// Give it headphones an it will do the rest
 class _AncCard extends StatelessWidget {
   final HeadphonesBase headphones;
 
@@ -176,6 +188,7 @@ class _AncCard extends StatelessWidget {
 
 // ##### Small items #####
 
+/// Simple button leading to headphones settings page
 class _HeadphonesSettingsButton extends StatelessWidget {
   final HeadphonesBase headphones;
 
@@ -206,14 +219,16 @@ class _HeadphonesSettingsButton extends StatelessWidget {
   }
 }
 
-/// Android12-Google-Battery-Widget-style vertical progress bar
+/// Android12-Google-Battery-Widget-style vertical progress bar/container (?)
+///
+/// (without anything inside - feel free to use it for something else)
 ///
 /// https://9to5google.com/2022/03/07/google-pixel-battery-widget/
 /// https://9to5google.com/2022/09/29/pixel-battery-widget-time/
-class _BatteryBar extends StatelessWidget {
+class _BatteryContainer extends StatelessWidget {
   final double? value;
 
-  const _BatteryBar({Key? key, this.value}) : super(key: key);
+  const _BatteryContainer({Key? key, this.value}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -251,19 +266,21 @@ class _BatteryIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = Theme.of(context);
     final value = level != null ? level! / 100 : null;
     return Stack(
       alignment: Alignment.center,
       fit: StackFit.expand,
       children: [
-        _BatteryBar(value: value),
+        _BatteryContainer(value: value),
         Center(child: child),
       ],
     );
   }
 }
 
+/// Button for switching anc mode
+///
+/// TODO: Make this prettier (splash animation at least :/ )
 class _AncButton extends StatelessWidget {
   final IconData icon;
   final bool isSelected;
