@@ -97,9 +97,12 @@ class _DoubleTapSetting extends StatelessWidget {
   final HeadphonesGestureDoubleTap? value;
   final void Function(HeadphonesGestureDoubleTap?)? onChanged;
 
-  const _DoubleTapSetting(
-      {Key? key, required this.value, this.onChanged, this.title})
-      : super(key: key);
+  const _DoubleTapSetting({
+    Key? key,
+    required this.value,
+    this.onChanged,
+    this.title,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -118,30 +121,35 @@ class _DoubleTapSetting extends StatelessWidget {
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapPlayPause),
             value: HeadphonesGestureDoubleTap.playPause,
+            dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapNextSong),
             value: HeadphonesGestureDoubleTap.next,
+            dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapPrevSong),
             value: HeadphonesGestureDoubleTap.previous,
+            dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapAssist),
             value: HeadphonesGestureDoubleTap.voiceAssistant,
+            dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapNone),
             value: HeadphonesGestureDoubleTap.nothing,
+            dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
