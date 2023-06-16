@@ -59,7 +59,7 @@ class _HeadphonesSettingsButton extends StatelessWidget {
     return Padding(
       padding: t.cardTheme.margin ?? const EdgeInsets.all(4.0),
       child: OutlinedButton(
-        onPressed: () => Navigator.pushNamed(context, '/gesture_settings'),
+        onPressed: () => Navigator.pushNamed(context, '/headphones_settings'),
         child: Padding(
           padding: const EdgeInsets.all(2.0),
           child: Row(

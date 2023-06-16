@@ -9,21 +9,21 @@ import '../../../headphones/headphones_data_objects.dart';
 import '../../../headphones/headphones_mocks.dart';
 import '../disabled.dart';
 
-class GestureSettingsPage extends StatefulWidget {
-  const GestureSettingsPage({Key? key}) : super(key: key);
+class HeadphonesSettingsPage extends StatefulWidget {
+  const HeadphonesSettingsPage({Key? key}) : super(key: key);
 
   @override
-  State<GestureSettingsPage> createState() => _GestureSettingsPageState();
+  State<HeadphonesSettingsPage> createState() => _HeadphonesSettingsPageState();
 }
 
-class _GestureSettingsPageState extends State<GestureSettingsPage> {
+class _HeadphonesSettingsPageState extends State<HeadphonesSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
     final l = AppLocalizations.of(context)!;
     return Scaffold(
-      appBar: AppBar(title: Text(l.pageGestureSettingsTitle)),
+      appBar: AppBar(title: Text(l.pageHeadphonesSettingsTitle)),
       body: BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
         builder: (_, state) {
           // TODO: Unify this with whole big-ass machine from home_page.dart
@@ -69,11 +69,11 @@ class _ActualSettings extends StatelessWidget {
           padding: const EdgeInsets.all(16),
           children: [
             Text(
-              l.pageGestureSettingsDoubleTap,
+              l.pageHeadphonesSettingsDoubleTap,
               style: tt.titleMedium,
             ),
             Text(
-              l.pageGestureSettingsDoubleTapDesc,
+              l.pageHeadphonesSettingsDoubleTapDesc,
               style: tt.labelMedium,
             ),
             const SizedBox(height: 6),
@@ -81,7 +81,7 @@ class _ActualSettings extends StatelessWidget {
               children: [
                 Expanded(
                   child: _DoubleTapSetting(
-                    title: Text(l.pageGestureSettingsLeftBud),
+                    title: Text(l.pageHeadphonesSettingsLeftBud),
                     value: data.doubleTapLeft,
                     onChanged: (v) => headphones.setGestureSettings(
                       HeadphonesGestureSettings(doubleTapLeft: v),
@@ -92,7 +92,7 @@ class _ActualSettings extends StatelessWidget {
                 // https://github.com/flutter/flutter/issues/27293
                 Expanded(
                   child: _DoubleTapSetting(
-                    title: Text(l.pageGestureSettingsRightBud),
+                    title: Text(l.pageHeadphonesSettingsRightBud),
                     value: data.doubleTapRight,
                     onChanged: (v) => headphones.setGestureSettings(
                       HeadphonesGestureSettings(doubleTapRight: v),
@@ -111,11 +111,11 @@ class _ActualSettings extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        l.pageGestureSettingsHold,
+                        l.pageHeadphonesSettingsHold,
                         style: tt.titleMedium,
                       ),
                       Text(
-                        l.pageGestureSettingsHoldDesc,
+                        l.pageHeadphonesSettingsHoldDesc,
                         style: tt.labelMedium,
                       ),
                     ],
@@ -168,7 +168,7 @@ class _DoubleTapSetting extends StatelessWidget {
       children: [
         if (title != null) title!,
         ListTile(
-          title: Text(l.pageGestureSettingsDoubleTapPlayPause),
+          title: Text(l.pageHeadphonesSettingsDoubleTapPlayPause),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.playPause,
             groupValue: value,
@@ -176,7 +176,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: Text(l.pageGestureSettingsDoubleTapNextSong),
+          title: Text(l.pageHeadphonesSettingsDoubleTapNextSong),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.next,
             groupValue: value,
@@ -184,7 +184,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: Text(l.pageGestureSettingsDoubleTapPrevSong),
+          title: Text(l.pageHeadphonesSettingsDoubleTapPrevSong),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.previous,
             groupValue: value,
@@ -192,7 +192,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: Text(l.pageGestureSettingsDoubleTapAssist),
+          title: Text(l.pageHeadphonesSettingsDoubleTapAssist),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.voiceAssistant,
             groupValue: value,
@@ -200,7 +200,7 @@ class _DoubleTapSetting extends StatelessWidget {
           ),
         ),
         ListTile(
-          title: Text(l.pageGestureSettingsDoubleTapNone),
+          title: Text(l.pageHeadphonesSettingsDoubleTapNone),
           trailing: Radio(
             value: HeadphonesGestureDoubleTap.nothing,
             groupValue: value,
