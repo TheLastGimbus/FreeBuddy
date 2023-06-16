@@ -3,6 +3,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../headphones/headphones_base.dart';
 import '../../../headphones/headphones_data_objects.dart';
+import '../../common/list_tile_checkbox.dart';
+import '../../common/list_tile_switch.dart';
 import '../disabled.dart';
 
 class HoldSection extends StatelessWidget {
@@ -18,31 +20,24 @@ class HoldSection extends StatelessWidget {
       initialData: headphones.gestureSettings.valueOrNull ??
           const HeadphonesGestureSettings(),
       builder: (context, snapshot) {
+        final gs = snapshot.data!;
+        final enabled = gs.holdBoth == HeadphonesGestureHold.cycleAnc;
         return Column(
           children: [
-            ListTile(
+            ListTileSwitch(
               title: Text('Touch and hold'),
               subtitle: Text('Holding a bud will toggle these anc modes:'),
-              onTap: () => headphones.setGestureSettings(
+              value: enabled,
+              onChanged: (newVal) => headphones.setGestureSettings(
                 HeadphonesGestureSettings(
-                  holdBoth:
-                      snapshot.data!.holdBoth != HeadphonesGestureHold.cycleAnc
-                          ? HeadphonesGestureHold.cycleAnc
-                          : HeadphonesGestureHold.nothing,
-                ),
-              ),
-              trailing: IgnorePointer(
-                child: Switch(
-                  value:
-                      snapshot.data!.holdBoth == HeadphonesGestureHold.cycleAnc,
-                  // Tile does that
-                  onChanged: (_) {},
+                  holdBoth: newVal
+                      ? HeadphonesGestureHold.cycleAnc
+                      : HeadphonesGestureHold.nothing,
                 ),
               ),
             ),
             Disabled(
-              disabled:
-                  !(snapshot.data!.holdBoth == HeadphonesGestureHold.cycleAnc),
+              disabled: !enabled,
               child: _HoldSettingsCard(
                 enabledModes: MapEntry(snapshot.data!.holdBoth,
                     snapshot.data!.holdBothToggledAncModes),
@@ -82,24 +77,22 @@ class _HoldSettingsCard extends StatelessWidget {
 
   Widget modeCheckbox(String title, String desc, HeadphonesAncMode mode) {
     final checked = checkboxChecked(mode);
-    return ListTile(
+    return ListTileCheckbox(
       title: Text(title),
       subtitle: Text(desc),
-      trailing: Checkbox(
-        value: checked,
-        onChanged: checkboxEnabled(checked)
-            ? (val) {
-                onChanged!(
-                  MapEntry(
-                    enabledModes.key,
-                    val!
-                        ? ({...enabledModes.value!, mode})
-                        : ({...enabledModes.value!}..remove(mode)),
-                  ),
-                );
-              }
-            : null,
-      ),
+      value: checked,
+      onChanged: checkboxEnabled(checked)
+          ? (val) {
+              onChanged!(
+                MapEntry(
+                  enabledModes.key,
+                  val
+                      ? ({...enabledModes.value!, mode})
+                      : ({...enabledModes.value!}..remove(mode)),
+                ),
+              );
+            }
+          : null,
     );
   }
 
