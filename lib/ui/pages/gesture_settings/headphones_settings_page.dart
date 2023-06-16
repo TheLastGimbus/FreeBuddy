@@ -9,14 +9,9 @@ import '../../../headphones/headphones_data_objects.dart';
 import '../../../headphones/headphones_mocks.dart';
 import '../disabled.dart';
 
-class HeadphonesSettingsPage extends StatefulWidget {
+class HeadphonesSettingsPage extends StatelessWidget {
   const HeadphonesSettingsPage({Key? key}) : super(key: key);
 
-  @override
-  State<HeadphonesSettingsPage> createState() => _HeadphonesSettingsPageState();
-}
-
-class _HeadphonesSettingsPageState extends State<HeadphonesSettingsPage> {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
