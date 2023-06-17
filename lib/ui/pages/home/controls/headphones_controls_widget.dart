@@ -26,54 +26,57 @@ class HeadphonesControlsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
-    return WindowSizeClass.of(context) == WindowSizeClass.compact
-        ? Column(
-            children: [
-              Text(
-                // TODO: This hardcode
-                headphones.alias ?? 'FreeBuds 4i',
-                style: tt.headlineMedium,
-              ),
-              HeadphonesImage(headphones),
-              Align(
-                alignment: Alignment.centerRight,
-                child: _HeadphonesSettingsButton(headphones),
-              ),
-              // const SizedBox(height: 6),
-              BatteryCard(headphones),
-              AncCard(headphones),
-            ],
-          )
-        : Row(
-            children: [
-              Expanded(
-                child: Column(
-                  children: [
-                    Text(
-                      // TODO: This hardcode
-                      headphones.alias ?? 'FreeBuds 4i',
-                      style: tt.headlineMedium,
-                    ),
-                    HeadphonesImage(headphones),
-                  ],
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: WindowSizeClass.of(context) == WindowSizeClass.compact
+          ? Column(
+              children: [
+                Text(
+                  // TODO: This hardcode
+                  headphones.alias ?? 'FreeBuds 4i',
+                  style: tt.headlineMedium,
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: _HeadphonesSettingsButton(headphones),
-                    ),
-                    // const SizedBox(height: 6),
-                    BatteryCard(headphones),
-                    AncCard(headphones),
-                  ],
+                HeadphonesImage(headphones),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: _HeadphonesSettingsButton(headphones),
                 ),
-              ),
-            ],
-          );
+                // const SizedBox(height: 6),
+                BatteryCard(headphones),
+                AncCard(headphones),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      Text(
+                        // TODO: This hardcode
+                        headphones.alias ?? 'FreeBuds 4i',
+                        style: tt.headlineMedium,
+                      ),
+                      HeadphonesImage(headphones),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: _HeadphonesSettingsButton(headphones),
+                      ),
+                      // const SizedBox(height: 6),
+                      BatteryCard(headphones),
+                      AncCard(headphones),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+    );
   }
 }
 

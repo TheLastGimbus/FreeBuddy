@@ -51,13 +51,8 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: HeadphonesConnectionEnsuringOverlay(
-            builder: (_, h) => HeadphonesControlsWidget(headphones: h),
-          ),
-        ),
+      body: HeadphonesConnectionEnsuringOverlay(
+        builder: (_, h) => HeadphonesControlsWidget(headphones: h),
       ),
     );
   }
