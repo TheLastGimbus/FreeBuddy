@@ -16,7 +16,7 @@ import '../pages/home/not_paired_info_widget.dart';
 /// This listens to [HeadphonesConnectionCubit] and (thorugh big-ass switch
 /// machinery), decides whether to:
 /// - show card about not having bluetooth granted/enabled
-/// - show grayed widget from builder
+/// - show disabled widget from builder, covered with info about disconnection
 /// - actually show the damn widget
 ///
 /// When headphones are, for example, paired but not connected, it gives your
