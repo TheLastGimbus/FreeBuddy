@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../headphones/headphones_base.dart';
+import '../../../theme/layouts.dart';
 import 'anc_card.dart';
 import 'battery_card.dart';
 import 'headphones_image.dart';
@@ -25,23 +26,54 @@ class HeadphonesControlsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
-    return Column(
-      children: [
-        Text(
-          // TODO: This hardcode
-          headphones.alias ?? 'FreeBuds 4i',
-          style: tt.headlineMedium,
-        ),
-        HeadphonesImage(headphones),
-        Align(
-          alignment: Alignment.centerRight,
-          child: _HeadphonesSettingsButton(headphones),
-        ),
-        // const SizedBox(height: 6),
-        BatteryCard(headphones),
-        AncCard(headphones),
-      ],
-    );
+    return WindowSizeClass.of(context) == WindowSizeClass.compact
+        ? Column(
+            children: [
+              Text(
+                // TODO: This hardcode
+                headphones.alias ?? 'FreeBuds 4i',
+                style: tt.headlineMedium,
+              ),
+              HeadphonesImage(headphones),
+              Align(
+                alignment: Alignment.centerRight,
+                child: _HeadphonesSettingsButton(headphones),
+              ),
+              // const SizedBox(height: 6),
+              BatteryCard(headphones),
+              AncCard(headphones),
+            ],
+          )
+        : Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      // TODO: This hardcode
+                      headphones.alias ?? 'FreeBuds 4i',
+                      style: tt.headlineMedium,
+                    ),
+                    HeadphonesImage(headphones),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: _HeadphonesSettingsButton(headphones),
+                    ),
+                    // const SizedBox(height: 6),
+                    BatteryCard(headphones),
+                    AncCard(headphones),
+                  ],
+                ),
+              ),
+            ],
+          );
   }
 }
 
