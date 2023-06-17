@@ -15,6 +15,15 @@ class HeadphonesImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO: Switch image based on headphones
-    return Expanded(child: Image.asset('assets/app_icons/ic_launcher.png'));
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 64),
+        child: Image.asset(
+          'assets/app_icons/ic_launcher.png',
+          fit: BoxFit.contain,
+          filterQuality: FilterQuality.none,
+        ),
+      ),
+    );
   }
 }
