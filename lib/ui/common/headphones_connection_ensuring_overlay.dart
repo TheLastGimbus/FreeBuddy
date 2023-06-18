@@ -62,6 +62,9 @@ class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
                   ],
                 ),
               HeadphonesConnectedClosed() => const ConnectedClosedWidget(),
+              // Disabled() widget has a non-0ms transition so we need to swap
+              // the overlay even when it's connected
+              HeadphonesConnectedOpen() => const SizedBox(),
               _ => Text(l.pageHomeUnknown),
             },
             child: builder(
