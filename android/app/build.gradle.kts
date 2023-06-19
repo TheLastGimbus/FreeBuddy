@@ -25,7 +25,7 @@ plugins {
     id("com.android.application")
     kotlin("android")
 }
-apply("$flutterRoot/packages/flutter_tools/gradle/flutter.gradle")
+apply(from = "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle.kts")
 
 android {
     compileSdk = 33
