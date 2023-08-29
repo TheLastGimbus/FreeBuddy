@@ -5,6 +5,11 @@ import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.widget.RemoteViews
 import es.antonborri.home_widget.HomeWidgetPlugin
+import io.flutter.embedding.android.FlutterView
+import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.dart.DartExecutor
+import io.flutter.embedding.engine.loader.FlutterLoader
+import io.flutter.view.FlutterMain
 
 class BatteryWidgetProvider : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
