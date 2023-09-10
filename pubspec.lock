@@ -5,10 +5,10 @@ packages:
     dependency: "direct main"
     description:
       name: app_settings
-      sha256: "66715a323ac36d6c8201035ba678777c0d2ea869e4d7064300d95af10c3bb8cb"
+      sha256: e6a34735d4ddb24ca9c5fd7e965ec65c8b611cbd3a329152c294f9e9f4bacb33
       url: "https://pub.dev"
     source: hosted
-    version: "4.2.0"
+    version: "4.3.1"
   archive:
     dependency: transitive
     description:
@@ -233,10 +233,10 @@ packages:
     dependency: "direct main"
     description:
       name: home_widget
-      sha256: "2ef64c73c7cf3b7cbfdf8233a0a46055a66d6289de58ae40912f9801f9282d79"
+      sha256: "9a0ed6094823b07025727a39d3dc2d3e02c5281372af22d72e611137e0b3c10d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.2.1"
+    version: "0.3.0"
   html:
     dependency: transitive
     description:
@@ -365,6 +365,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.3"
+  path_provider:
+    dependency: transitive
+    description:
+      name: path_provider
+      sha256: "3087813781ab814e4157b172f1a11c46be20179fcc9bea043e0fba36bc0acaa2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.15"
+  path_provider_android:
+    dependency: transitive
+    description:
+      name: path_provider_android
+      sha256: "2cec049d282c7f13c594b4a73976b0b4f2d7a1838a6dd5aaf7bd9719196bee86"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.27"
+  path_provider_foundation:
+    dependency: transitive
+    description:
+      name: path_provider_foundation
+      sha256: "916731ccbdce44d545414dd9961f26ba5fbaa74bcbb55237d8e65a623a8c7297"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.4"
   path_provider_linux:
     dependency: transitive
     description:
