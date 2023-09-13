@@ -4,7 +4,7 @@
     <!-- I was looking for those fucking values for like 1.5 hour -->
     <!-- There they were, hidden in some documentation for vendors system implementations?? Or something?? -->
     <!-- https://source.android.com/docs/core/display/dynamic-color -->
-    <color name="battery_widget_text_color">@android:color/system_accent1_900</color>
-    <color name="battery_widget_bar_color">@android:color/system_accent1_200</color>
-    <color name="battery_widget_bar_background">@android:color/system_accent1_100</color>
+    <color name="battery_widget_text_color">#001E2C</color>
+    <color name="battery_widget_bar_color">#76D1FF</color>
+    <color name="battery_widget_bar_background">#C1E8FF</color>
 </resources>
