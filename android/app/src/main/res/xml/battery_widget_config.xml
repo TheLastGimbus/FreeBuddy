@@ -3,6 +3,6 @@
                     android:minWidth="40dp"
                     android:minHeight="40dp"
                     android:updatePeriodMillis="86400000"
-                    android:initialLayout="@layout/battery_widget"
+                    android:initialLayout="@layout/glance_default_loading_layout"
                     android:resizeMode="horizontal|vertical"
                     android:widgetCategory="home_screen"/>
