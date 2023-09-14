@@ -2,7 +2,6 @@ package com.lastgimbus.the.freebuddy
 
 import android.content.Context
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.GlanceId
 import androidx.glance.GlanceModifier
@@ -36,23 +35,26 @@ class BatteryWidget : GlanceAppWidget() {
                 Row(
                     modifier = GlanceModifier.fillMaxSize().appWidgetBackground()
                         .background(GlanceTheme.colors.background)
+                        .cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
                 ) {
                     @Composable
                     fun BatteryBox(progress: Float, text: String) {
                         Box(
-                            modifier = GlanceModifier.defaultWeight().fillMaxHeight().padding(4.dp),
+                            modifier = GlanceModifier
+                                .defaultWeight()
+                                .fillMaxHeight()
+                                .padding(R.dimen.batteryWidgetPadding),
                             contentAlignment = Alignment.Center
                         ) {
                             LinearProgressIndicator(
-                                modifier = GlanceModifier.cornerRadius(16.dp).fillMaxHeight().fillMaxWidth(),
+                                modifier = GlanceModifier
+                                    .cornerRadius(R.dimen.batteryWidgetInnerRadius)
+                                    .fillMaxSize(),
                                 progress = progress,
                                 color = barColor,
                                 backgroundColor = barBackground
                             )
-                            Text(
-                                text,
-                                style = textStyle
-                            )
+                            Text(text, style = textStyle)
                         }
 
                     }
