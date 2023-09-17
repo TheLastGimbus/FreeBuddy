@@ -27,7 +27,6 @@ So I got mad and decided to make my own... and here it is 🌈
   - [x] Smart wear
   - [x] Tap actions
 - [x] Cool features:
-  - [x] Sleep mode - disables gestures/anc/smart wear for nice sleeping
   - [ ] ANC lock - lock on certain ANC mode no matter what
   - [ ] Find lost
 
