@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:isolate';
+import 'dart:ui';
 
 import 'package:app_settings/app_settings.dart';
 import 'package:collection/collection.dart';
@@ -19,6 +21,14 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   StreamSubscription? _devStream;
   bool _btEnabledCache = false;
   static const connectTries = 3;
+
+  // I needed a way to tell (from background task) if app is currently running.
+  // First idea was to then ask the cubit for some info (about battery etc)
+  // But, looking at how fucked up this Port communication is, I will just
+  // register/deregister this port name, and if background detects it, it just
+  // skips 🤷
+  static const dummyReceivePortName = 'dummyHeadphonesCubitPort';
+  final _dummyReceivePort = ReceivePort('dummyHeadphonesCubitPort');
 
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
@@ -83,6 +93,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
         super(HeadphonesNotPaired()) {
+    IsolateNameServer.registerPortWithName(
+        _dummyReceivePort.sendPort, dummyReceivePortName);
     _init();
   }
 
@@ -113,6 +125,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   @override
   Future<void> close() async {
+    IsolateNameServer.removePortNameMapping(dummyReceivePortName);
     await _btStream?.cancel();
     await _devStream?.cancel();
     super.close();

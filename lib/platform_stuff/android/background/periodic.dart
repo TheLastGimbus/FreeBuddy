@@ -2,9 +2,14 @@
 ///
 /// Right now it is small and simple enough to have everything in one file
 
+import 'dart:ui';
+
+import 'package:rxdart/rxdart.dart';
+import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 import 'package:workmanager/workmanager.dart';
 
-import '../../../headphones/headphones_data_objects.dart';
+import '../../../headphones/cubit/headphones_connection_cubit.dart';
+import '../../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../../logger.dart';
 import '../appwidgets/battery_appwidget.dart';
 
@@ -13,18 +18,41 @@ import '../appwidgets/battery_appwidget.dart';
 ///   get their battery and set widgets/send notifications etc
 // maybe move them to some special class/enum/smth??
 
+const commonTimeout = Duration(seconds: 10);
+
 const taskIdRoutineUpdate = "freebuddy.routine_update";
 
 Future<bool> routineUpdateCallback() async {
-  // TODO: Get battery from real headphones
-  // final batteryData = await HeadphonesMockPrettyFake()
-  //     .batteryData
-  //     .first
-  //     .timeout(const Duration(seconds: 10));
-  final batteryData = HeadphonesBatteryData(2, 1, 3, false, true, false);
-  logg.d("udpating widget from bgn: $batteryData");
-  await updateBatteryHomeWidget(batteryData);
-  return true;
+  if (IsolateNameServer.lookupPortByName(
+          HeadphonesConnectionCubit.dummyReceivePortName) !=
+      null) {
+    logg.d("Not updating stuff from ROUTINE_UPDATE "
+        "because cubit is already running");
+    return true;
+  }
+  // NOT_SURE: Also use real/mock logic here?? idk, but if you want,
+  // feel free to make some proper DI for this to be shared in UI and here
+  final cubit = HeadphonesConnectionCubit(bluetooth: TheLastBluetooth.instance);
+  try {
+    final headphones = await cubit.stream
+        .debounceTime(const Duration(seconds: 1))
+        .firstWhere((e) => e is! HeadphonesConnecting)
+        .timeout(commonTimeout);
+    if (headphones is! HeadphonesConnectedOpen) {
+      logg.d("Not updating stuff from ROUTINE_UPDATE because: "
+          "${headphones.toString()}");
+      return true;
+    }
+    final batteryData =
+        await headphones.headphones.batteryData.first.timeout(commonTimeout);
+    logg.d("udpating widget from bgn: $batteryData");
+    await updateBatteryHomeWidget(batteryData);
+    await cubit.close(); // remember to close cubit to deregister port name
+    return true;
+  } catch (e) {
+    await cubit.close(); // remember to close cubit to deregister port name
+    rethrow;
+  }
 }
 
 @pragma('vm:entry-point')
@@ -35,7 +63,7 @@ void callbackDispatcher() {
         "${inputData != null ? " - input data: $inputData" : ""}");
     try {
       return switch (task) {
-        taskIdRoutineUpdate => routineUpdateCallback(),
+        taskIdRoutineUpdate => routineUpdateCallback().timeout(commonTimeout),
         String() => throw Exception("No such task named $task"),
       };
     } catch (e, s) {
@@ -60,7 +88,7 @@ Future<void> init() async {
     taskIdRoutineUpdate, // this doesnt get exposed in executeTask()
     taskIdRoutineUpdate, // ...so pass it here too 🙃
     frequency: const Duration(minutes: 15),
-    initialDelay: Duration(minutes: 1),
+    initialDelay: const Duration(minutes: 5),
     existingWorkPolicy: ExistingWorkPolicy.keep,
     backoffPolicy: BackoffPolicy.linear,
   );

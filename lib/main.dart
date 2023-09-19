@@ -28,23 +28,41 @@ void main() {
     // this is async, so it won't block runApp
     android_periodic.init();
   }
-  runApp(
-    Provider<AppSettings>(
+  runApp(const MyAppWrapper());
+}
+
+// Big ass ugly-as-fuck wrapper because:
+// https://github.com/felangel/bloc/issues/2040#issuecomment-1726472426
+class MyAppWrapper extends StatefulWidget {
+  const MyAppWrapper({super.key});
+
+  @override
+  State<MyAppWrapper> createState() => _MyAppWrapperState();
+}
+
+class _MyAppWrapperState extends State<MyAppWrapper>
+    with WidgetsBindingObserver {
+  final _btBlock = (!kIsWeb &&
+          Platform.isAndroid &&
+          !const bool.fromEnvironment('USE_HEADPHONES_MOCK'))
+      ? HeadphonesConnectionCubit(
+          bluetooth: TheLastBluetooth.instance,
+        )
+      : HeadphonesMockCubit();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Provider<AppSettings>(
       create: (context) =>
           SharedPreferencesAppSettings(StreamingSharedPreferences.instance),
       child: MultiBlocProvider(
-        providers: [
-          BlocProvider<HeadphonesConnectionCubit>(
-            // need to use kIsWeb because Platform is from dart:io
-            create: (_) => (!kIsWeb &&
-                    Platform.isAndroid &&
-                    !const bool.fromEnvironment('USE_HEADPHONES_MOCK'))
-                ? HeadphonesConnectionCubit(
-                    bluetooth: TheLastBluetooth.instance,
-                  )
-                : HeadphonesMockCubit(),
-          ),
-        ],
+        providers: [BlocProvider.value(value: _btBlock)],
         // don't know if this is good place to put this, but seems right
         // maybe convert this to multi listener with advanced "listenWhen" logic
         // this would make it a nice single place to know what launches when 🤔
@@ -54,8 +72,23 @@ void main() {
           child: MyApp(),
         ),
       ),
-    ),
-  );
+    );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) async {
+    if (state == AppLifecycleState.detached) {
+      await _btBlock.close();
+    }
+    super.didChangeAppLifecycleState(state);
+  }
+
+  @override
+  void dispose() async {
+    await _btBlock.close();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
 }
 
 class MyApp extends StatelessWidget {
