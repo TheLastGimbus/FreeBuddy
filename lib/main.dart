@@ -31,7 +31,9 @@ void main() {
         providers: [
           BlocProvider<HeadphonesConnectionCubit>(
             // need to use kIsWeb because Platform is from dart:io
-            create: (_) => (!kIsWeb && Platform.isAndroid)
+            create: (_) => (!kIsWeb &&
+                    Platform.isAndroid &&
+                    !const bool.fromEnvironment('USE_HEADPHONES_MOCK'))
                 ? HeadphonesConnectionCubit(
                     bluetooth: TheLastBluetooth.instance,
                   )
