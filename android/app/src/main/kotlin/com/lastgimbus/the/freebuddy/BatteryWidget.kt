@@ -12,6 +12,7 @@ import androidx.glance.appwidget.*
 import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
+import androidx.glance.text.TextAlign
 import androidx.glance.text.TextDefaults
 import androidx.glance.unit.ColorProvider
 import es.antonborri.home_widget.HomeWidgetPlugin
@@ -50,7 +51,8 @@ class BatteryWidget : GlanceAppWidget() {
                 val barBackground = ColorProvider(R.color.battery_widget_bar_background)
                 val textStyle = TextDefaults.defaultTextStyle.copy(
                     color = ColorProvider(R.color.battery_widget_text_color),
-                    fontWeight = FontWeight.Medium, fontSize = 16.sp
+                    fontWeight = FontWeight.Medium, fontSize = 16.sp,
+                    textAlign = TextAlign.Center,
                 )
 
                 @Composable
