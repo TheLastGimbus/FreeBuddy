@@ -6,6 +6,8 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.glance.*
+import androidx.glance.action.actionStartActivity
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.*
 import androidx.glance.layout.*
 import androidx.glance.text.FontWeight
@@ -54,7 +56,10 @@ class BatteryWidget : GlanceAppWidget() {
 
                 if (size.height < VERTICAL_RECTANGLE.height) {
                     Row(
-                        modifier = GlanceModifier.fillMaxSize().appWidgetBackground()
+                        modifier = GlanceModifier
+                            .fillMaxSize()
+                            .appWidgetBackground()
+                            .clickable(actionStartActivity(activity = MainActivity::class.java))
                             .background(GlanceTheme.colors.background)
                             .cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
                     ) {
@@ -95,6 +100,7 @@ class BatteryWidget : GlanceAppWidget() {
                         modifier = GlanceModifier
                             .fillMaxSize()
                             .appWidgetBackground()
+                            .clickable(actionStartActivity(activity = MainActivity::class.java))
                             .background(GlanceTheme.colors.background)
                             .cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
                     ) {
