@@ -23,10 +23,10 @@ class BatteryWidget : GlanceAppWidget() {
     // TODO: Fuck with this a bit more
     // note: done some fucking, may be good now
     companion object {
-        private val SMALL_SQUARE = DpSize(80.dp, 80.dp)
-        private val VERTICAL_RECTANGLE = DpSize(100.dp, 160.dp)
-        private val HORIZONTAL_RECTANGLE = DpSize(260.dp, 80.dp)
-        private val BIG_SQUARE = DpSize(160.dp, 160.dp)
+        private val SMALL_SQUARE = DpSize(60.dp, 60.dp)
+        private val HORIZONTAL_RECTANGLE = DpSize(220.dp, 60.dp)
+        private val VERTICAL_RECTANGLE = DpSize(80.dp, 160.dp)
+        private val BIG_SQUARE = DpSize(180.dp, 180.dp)
     }
 
     override val sizeMode = SizeMode.Responsive(
