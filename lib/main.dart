@@ -10,8 +10,10 @@ import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import 'headphones/cubit/headphones_connection_cubit.dart';
+import 'headphones/cubit/headphones_cubit_objects.dart';
 import 'headphones/cubit/headphones_mock_cubit.dart';
 import 'ui/app_settings.dart';
+import 'ui/appwidgets/battery_appwidget.dart';
 import 'ui/pages/about/about_page.dart';
 import 'ui/pages/headphones_settings/headphones_settings_page.dart';
 import 'ui/pages/home/home_page.dart';
@@ -29,14 +31,23 @@ void main() {
         providers: [
           BlocProvider<HeadphonesConnectionCubit>(
             // need to use kIsWeb because Platform is from dart:io
-            create: (_) => (!kIsWeb && Platform.isAndroid)
+            create: (_) => (!kIsWeb &&
+                    Platform.isAndroid &&
+                    !const bool.fromEnvironment('USE_HEADPHONES_MOCK'))
                 ? HeadphonesConnectionCubit(
                     bluetooth: TheLastBluetooth.instance,
                   )
                 : HeadphonesMockCubit(),
           ),
         ],
-        child: const MyApp(),
+        // don't know if this is good place to put this, but seems right
+        // maybe convert this to multi listener with advanced "listenWhen" logic
+        // this would make it a nice single place to know what launches when 🤔
+        child: const BlocListener<HeadphonesConnectionCubit,
+            HeadphonesConnectionState>(
+          listener: batteryHomeWidgetHearBloc,
+          child: MyApp(),
+        ),
       ),
     ),
   );
