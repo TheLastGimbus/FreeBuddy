@@ -21,7 +21,8 @@ void batteryHomeWidgetHearBloc(BuildContext context,
   } else {
     _headphonesBatteryStreamSub = headphonesConnectionState
         .headphones.batteryData
-        .throttleTime(Duration(seconds: 15), trailing: true, leading: false)
+        .throttleTime(const Duration(seconds: 15),
+            trailing: true, leading: false)
         .listen((event) async {
       await HomeWidget.saveWidgetData<int?>('left', event.levelLeft);
       await HomeWidget.saveWidgetData<int?>('right', event.levelRight);

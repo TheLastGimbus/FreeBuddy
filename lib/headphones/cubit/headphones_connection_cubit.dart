@@ -61,7 +61,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       // hopefully this happens *before* next stream event with data 🤷
       // so that it nicely goes again and we emit HeadphonesDisconnected()
     } on PlatformException catch (e, s) {
-      logg.e("PlatformError while connecting to socket", e, s);
+      logg.e("PlatformError while connecting to socket",
+          error: e, stackTrace: s);
     }
     await _connection?.io.sink.close();
     _connection = null;
@@ -102,8 +103,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   // TODO:
   Future<bool> enableBluetooth() async => false;
 
-  Future<void> openBluetoothSettings() =>
-      AppSettings.openBluetoothSettings(asAnotherTask: true);
+  Future<void> openBluetoothSettings() => AppSettings.openAppSettings(
+      type: AppSettingsType.bluetooth, asAnotherTask: true);
 
   Future<void> requestPermission() async {
     await Permission.bluetoothConnect.request();
