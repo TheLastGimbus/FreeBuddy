@@ -42,6 +42,7 @@ dependencies:
   permission_handler: ^11.0.0
   dynamic_color: ^1.6.7
   home_widget: ^0.3.0
+  workmanager: ^0.5.1
 
   # Logic libs
   crclib: ^3.0.0

@@ -12,8 +12,9 @@ import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 import 'headphones/cubit/headphones_connection_cubit.dart';
 import 'headphones/cubit/headphones_cubit_objects.dart';
 import 'headphones/cubit/headphones_mock_cubit.dart';
+import 'platform_stuff/android/appwidgets/battery_appwidget.dart';
+import 'platform_stuff/android/background/periodic.dart' as android_periodic;
 import 'ui/app_settings.dart';
-import 'ui/appwidgets/battery_appwidget.dart';
 import 'ui/pages/about/about_page.dart';
 import 'ui/pages/headphones_settings/headphones_settings_page.dart';
 import 'ui/pages/home/home_page.dart';
@@ -23,6 +24,10 @@ import 'ui/theme/themes.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  if (Platform.isAndroid) {
+    // this is async, so it won't block runApp
+    android_periodic.init();
+  }
   runApp(
     Provider<AppSettings>(
       create: (context) =>
