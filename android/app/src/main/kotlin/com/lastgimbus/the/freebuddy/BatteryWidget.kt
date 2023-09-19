@@ -20,24 +20,26 @@ import kotlin.math.max
 
 class BatteryWidget : GlanceAppWidget() {
     // TODO: Fuck with this a bit more
+    // note: done some fucking, may be good now
     companion object {
-        private val SMALL_SQUARE = DpSize(100.dp, 100.dp)
-        private val HORIZONTAL_RECTANGLE = DpSize(220.dp, 100.dp)
-        private val VERTICAL_RECTANGLE = DpSize(100.dp, 180.dp)
-        private val BIG_SQUARE = DpSize(200.dp, 200.dp)
+        private val SMALL_SQUARE = DpSize(80.dp, 80.dp)
+        private val VERTICAL_RECTANGLE = DpSize(100.dp, 160.dp)
+        private val HORIZONTAL_RECTANGLE = DpSize(260.dp, 80.dp)
+        private val BIG_SQUARE = DpSize(160.dp, 160.dp)
     }
 
     override val sizeMode = SizeMode.Responsive(
         setOf(
             SMALL_SQUARE,
-            HORIZONTAL_RECTANGLE,
             VERTICAL_RECTANGLE,
+            HORIZONTAL_RECTANGLE,
             BIG_SQUARE,
         )
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-
+        // TODO: Icons/charging
+        // TODO: Unknown battery states
         provideContent {
             GlanceTheme {
                 val sp = HomeWidgetPlugin.getData(LocalContext.current)
@@ -52,81 +54,83 @@ class BatteryWidget : GlanceAppWidget() {
                     fontWeight = FontWeight.Medium, fontSize = 16.sp
                 )
 
-                // TODO: Implement all cases here
-
-                if (size.height < VERTICAL_RECTANGLE.height) {
-                    Row(
-                        modifier = GlanceModifier
-                            .fillMaxSize()
-                            .appWidgetBackground()
-                            .clickable(actionStartActivity(activity = MainActivity::class.java))
-                            .background(GlanceTheme.colors.background)
-                            .cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
-                    ) {
-                        @Composable
-                        fun BatteryBox(progress: Float, text: String) {
-                            Box(
-                                modifier = GlanceModifier
-                                    .defaultWeight()
-                                    .fillMaxHeight()
-                                    .padding(R.dimen.batteryWidgetPadding),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                LinearProgressIndicator(
+                Box(
+                    modifier = GlanceModifier
+                        .fillMaxSize()
+                        .appWidgetBackground()
+                        .clickable(actionStartActivity(activity = MainActivity::class.java))
+                        .background(GlanceTheme.colors.background)
+                        .cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
+                        .padding(R.dimen.batteryWidgetPadding)
+                ) {
+                    if (size.height < VERTICAL_RECTANGLE.height) {
+                        Row(modifier = GlanceModifier.fillMaxSize()) {
+                            // this must be duplicated in here because for some reason the .defaultWeight()
+                            // is context aware??
+                            @Composable
+                            fun BatteryBox(progress: Float, text: String) {
+                                Box(
                                     modifier = GlanceModifier
-                                        .cornerRadius(R.dimen.batteryWidgetInnerRadius)
-                                        .fillMaxSize(),
-                                    progress = progress,
-                                    color = barColor,
-                                    backgroundColor = barBackground
-                                )
-                                Text(text, style = textStyle)
+                                        .defaultWeight()
+                                        .fillMaxHeight(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    LinearProgressIndicator(
+                                        modifier = GlanceModifier
+                                            .cornerRadius(R.dimen.batteryWidgetInnerRadius)
+                                            .fillMaxSize(),
+                                        progress = progress,
+                                        color = barColor,
+                                        backgroundColor = barBackground
+                                    )
+                                    Text(text, style = textStyle)
+                                }
+
+                            }
+                            if (size.width <= SMALL_SQUARE.width) {
+                                val b = max(left, right)
+                                BatteryBox(b / 100f, "Buds • $b%")
+                            } else {
+                                BatteryBox(left / 100f, "Left • $left%")
+                                Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
+                                BatteryBox(right / 100f, "Right • $right%")
+                                Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
+                                BatteryBox(case / 100f, "Case • $case%")
                             }
 
+
                         }
-                        if (size.width <= SMALL_SQUARE.width) {
-                            val b = max(left, right)
-                            BatteryBox(b / 100f, "Buds • $b%")
-                        } else {
+                    } else {
+                        Column(
+                            modifier = GlanceModifier.fillMaxSize()
+                        ) {
+                            // this must be duplicated in here because for some reason the .defaultWeight()
+                            // is context aware??
+                            @Composable
+                            fun BatteryBox(progress: Float, text: String) {
+                                Box(
+                                    modifier = GlanceModifier
+                                        .defaultWeight(),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    LinearProgressIndicator(
+                                        modifier = GlanceModifier
+                                            .cornerRadius(R.dimen.batteryWidgetInnerRadius)
+                                            .fillMaxSize(),
+                                        progress = progress,
+                                        color = barColor,
+                                        backgroundColor = barBackground
+                                    )
+                                    Text(text, style = textStyle)
+                                }
+
+                            }
                             BatteryBox(left / 100f, "Left • $left%")
+                            Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
                             BatteryBox(right / 100f, "Right • $right%")
+                            Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
                             BatteryBox(case / 100f, "Case • $case%")
                         }
-
-
-                    }
-                } else {
-                    Column(
-                        modifier = GlanceModifier
-                            .fillMaxSize()
-                            .appWidgetBackground()
-                            .clickable(actionStartActivity(activity = MainActivity::class.java))
-                            .background(GlanceTheme.colors.background)
-                            .cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
-                    ) {
-                        @Composable
-                        fun BatteryBox(progress: Float, text: String) {
-                            Box(
-                                modifier = GlanceModifier
-                                    .defaultWeight()
-                                    .padding(R.dimen.batteryWidgetPadding),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                LinearProgressIndicator(
-                                    modifier = GlanceModifier
-                                        .cornerRadius(R.dimen.batteryWidgetInnerRadius)
-                                        .fillMaxSize(),
-                                    progress = progress,
-                                    color = barColor,
-                                    backgroundColor = barBackground
-                                )
-                                Text(text, style = textStyle)
-                            }
-
-                        }
-                        BatteryBox(left / 100f, "Left • $left%")
-                        BatteryBox(right / 100f, "Right • $right%")
-                        BatteryBox(case / 100f, "Case • $case%")
                     }
                 }
             }
