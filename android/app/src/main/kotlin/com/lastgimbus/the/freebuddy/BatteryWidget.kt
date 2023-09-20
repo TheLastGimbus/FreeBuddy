@@ -90,9 +90,9 @@ class BatteryWidget : GlanceAppWidget() {
                                 BatteryBox(mod, max(left, right), "Buds")
                             } else {
                                 BatteryBox(mod, left, "Left")
-                                Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
+                                Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetSquaresSpacerSize))
                                 BatteryBox(mod, right, "Right")
-                                Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
+                                Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetSquaresSpacerSize))
                                 BatteryBox(mod, case, "Case")
                             }
                         }
@@ -101,9 +101,9 @@ class BatteryWidget : GlanceAppWidget() {
                             // this must be passed  here because for some reason the .defaultWeight() is context aware??
                             val mod = GlanceModifier.defaultWeight() // no .fillMaxHeight()!
                             BatteryBox(mod, left, "Left")
-                            Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
+                            Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetLinesSpacerSize))
                             BatteryBox(mod, right, "Right")
-                            Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetPadding))
+                            Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetLinesSpacerSize))
                             BatteryBox(mod, case, "Case")
                         }
                     }
