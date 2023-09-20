@@ -69,7 +69,24 @@ class BatteryWidget : GlanceAppWidget() {
                             color = barColor,
                             backgroundColor = barBackground
                         )
-                        Text("$label • ${if (level >= 0) "$level%" else "-"}", style = textStyle)
+                        Row(
+                            modifier = GlanceModifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.Horizontal.Start,
+                            verticalAlignment = Alignment.Vertical.CenterVertically
+                        ) {
+                            Image(
+                                ImageProvider(R.drawable.left_earbud),
+                                "Left earbud",
+                                modifier = GlanceModifier.defaultWeight()
+                            )
+                            Text(label, style = textStyle)
+                            Spacer(modifier = GlanceModifier.defaultWeight())
+                            Text(
+                                if (level >= 0) "$level%" else "-",
+                                style = textStyle,
+                                modifier = GlanceModifier.defaultWeight()
+                            )
+                        }
                     }
                 }
 
