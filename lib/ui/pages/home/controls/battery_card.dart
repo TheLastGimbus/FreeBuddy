@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../../gen/fms.dart';
 import '../../../../headphones/headphones_base.dart';
 
 /// Android12-Google-Battery-Widget-style battery card
@@ -33,7 +33,8 @@ class BatteryCard extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 1),
                       child: Icon(
-                        Fms.charger_filled,
+                        Symbols.charger,
+                        fill: 1,
                         size: 20,
                         color: t.colorScheme.onPrimaryContainer,
                       ),

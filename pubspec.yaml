@@ -63,6 +63,7 @@ dependencies:
   ## This is low-level, but I *do* use it to mix colors here and there
   material_color_utilities: ^0.8.0
   screenshot: ^2.1.0
+  material_symbols_icons: ^4.2668.0
 
 dependency_overrides:
   ## flutter_test, as always...
@@ -72,18 +73,15 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  ## When updating stuff here, it conflicts with fms
-  ## TODO: Replace fms: https://github.com/fujidaiti/fms/issues/3
-  flutter_launcher_icons: ^0.12.0
-  flutter_native_splash: ^2.3.1
-  fms: ^0.9.2
+  flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.3.2
 
   flutter_lints: ^2.0.3
 
 
 # Run with:
 # $ flutter pub run flutter_launcher_icons:main
-flutter_icons:
+flutter_launcher_icons:
   # This was made using:
   # $ convert ic_launcher.png  -gravity Center -background transparent -extent 352x352 ic_launcher_adaptive_fore.png
   image_path: "assets/app_icons/ic_launcher.png"
@@ -117,11 +115,6 @@ flutter:
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
-
-  fonts:
-    - family: Fms
-      fonts:
-        - asset: assets/fonts/fms.ttf
 
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
