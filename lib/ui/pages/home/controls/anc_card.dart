@@ -75,7 +75,7 @@ class _AncButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final child = Padding(
-      padding: const EdgeInsets.all(2),
+      padding: const EdgeInsets.all(4),
       child: Icon(
         icon,
         weight: isSelected ? 600 : 400,
