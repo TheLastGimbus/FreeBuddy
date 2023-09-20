@@ -74,18 +74,26 @@ class BatteryWidget : GlanceAppWidget() {
                             horizontalAlignment = Alignment.Horizontal.Start,
                             verticalAlignment = Alignment.Vertical.CenterVertically
                         ) {
-                            Image(
-                                ImageProvider(R.drawable.left_earbud),
-                                "Left earbud",
-                                modifier = GlanceModifier.defaultWeight()
-                            )
+                            Box(modifier = GlanceModifier.padding(R.dimen.batteryWidgetPadding)) {
+                                Image(
+                                    ImageProvider(R.drawable.left_earbud),
+                                    "Left earbud",
+                                    modifier = GlanceModifier.defaultWeight().size(30.dp),
+                                    colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
+                                )
+                            }
                             Text(label, style = textStyle)
                             Spacer(modifier = GlanceModifier.defaultWeight())
-                            Text(
-                                if (level >= 0) "$level%" else "-",
-                                style = textStyle,
-                                modifier = GlanceModifier.defaultWeight()
-                            )
+                            Box(
+                                modifier = GlanceModifier.padding(R.dimen.batteryWidgetPadding),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Text(
+                                    if (level >= 0) "$level%" else "-",
+                                    style = textStyle,
+                                    modifier = GlanceModifier.defaultWeight().width(64.dp)
+                                )
+                            }
                         }
                     }
                 }
