@@ -21,7 +21,6 @@ import kotlin.math.max
 
 
 class BatteryWidget : GlanceAppWidget() {
-    // TODO: Preview layout/image
     companion object {
         private val SMALL_SQUARE = DpSize(60.dp, 60.dp)
         private val SMALL_HORIZONTAL_RECTANGLE = DpSize(200.dp, 60.dp)
