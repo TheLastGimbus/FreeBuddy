@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -26,7 +27,7 @@ void main() {
   // This is so that we try to connect to headphones under splash screen
   // This will make it more smooth to the user
   FlutterNativeSplash.preserve(widgetsBinding: bind);
-  if (Platform.isAndroid) {
+  if (!kIsWeb && Platform.isAndroid) {
     // this is async, so it won't block runApp
     android_periodic.init();
   }
@@ -74,7 +75,7 @@ class _MyAppWrapperState extends State<MyAppWrapper>
             BlocListener<HeadphonesConnectionCubit, HeadphonesConnectionState>(
           listener: batteryHomeWidgetHearBloc,
           // Should this be *here* or somewhere special? Idk, okay for now 🤷
-          listenWhen: (p, c) => Platform.isAndroid,
+          listenWhen: (p, c) => !kIsWeb && Platform.isAndroid,
           child: const MyApp(),
         ),
       ),
