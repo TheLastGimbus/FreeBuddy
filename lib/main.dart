@@ -58,10 +58,12 @@ class _MyAppWrapperState extends State<MyAppWrapper>
         // don't know if this is good place to put this, but seems right
         // maybe convert this to multi listener with advanced "listenWhen" logic
         // this would make it a nice single place to know what launches when 🤔
-        child: const BlocListener<HeadphonesConnectionCubit,
-            HeadphonesConnectionState>(
+        child:
+            BlocListener<HeadphonesConnectionCubit, HeadphonesConnectionState>(
           listener: batteryHomeWidgetHearBloc,
-          child: MyApp(),
+          // Should this be *here* or somewhere special? Idk, okay for now 🤷
+          listenWhen: (p, c) => Platform.isAndroid,
+          child: const MyApp(),
         ),
       ),
     );
