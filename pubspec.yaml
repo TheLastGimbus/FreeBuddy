@@ -43,6 +43,7 @@ dependencies:
   dynamic_color: ^1.6.7
   home_widget: ^0.3.0
   workmanager: ^0.5.1
+  flutter_native_splash: ^2.3.2
 
   # Logic libs
   crclib: ^3.0.0
@@ -74,7 +75,6 @@ dev_dependencies:
     sdk: flutter
 
   flutter_launcher_icons: ^0.13.1
-  flutter_native_splash: ^2.3.2
 
   flutter_lints: ^2.0.3
 

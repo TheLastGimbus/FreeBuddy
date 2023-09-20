@@ -4,6 +4,7 @@ import 'package:dynamic_color/dynamic_color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
@@ -21,7 +22,10 @@ import 'ui/pages/settings/settings_page.dart';
 import 'ui/theme/themes.dart';
 
 void main() {
-  WidgetsFlutterBinding.ensureInitialized();
+  final bind = WidgetsFlutterBinding.ensureInitialized();
+  // This is so that we try to connect to headphones under splash screen
+  // This will make it more smooth to the user
+  FlutterNativeSplash.preserve(widgetsBinding: bind);
   if (Platform.isAndroid) {
     // this is async, so it won't block runApp
     android_periodic.init();
@@ -45,6 +49,14 @@ class _MyAppWrapperState extends State<MyAppWrapper>
   @override
   void initState() {
     WidgetsBinding.instance.addObserver(this);
+    // ...and this removes splash if we either connected or 1 second passed
+    _btBlock.stream
+        .firstWhere((e) => e is HeadphonesConnectedOpen)
+        .timeout(
+          const Duration(seconds: 1),
+          onTimeout: () => HeadphonesNotPaired(), // just placeholder
+        )
+        .then((_) => FlutterNativeSplash.remove());
     super.initState();
   }
 
