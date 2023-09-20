@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="battery_widget_text_color">#C1E8FF</color>
+    <color name="battery_widget_text_color">#F9FCFF</color>
     <color name="battery_widget_bar_color">#00668B</color>
     <color name="battery_widget_bar_background">#003549</color>
 </resources>
