@@ -1,17 +1,15 @@
 import 'dart:io';
 
 import 'package:dynamic_color/dynamic_color.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
-import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
+import 'di.dart' as di;
 import 'headphones/cubit/headphones_connection_cubit.dart';
 import 'headphones/cubit/headphones_cubit_objects.dart';
-import 'headphones/cubit/headphones_mock_cubit.dart';
 import 'platform_stuff/android/appwidgets/battery_appwidget.dart';
 import 'platform_stuff/android/background/periodic.dart' as android_periodic;
 import 'ui/app_settings.dart';
@@ -42,13 +40,7 @@ class MyAppWrapper extends StatefulWidget {
 
 class _MyAppWrapperState extends State<MyAppWrapper>
     with WidgetsBindingObserver {
-  final _btBlock = (!kIsWeb &&
-          Platform.isAndroid &&
-          !const bool.fromEnvironment('USE_HEADPHONES_MOCK'))
-      ? HeadphonesConnectionCubit(
-          bluetooth: TheLastBluetooth.instance,
-        )
-      : HeadphonesMockCubit();
+  final _btBlock = di.getHeadphonesCubit();
 
   @override
   void initState() {

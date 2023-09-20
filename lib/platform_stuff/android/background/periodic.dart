@@ -5,9 +5,9 @@
 import 'dart:ui';
 
 import 'package:rxdart/rxdart.dart';
-import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 import 'package:workmanager/workmanager.dart';
 
+import '../../../di.dart' as di;
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
 import '../../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../../logger.dart';
@@ -32,7 +32,7 @@ Future<bool> routineUpdateCallback() async {
   }
   // NOT_SURE: Also use real/mock logic here?? idk, but if you want,
   // feel free to make some proper DI for this to be shared in UI and here
-  final cubit = HeadphonesConnectionCubit(bluetooth: TheLastBluetooth.instance);
+  final cubit = di.getHeadphonesCubit();
   try {
     final headphones = await cubit.stream
         .debounceTime(const Duration(seconds: 1))
