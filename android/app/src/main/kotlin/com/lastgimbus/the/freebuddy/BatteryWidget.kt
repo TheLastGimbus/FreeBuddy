@@ -2,6 +2,7 @@ package com.lastgimbus.the.freebuddy
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +39,9 @@ class BatteryWidget : GlanceAppWidget() {
     )
 
     override suspend fun provideGlance(context: Context, id: GlanceId) {
-        // TODO: Icons/charging
+        // TODO in future: Charging, but only when updates will be more "live"
+        // currently there is so much lag between updates that it doesn't make sense :/
+        // but it will if we'll have foreground service or something
         provideContent {
             GlanceTheme {
                 val sp = HomeWidgetPlugin.getData(LocalContext.current)
@@ -55,16 +58,19 @@ class BatteryWidget : GlanceAppWidget() {
                 )
 
                 @Composable
-                fun BatteryBox(passGlanceModifier: GlanceModifier, level: Int, label: String) {
+                fun BatteryBox(
+                    passGlanceModifier: GlanceModifier,
+                    icon: ImageProvider,
+                    level: Int,
+                    label: String,
+                    availableWidth: Dp = size.width
+                ) {
                     Box(
                         // this must be passed  here because for some reason the .defaultWeight() is context aware??
-                        modifier = passGlanceModifier,
-                        contentAlignment = Alignment.Center
+                        modifier = passGlanceModifier, contentAlignment = Alignment.Center
                     ) {
                         LinearProgressIndicator(
-                            modifier = GlanceModifier
-                                .cornerRadius(R.dimen.batteryWidgetInnerRadius)
-                                .fillMaxSize(),
+                            modifier = GlanceModifier.cornerRadius(R.dimen.batteryWidgetInnerRadius).fillMaxSize(),
                             progress = max(0f, level / 100f),
                             color = barColor,
                             backgroundColor = barBackground
@@ -76,14 +82,14 @@ class BatteryWidget : GlanceAppWidget() {
                         ) {
                             Box(modifier = GlanceModifier.padding(R.dimen.batteryWidgetPadding)) {
                                 Image(
-                                    ImageProvider(R.drawable.left_earbud),
-                                    "Left earbud",
+                                    icon,
+                                    "$label icon",
                                     modifier = GlanceModifier.defaultWeight().size(30.dp),
                                     colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
                                 )
                             }
-                            Text(label, style = textStyle)
-                            Spacer(modifier = GlanceModifier.defaultWeight())
+                            if (availableWidth > 128.dp) Text(label, style = textStyle)
+                            Spacer(modifier = GlanceModifier.size(0.dp).defaultWeight())
                             Box(
                                 modifier = GlanceModifier.padding(R.dimen.batteryWidgetPadding),
                                 contentAlignment = Alignment.Center
@@ -91,7 +97,7 @@ class BatteryWidget : GlanceAppWidget() {
                                 Text(
                                     if (level >= 0) "$level%" else "-",
                                     style = textStyle,
-                                    modifier = GlanceModifier.defaultWeight().width(64.dp)
+                                    modifier = GlanceModifier.defaultWeight().width(40.dp)
                                 )
                             }
                         }
@@ -99,12 +105,9 @@ class BatteryWidget : GlanceAppWidget() {
                 }
 
                 Box(
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .appWidgetBackground()
+                    modifier = GlanceModifier.fillMaxSize().appWidgetBackground()
                         .clickable(actionStartActivity(activity = MainActivity::class.java))
-                        .background(GlanceTheme.colors.background)
-                        .cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
+                        .background(GlanceTheme.colors.background).cornerRadius(R.dimen.batteryWidgetBackgroundRadius)
                         .padding(R.dimen.batteryWidgetPadding)
                 ) {
                     if (size.height < VERTICAL_RECTANGLE.height) {
@@ -112,24 +115,25 @@ class BatteryWidget : GlanceAppWidget() {
                             // this must be passed  here because for some reason the .defaultWeight() is context aware??
                             val mod = GlanceModifier.defaultWeight().fillMaxHeight()
                             if (size.width <= SMALL_SQUARE.width) {
-                                BatteryBox(mod, max(left, right), "Buds")
+                                BatteryBox(mod, ImageProvider(R.drawable.earbuds), max(left, right), "Buds")
                             } else {
-                                BatteryBox(mod, left, "Left")
+                                val avail = size.width / 3
+                                BatteryBox(mod, ImageProvider(R.drawable.left_earbud), left, "Left", avail)
                                 Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetSquaresSpacerSize))
-                                BatteryBox(mod, right, "Right")
+                                BatteryBox(mod, ImageProvider(R.drawable.right_earbud), right, "Right", avail)
                                 Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetSquaresSpacerSize))
-                                BatteryBox(mod, case, "Case")
+                                BatteryBox(mod, ImageProvider(R.drawable.earbuds_case), case, "Case", avail)
                             }
                         }
                     } else {
                         Column(modifier = GlanceModifier.fillMaxSize()) {
                             // this must be passed  here because for some reason the .defaultWeight() is context aware??
                             val mod = GlanceModifier.defaultWeight() // no .fillMaxHeight()!
-                            BatteryBox(mod, left, "Left")
+                            BatteryBox(mod, ImageProvider(R.drawable.left_earbud), left, "Left")
                             Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetLinesSpacerSize))
-                            BatteryBox(mod, right, "Right")
+                            BatteryBox(mod, ImageProvider(R.drawable.right_earbud), right, "Right")
                             Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetLinesSpacerSize))
-                            BatteryBox(mod, case, "Case")
+                            BatteryBox(mod, ImageProvider(R.drawable.earbuds_case), case, "Case")
                         }
                     }
                 }
