@@ -80,7 +80,7 @@ dev_dependencies:
 
 
 # Run with:
-# $ flutter pub run flutter_launcher_icons:main
+# $ flutter pub run flutter_launcher_icons
 flutter_launcher_icons:
   # This was made using:
   # $ convert ic_launcher.png  -gravity Center -background transparent -extent 352x352 ic_launcher_adaptive_fore.png
