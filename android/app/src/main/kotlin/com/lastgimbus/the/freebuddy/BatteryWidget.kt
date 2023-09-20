@@ -24,7 +24,8 @@ class BatteryWidget : GlanceAppWidget() {
     // TODO: Preview layout/image
     companion object {
         private val SMALL_SQUARE = DpSize(60.dp, 60.dp)
-        private val HORIZONTAL_RECTANGLE = DpSize(220.dp, 60.dp)
+        private val SMALL_HORIZONTAL_RECTANGLE = DpSize(200.dp, 60.dp)
+        private val HORIZONTAL_RECTANGLE = DpSize(300.dp, 60.dp)
         private val VERTICAL_RECTANGLE = DpSize(80.dp, 160.dp)
         private val BIG_SQUARE = DpSize(180.dp, 180.dp)
     }
@@ -32,6 +33,7 @@ class BatteryWidget : GlanceAppWidget() {
     override val sizeMode = SizeMode.Responsive(
         setOf(
             SMALL_SQUARE,
+            SMALL_HORIZONTAL_RECTANGLE,
             VERTICAL_RECTANGLE,
             HORIZONTAL_RECTANGLE,
             BIG_SQUARE,
@@ -77,7 +79,7 @@ class BatteryWidget : GlanceAppWidget() {
                         )
                         Row(
                             modifier = GlanceModifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.Horizontal.Start,
+                            horizontalAlignment = Alignment.Horizontal.CenterHorizontally,
                             verticalAlignment = Alignment.Vertical.CenterVertically
                         ) {
                             Box(modifier = GlanceModifier.padding(R.dimen.batteryWidgetPadding)) {
@@ -88,17 +90,19 @@ class BatteryWidget : GlanceAppWidget() {
                                     colorFilter = ColorFilter.tint(GlanceTheme.colors.primary),
                                 )
                             }
-                            if (availableWidth > 128.dp) Text(label, style = textStyle)
-                            Spacer(modifier = GlanceModifier.size(0.dp).defaultWeight())
-                            Box(
-                                modifier = GlanceModifier.padding(R.dimen.batteryWidgetPadding),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    if (level >= 0) "$level%" else "-",
-                                    style = textStyle,
-                                    modifier = GlanceModifier.defaultWeight().width(40.dp)
-                                )
+                            if (availableWidth > 96.dp) Text(label, style = textStyle)
+                            if (availableWidth >= SMALL_SQUARE.width) {
+                                Spacer(modifier = GlanceModifier.size(0.dp).defaultWeight())
+                                Box(
+                                    modifier = GlanceModifier.padding(R.dimen.batteryWidgetPadding),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Text(
+                                        if (level >= 0) "$level%" else "-",
+                                        style = textStyle,
+                                        modifier = GlanceModifier.defaultWeight().width(40.dp)
+                                    )
+                                }
                             }
                         }
                     }
@@ -117,7 +121,7 @@ class BatteryWidget : GlanceAppWidget() {
                             if (size.width <= SMALL_SQUARE.width) {
                                 BatteryBox(mod, ImageProvider(R.drawable.earbuds), max(left, right), "Buds")
                             } else {
-                                val avail = size.width / 3
+                                val avail = (size.width / 3) - (8.dp * 2)
                                 BatteryBox(mod, ImageProvider(R.drawable.left_earbud), left, "Left", avail)
                                 Spacer(modifier = GlanceModifier.size(R.dimen.batteryWidgetSquaresSpacerSize))
                                 BatteryBox(mod, ImageProvider(R.drawable.right_earbud), right, "Right", avail)
