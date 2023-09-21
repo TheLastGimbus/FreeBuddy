@@ -27,8 +27,33 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   // But, looking at how fucked up this Port communication is, I will just
   // register/deregister this port name, and if background detects it, it just
   // skips 🤷
-  static const dummyReceivePortName = 'dummyHeadphonesCubitPort';
-  final _dummyReceivePort = ReceivePort('dummyHeadphonesCubitPort');
+  //
+  // UDPATE: LOOKS LIKE I CAN'T JUST REGEISTER, BECAUSE BLOC SUCKS ASS
+  // I WILL HAVE FULL BLOWN PING HERE NOW
+  // I could just implement whole fucking http server altoghether -_-
+  // ...
+  // Actaully............
+  // I would probably need something like this for Linux Desktop anyway...
+  // This might not be such a bad idea........
+  // ...
+  // Stop.
+  static const pingReceivePortName = 'pingHeadphonesCubitPort';
+  final _pingReceivePort = ReceivePort('dummyHeadphonesCubitPort');
+  late final StreamSubscription _pingReceivePortSS;
+
+  // This is so fucking embarrassing......
+  // Race conditions??? FUCK YES
+  static Future<bool> cubitAlreadyRunningSomewhere() async {
+    final ping = IsolateNameServer.lookupPortByName(
+        HeadphonesConnectionCubit.pingReceivePortName);
+    if (ping == null) return false;
+    final pong = ReceivePort(); // this is not right naming, i know
+    ping.send(pong.sendPort);
+    return await pong.first.timeout(
+      const Duration(milliseconds: 50),
+      onTimeout: () => false,
+    ) as bool;
+  }
 
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
@@ -93,8 +118,13 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
         super(HeadphonesNotPaired()) {
+    IsolateNameServer.removePortNameMapping(pingReceivePortName);
     IsolateNameServer.registerPortWithName(
-        _dummyReceivePort.sendPort, dummyReceivePortName);
+        _pingReceivePort.sendPort, pingReceivePortName);
+    _pingReceivePortSS = _pingReceivePort.listen((message) {
+      // ping back
+      if (message is SendPort) message.send(true);
+    });
     _init();
   }
 
@@ -125,7 +155,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   @override
   Future<void> close() async {
-    IsolateNameServer.removePortNameMapping(dummyReceivePortName);
+    await _pingReceivePortSS.cancel();
+    _pingReceivePort.close();
+    IsolateNameServer.removePortNameMapping(pingReceivePortName);
     await _btStream?.cancel();
     await _devStream?.cancel();
     super.close();

@@ -2,8 +2,6 @@
 ///
 /// Right now it is small and simple enough to have everything in one file
 
-import 'dart:ui';
-
 import 'package:rxdart/rxdart.dart';
 import 'package:workmanager/workmanager.dart';
 
@@ -23,9 +21,9 @@ const commonTimeout = Duration(seconds: 10);
 const taskIdRoutineUpdate = "freebuddy.routine_update";
 
 Future<bool> routineUpdateCallback() async {
-  if (IsolateNameServer.lookupPortByName(
-          HeadphonesConnectionCubit.dummyReceivePortName) !=
-      null) {
+  // i think this function is still "dependency injection" safe
+  // ...but it's not wise to keep remembering what is and what isn't, is it?
+  if (await HeadphonesConnectionCubit.cubitAlreadyRunningSomewhere()) {
     logg.d("Not updating stuff from ROUTINE_UPDATE "
         "because cubit is already running");
     return true;
