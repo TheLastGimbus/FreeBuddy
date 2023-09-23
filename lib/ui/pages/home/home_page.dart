@@ -51,8 +51,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: HeadphonesConnectionEnsuringOverlay(
-        builder: (_, h) => HeadphonesControlsWidget(headphones: h),
+      body: Center(
+        child: HeadphonesConnectionEnsuringOverlay(
+          builder: (_, h) => HeadphonesControlsWidget(headphones: h),
+        ),
       ),
     );
   }

@@ -14,19 +14,21 @@ class HeadphonesSettingsPage extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return Scaffold(
       appBar: AppBar(title: Text(l.pageHeadphonesSettingsTitle)),
-      body: HeadphonesConnectionEnsuringOverlay(
-        builder: (_, h) {
-          return ListView(
-            children: [
-              AutoPauseSection(headphones: h),
-              const Divider(indent: 16, endIndent: 16),
-              DoubleTapSection(headphones: h),
-              const Divider(indent: 16, endIndent: 16),
-              HoldSection(headphones: h),
-              const SizedBox(height: 64),
-            ],
-          );
-        },
+      body: Center(
+        child: HeadphonesConnectionEnsuringOverlay(
+          builder: (_, h) {
+            return ListView(
+              children: [
+                AutoPauseSection(headphones: h),
+                const Divider(indent: 16, endIndent: 16),
+                DoubleTapSection(headphones: h),
+                const Divider(indent: 16, endIndent: 16),
+                HoldSection(headphones: h),
+                const SizedBox(height: 64),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
