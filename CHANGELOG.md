@@ -1,10 +1,12 @@
 # Changelog
 
-# 0.1.5 (todo)
+# 0.1.5 (2023-09-24)
 
+- 🥁🥁🥁 BATTERY HOME WIDGET 🎉🎉🎉
 - More Material3-ish look:
-  - Colors from wallpaper on Android 12
-- Better layout in landscape
+  - Colors from wallpaper on Android 12 🎨
+  - Battery indicators stolen straight from Google's battery widget 🕵️
+- Better layout in landscape 
 - Move all headphone settings to own page - clearer home page
   - It's kinda empty now, so I hope to fill it with something soon 🙈
 
