@@ -46,6 +46,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
               ],
             )
           : Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Expanded(
                   child: Column(
@@ -60,16 +61,18 @@ class HeadphonesControlsWidget extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: _HeadphonesSettingsButton(headphones),
-                      ),
-                      BatteryCard(headphones),
-                      AncCard(headphones),
-                    ],
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: _HeadphonesSettingsButton(headphones),
+                        ),
+                        BatteryCard(headphones),
+                        AncCard(headphones),
+                      ],
+                    ),
                   ),
                 ),
               ],
