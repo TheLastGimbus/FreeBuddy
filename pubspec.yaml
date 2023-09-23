@@ -68,6 +68,7 @@ dependencies:
 dependency_overrides:
   ## flutter_test, as always...
   material_color_utilities: ^0.8.0
+  logger: ^2.0.2+1
 
 dev_dependencies:
   flutter_test:
@@ -76,7 +77,18 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
 
   flutter_lints: ^2.0.3
+  icon_font_generator: ^4.0.0
 
+
+# Run with:
+# $ flutter pub run icon_font_generator:generator
+icon_font:
+  input_svg_dir: "assets/app_icons/vector/"
+  output_font_file: "fonts/FreebuddyIcons.otf"
+  output_class_file: "lib/gen/freebuddy_icons.dart"
+  class_name: "FreebuddyIcons"
+  format: true
+  font_name: "FreebuddyIcons"
 
 # Run with:
 # $ flutter pub run flutter_launcher_icons
@@ -111,6 +123,11 @@ flutter:
     - "assets/app_icons/ic_launcher.png"
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
+
+  fonts:
+    - family: FreebuddyIcons
+      fonts:
+        - asset: "fonts/FreebuddyIcons.otf"
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

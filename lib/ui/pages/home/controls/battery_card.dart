@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
+import '../../../../gen/freebuddy_icons.dart';
 import '../../../../headphones/headphones_base.dart';
 
 /// Android12-Google-Battery-Widget-style battery card
@@ -17,6 +18,7 @@ class BatteryCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
+    final tt = t.textTheme;
     final l = AppLocalizations.of(context)!;
 
     // Don't feel like exporting this anywhere 🤷
@@ -31,11 +33,11 @@ class BatteryCard extends StatelessWidget {
                 // runAlignment: WrapAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(icon),
+                  Icon(icon, size: 32, color: t.colorScheme.primary),
                   const SizedBox(width: 8),
-                  Text(text),
+                  Text(text, style: tt.bodyMedium),
                   const Spacer(),
-                  Text('${level ?? '-'}%'),
+                  Text('${level ?? '-'}%', style: tt.bodyMedium),
                   const SizedBox(width: 8),
                   if (charging ?? false)
                     Padding(
@@ -43,8 +45,8 @@ class BatteryCard extends StatelessWidget {
                       child: Icon(
                         Symbols.charger,
                         fill: 1,
-                        size: 20,
-                        color: t.colorScheme.onPrimaryContainer,
+                        size: 24,
+                        color: t.colorScheme.primary,
                       ),
                     ),
                 ],
@@ -60,27 +62,26 @@ class BatteryCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: SizedBox(
-              height: 128,
+              height: 152,
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  // TODO: Maybe make them boxes (but with some max size)
                   batteryBox(
-                    Icons.arrow_circle_left,
+                    FreebuddyIcons.leftEarbud,
                     l.leftBudShort,
                     b?.levelLeft,
                     b?.chargingLeft,
                   ),
                   const SizedBox(height: 2),
                   batteryBox(
-                    Icons.arrow_circle_right,
+                    FreebuddyIcons.rightEarbud,
                     l.rightBudShort,
                     b?.levelRight,
                     b?.chargingRight,
                   ),
                   const SizedBox(height: 2),
                   batteryBox(
-                    Icons.cases_outlined,
+                    FreebuddyIcons.earbudsCase,
                     l.caseShort,
                     b?.levelCase,
                     b?.chargingCase,
