@@ -58,5 +58,14 @@
                 android:resource="@xml/battery_widget_config" />
         </receiver>
 
+        <receiver
+                android:name=".BluetoothDeviceConnectedReceiver"
+                android:permission="android.permission.BLUETOOTH_CONNECT"
+                android:exported="true">
+            <intent-filter>
+                <action android:name="android.bluetooth.device.action.ACL_CONNECTED"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 </manifest>
