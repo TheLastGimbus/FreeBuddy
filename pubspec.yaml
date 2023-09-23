@@ -51,7 +51,7 @@ dependencies:
   collection: ^1.17.2
   stream_channel: ^2.1.1
   flutter_bloc: ^8.1.3
-  logger: ^2.0.2
+  logger: ^2.0.2+1
   provider: ^6.0.5
   streaming_shared_preferences: ^2.0.0
   async: ^2.11.0
@@ -63,7 +63,6 @@ dependencies:
   intl: ^0.18.1
   ## This is low-level, but I *do* use it to mix colors here and there
   material_color_utilities: ^0.8.0
-  screenshot: ^2.1.0
   material_symbols_icons: ^4.2668.0
 
 dependency_overrides:
