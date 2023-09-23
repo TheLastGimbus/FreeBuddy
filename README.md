@@ -17,8 +17,7 @@ Also, it doesn't have features like "find lost headphones", etc...
 
 So I got mad and decided to make my own... and here it is 🌈
 
-<img alt="Freebuddy main screen light mode" src="https://user-images.githubusercontent.com/40139196/215295974-3a6a98d1-95ae-4883-ab8c-a5ae4716340d.png"  width=250px>
-<img alt="Freebuddy main screen dark mode" src="https://user-images.githubusercontent.com/40139196/215295981-6676238d-0082-4b44-a9b0-1042529287f1.png" width=250px>
+<img alt="Freebuddy main screen light mode" src="https://user-images.githubusercontent.com/40139196/215295974-3a6a98d1-95ae-4883-ab8c-a5ae4716340d.png"  width=250px> <img alt="Freebuddy main screen dark mode" src="https://user-images.githubusercontent.com/40139196/215295981-6676238d-0082-4b44-a9b0-1042529287f1.png" width=250px>
 
 ## Features 🔨
 
