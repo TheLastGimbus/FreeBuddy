@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.5 (2023-09-24)
+## 0.2.0 (2023-09-24)
 
 - 🥁🥁🥁 BATTERY HOME WIDGET 🎉🎉🎉
 - More Material3-ish look:
