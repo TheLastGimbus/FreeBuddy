@@ -158,6 +158,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     await _pingReceivePortSS.cancel();
     _pingReceivePort.close();
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
+    await _connection?.io.sink.close();
     await _btStream?.cancel();
     await _devStream?.cancel();
     super.close();
