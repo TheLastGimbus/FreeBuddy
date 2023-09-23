@@ -56,7 +56,6 @@ class DoubleTapSection extends StatelessWidget {
                       child: _DoubleTapSetting(
                         title: Text(
                           l.pageHeadphonesSettingsLeftBud,
-                          // TODO: Make this titleMedium larger maybe? for whole app
                           style: tt.titleMedium,
                         ),
                         value: gs.doubleTapLeft,

@@ -41,8 +41,8 @@ ThemeData _customize(ThemeData theme) {
 ThemeData lightTheme(ColorScheme? dynamicColorScheme) {
   return _customize(ThemeData.light(useMaterial3: useMaterial3)).copyWith(
     colorScheme: dynamicColorScheme,
-    // TODO: Do something about this shadow...
     // colorScheme: _light.colorScheme.copyWith(
+    // Leaving this so you see how you can customize colors individually
     //   shadow: const Color(0x80808080),
     // ),
   );

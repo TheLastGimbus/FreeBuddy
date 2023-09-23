@@ -22,7 +22,6 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _introCheck() async {
-    // TODO: Get settings async then open intro if needed
     final settings = context.read<AppSettings>();
     if (!(await settings.seenIntroduction.first)) {
       // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
