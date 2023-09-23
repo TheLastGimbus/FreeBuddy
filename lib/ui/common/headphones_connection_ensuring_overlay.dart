@@ -34,6 +34,9 @@ class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
   const HeadphonesConnectionEnsuringOverlay({Key? key, required this.builder})
       : super(key: key);
 
+  Widget _padded(Widget child) =>
+      Padding(padding: const EdgeInsets.all(16), child: child);
+
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
@@ -41,9 +44,10 @@ class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     return BlocBuilder<HeadphonesConnectionCubit, HeadphonesConnectionState>(
       builder: (context, state) => switch (state) {
-        HeadphonesNoPermission() => const NoPermissionInfoWidget(),
-        HeadphonesNotPaired() => const NotPairedInfoWidget(),
-        HeadphonesBluetoothDisabled() => const BluetoothDisabledInfoWidget(),
+        HeadphonesNoPermission() => _padded(const NoPermissionInfoWidget()),
+        HeadphonesNotPaired() => _padded(const NotPairedInfoWidget()),
+        HeadphonesBluetoothDisabled() =>
+          _padded(const BluetoothDisabledInfoWidget()),
         // We know that we *have* the headphones, but not necessary connected
         HeadphonesDisconnected() ||
         HeadphonesConnecting() ||

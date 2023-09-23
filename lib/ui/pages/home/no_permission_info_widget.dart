@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
-import '../pretty_rounded_container_widget.dart';
 
 class NoPermissionInfoWidget extends StatelessWidget {
   const NoPermissionInfoWidget({Key? key}) : super(key: key);
@@ -14,9 +13,9 @@ class NoPermissionInfoWidget extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
     final t = Theme.of(context);
     final tt = t.textTheme;
-    return PrettyRoundedContainerWidget(
+    return Card(
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(12),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
