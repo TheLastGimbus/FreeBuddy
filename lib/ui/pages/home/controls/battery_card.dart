@@ -121,7 +121,7 @@ class _BatteryContainer extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           LinearProgressIndicator(
-            value: value,
+            value: value ?? 0,
             color: Color(
               palette.get(
                 t.colorScheme.brightness == Brightness.dark ? 25 : 80,
