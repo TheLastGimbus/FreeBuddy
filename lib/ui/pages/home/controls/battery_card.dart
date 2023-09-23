@@ -20,15 +20,23 @@ class BatteryCard extends StatelessWidget {
     final l = AppLocalizations.of(context)!;
 
     // Don't feel like exporting this anywhere 🤷
-    batteryBox(String text, int? level, bool? charging) => Expanded(
+    batteryBox(IconData icon, String text, int? level, bool? charging) =>
+        Expanded(
           child: _BatteryContainer(
             value: level != null ? level / 100 : null,
-            child: Center(
-              child: Wrap(
-                alignment: WrapAlignment.spaceEvenly,
-                crossAxisAlignment: WrapCrossAlignment.center,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                // runAlignment: WrapAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text('$text • ${level ?? '-'}%', textAlign: TextAlign.center),
+                  Icon(icon),
+                  const SizedBox(width: 8),
+                  Text(text),
+                  const Spacer(),
+                  Text('${level ?? '-'}%'),
+                  const SizedBox(width: 8),
                   if (charging ?? false)
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 1),
@@ -52,16 +60,31 @@ class BatteryCard extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: SizedBox(
-              height: 86,
-              child: Row(
+              height: 128,
+              child: Column(
                 mainAxisSize: MainAxisSize.max,
                 children: [
                   // TODO: Maybe make them boxes (but with some max size)
-                  batteryBox(l.leftBudShort, b?.levelLeft, b?.chargingLeft),
-                  const SizedBox(width: 8),
-                  batteryBox(l.rightBudShort, b?.levelRight, b?.chargingRight),
-                  const SizedBox(width: 8),
-                  batteryBox(l.caseShort, b?.levelCase, b?.chargingCase),
+                  batteryBox(
+                    Icons.arrow_circle_left,
+                    l.leftBudShort,
+                    b?.levelLeft,
+                    b?.chargingLeft,
+                  ),
+                  const SizedBox(height: 2),
+                  batteryBox(
+                    Icons.arrow_circle_right,
+                    l.rightBudShort,
+                    b?.levelRight,
+                    b?.chargingRight,
+                  ),
+                  const SizedBox(height: 2),
+                  batteryBox(
+                    Icons.cases_outlined,
+                    l.caseShort,
+                    b?.levelCase,
+                    b?.chargingCase,
+                  ),
                 ],
               ),
             ),
@@ -91,24 +114,21 @@ class _BatteryContainer extends StatelessWidget {
     final color = Hct.fromInt(t.colorScheme.primary.value);
     final palette = TonalPalette.of(color.hue, color.chroma);
     return ClipRRect(
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(16),
       child: Stack(
         alignment: Alignment.center,
         fit: StackFit.expand,
         children: [
-          RotatedBox(
-            quarterTurns: -1,
-            child: LinearProgressIndicator(
-              value: value,
-              color: Color(
-                palette.get(
-                  t.colorScheme.brightness == Brightness.dark ? 25 : 80,
-                ),
+          LinearProgressIndicator(
+            value: value,
+            color: Color(
+              palette.get(
+                t.colorScheme.brightness == Brightness.dark ? 25 : 80,
               ),
-              backgroundColor: Color(
-                palette.get(
-                  t.colorScheme.brightness == Brightness.dark ? 10 : 90,
-                ),
+            ),
+            backgroundColor: Color(
+              palette.get(
+                t.colorScheme.brightness == Brightness.dark ? 10 : 90,
               ),
             ),
           ),
