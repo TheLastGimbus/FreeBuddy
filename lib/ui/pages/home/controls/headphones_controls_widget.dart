@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../headphones/headphones_base.dart';
+import '../../../../headphones/huawei/otter/otter_constants.dart';
 import '../../../theme/layouts.dart';
 import 'anc_card.dart';
 import 'battery_card.dart';
@@ -33,10 +34,10 @@ class HeadphonesControlsWidget extends StatelessWidget {
               children: [
                 Text(
                   // TODO: This hardcode
-                  headphones.alias ?? 'FreeBuds 4i',
+                  headphones.alias ?? 'FreeBuds',
                   style: tt.headlineMedium,
                 ),
-                HeadphonesImage(headphones),
+                HeadphonesImage(headphones, getAsset(headphones.alias?? 'FreeBuds')),
                 Align(
                   alignment: Alignment.centerRight,
                   child: _HeadphonesSettingsButton(headphones),
@@ -53,10 +54,10 @@ class HeadphonesControlsWidget extends StatelessWidget {
                     children: [
                       Text(
                         // TODO: This hardcode
-                        headphones.alias ?? 'FreeBuds 4i',
+                        headphones.alias ?? 'FreeBuds',
                         style: tt.headlineMedium,
                       ),
-                      HeadphonesImage(headphones),
+                      HeadphonesImage(headphones, getAsset(headphones.alias ?? 'FreeBus')),
                     ],
                   ),
                 ),
@@ -79,6 +80,19 @@ class HeadphonesControlsWidget extends StatelessWidget {
             ),
     );
   }
+
+  String getAsset(String name) {
+
+    int pos = 0;
+
+    for (int i = 0; i < OtterConst.btDevNameRegex.length; i++) {
+      if (OtterConst.btDevNameRegex[i].hasMatch(name)) {
+        pos = i ;
+      }
+    }
+    return OtterConst.imageAsset[pos]; 
+  }
+
 }
 
 /// Simple button leading to headphones settings page

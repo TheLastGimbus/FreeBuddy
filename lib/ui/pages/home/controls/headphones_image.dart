@@ -9,8 +9,9 @@ import '../../../../headphones/headphones_base.dart';
 /// ...well, in the future :D
 class HeadphonesImage extends StatelessWidget {
   final HeadphonesBase headphones;
+  final String assetPath; 
 
-  const HeadphonesImage(this.headphones, {Key? key}) : super(key: key);
+  const HeadphonesImage(this.headphones, this.assetPath, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class HeadphonesImage extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 64),
         child: Image.asset(
-          'assets/app_icons/ic_launcher.png',
+          assetPath,
           fit: BoxFit.contain,
           filterQuality: FilterQuality.none,
         ),

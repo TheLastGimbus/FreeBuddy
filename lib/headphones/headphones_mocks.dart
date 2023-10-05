@@ -69,7 +69,7 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
   }
 
   @override
-  String? get alias => "Freebuds 4i😺";
+  String? get alias => "Freebuds😺";
 
   @override
   ValueStream<HeadphonesBatteryData> get batteryData => _batteryData.stream;

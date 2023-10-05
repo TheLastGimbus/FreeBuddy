@@ -1,5 +1,5 @@
 name: freebuddy
-description: Open-source app for Huawei Freebuds 4i headphones
+description: Open-source app for Huawei Freebuds 4i/Freebuds Pro headphones
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -121,6 +121,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - "assets/app_icons/ic_launcher.png"
+    - "assets/app_icons/freebuds_pro_one.png"
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
