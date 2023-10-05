@@ -33,7 +33,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
               children: [
                 Text(
                   // TODO: This hardcode
-                  headphones.alias ?? 'FreeBuds 4i',
+                  headphones.alias ?? 'FreeBuds',
                   style: tt.headlineMedium,
                 ),
                 HeadphonesImage(headphones),
@@ -53,7 +53,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
                     children: [
                       Text(
                         // TODO: This hardcode
-                        headphones.alias ?? 'FreeBuds 4i',
+                        headphones.alias ?? 'FreeBuds',
                         style: tt.headlineMedium,
                       ),
                       HeadphonesImage(headphones),

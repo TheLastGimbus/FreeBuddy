@@ -67,7 +67,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     }
     if (_connection != null) return; // already connected and working, skip
     final otter = devices
-        .firstWhereOrNull((d) => OtterConst.btDevNameRegex.hasMatch(d.name));
+        .firstWhereOrNull((d) => OtterConst.btDevNameRegex.any((regex) => regex.hasMatch(d.name)));
     if (otter == null) {
       emit(HeadphonesNotPaired());
       return;
@@ -106,8 +106,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     if (!_btEnabledCache) return;
     emit(
       ((await _bluetooth.pairedDevices)
-                  .firstWhereOrNull(
-                      (d) => OtterConst.btDevNameRegex.hasMatch(d.name))
+                          .firstWhereOrNull(
+                            (d) => OtterConst.btDevNameRegex.any((regex) => regex.hasMatch(d.name)))
                   ?.isConnected ??
               false)
           ? HeadphonesConnectedClosed()

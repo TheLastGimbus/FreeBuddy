@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:crclib/catalog.dart';
+import '../../../logger.dart';
 
 import '../headphones_data_objects.dart';
 
@@ -98,6 +99,7 @@ class MbbCommand {
       commandId,
       ...dataBytes, // Make sure they are >0 and <256
     ];
+    logg.t("⬆ data: ${Uint8List.fromList(bytesList..addAll(MbbUtils.checksum(bytesList)))}");
     return Uint8List.fromList(bytesList..addAll(MbbUtils.checksum(bytesList)));
   }
 
@@ -106,6 +108,7 @@ class MbbCommand {
     bool verify = true,
     bool smartDivide = true,
   }) {
+    logg.t("📥 received: ${payload}");
     final divided = <Uint8List>[];
     if (smartDivide) {
       while (payload.length >= 8) {
