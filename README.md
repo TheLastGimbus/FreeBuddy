@@ -5,7 +5,7 @@
 [![resolved Github issues](https://img.shields.io/github/issues-closed/TheLastGimbus/FreeBuddy?label=resolved%20issues)](https://github.com/TheLastGimbus/FreeBuddy/issues)
 [![commit activity](https://img.shields.io/github/commit-activity/y/TheLastGimbus/FreeBuddy)](https://github.com/TheLastGimbus/FreeBuddy/graphs/contributors)
 
-Free and open source app for Huawei Freebuds 4i headphones 🎧
+Free and open source app for Huawei Freebuds 4i/ FreeBudsPro headphones 🎧
 
 ## Why 🧐
 

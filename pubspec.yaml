@@ -1,5 +1,5 @@
 name: freebuddy
-description: Open-source app for Huawei Freebuds 4i headphones
+description: Open-source app for Huawei Freebuds 4i/Freebuds Pro headphones
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
