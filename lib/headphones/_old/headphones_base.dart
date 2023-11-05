@@ -4,12 +4,12 @@ import 'package:rxdart/rxdart.dart';
 
 import 'headphones_data_objects.dart';
 
-/// Base class for interacting with headphones. UI/other logic shout *not*
+/// Base class for interacting with headphones. UI/other logic should *not*
 /// care what underlying class is implementing it so we can test nicely with
 /// mocks
 ///
 /// All data - about battery, modes, settings etc should be a separate stream,
-/// so we can nicely use [StreamBuildes]s everywhere
+/// so we can nicely use [StreamBuilder]s everywhere
 ///
 /// Moreover, all of those streams should be implemented with
 /// [rxdart](https://pub.dev/packages/rxdart#rx-observables-vs-dart-streams)'s
@@ -17,6 +17,7 @@ import 'headphones_data_objects.dart';
 // (Previously, there were often grayed out values because we had to wait for
 // stream to emit again)
 abstract class HeadphonesBase {
+  String get name;
   // TODO: Stream/whatever - this doesn't self update
   String? get alias;
 
