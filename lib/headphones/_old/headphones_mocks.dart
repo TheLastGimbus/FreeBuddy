@@ -9,6 +9,9 @@ class HeadphonesMockNever extends HeadphonesBase {
   String? get alias => null;
 
   @override
+  String get name => 'FreeBuds';
+
+  @override
   ValueStream<HeadphonesBatteryData> get batteryData =>
       NeverStream<HeadphonesBatteryData>().shareValue();
 
@@ -70,6 +73,9 @@ class HeadphonesMockPrettyFake extends HeadphonesBase {
 
   @override
   String? get alias => "Freebuds 4i😺";
+
+  @override
+  String get name => "Freebuds";
 
   @override
   ValueStream<HeadphonesBatteryData> get batteryData => _batteryData.stream;
