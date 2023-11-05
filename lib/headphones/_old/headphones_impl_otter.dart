@@ -11,17 +11,26 @@ import 'headphones_data_objects.dart';
 
 class HeadphonesImplOtter extends HeadphonesBase {
   final StreamChannel<Uint8List> connection;
-
   final _batteryStreamCtrl = BehaviorSubject<HeadphonesBatteryData>();
   final _ancStreamCtrl = BehaviorSubject<HeadphonesAncMode>();
   final _autoPauseStreamCtrl = BehaviorSubject<bool>();
   final _gestureSettingsStreamCtrl =
       BehaviorSubject<HeadphonesGestureSettings>();
+  late final GenericHeadphoneCommands _headphoneInterface;
 
   /// This watches if we are still missing any info and re-requests it
   late StreamSubscription _watchdogStreamSub;
 
-  HeadphonesImplOtter(this.connection, [this.alias]) {
+  HeadphonesImplOtter(this.connection, this.name, this.alias) {
+    if (name.contains('4i')) {
+      _headphoneInterface = Freebuds4iCommands();
+    } else if (name.contains('3i')) {
+      _headphoneInterface = Freebuds3iCommands();
+    }
+    else {
+      throw("Unknown headphone model, cannot determine required opcodes, throwing");
+    }
+
     connection.stream.listen((event) {
       List<MbbCommand>? commands;
       try {
@@ -108,10 +117,10 @@ class HeadphonesImplOtter extends HeadphonesBase {
       _gestureSettingsStreamCtrl.add(
         lastGestures.copyWith(
           doubleTapLeft: cmd.args[1] != null
-              ? HeadphonesGestureDoubleTap.fromMbbValue(cmd.args[1]![0])
+              ? _headphoneInterface.fromMbbValue(cmd.args[1]![0], _headphoneInterface.doubleTapCommands)
               : lastGestures.doubleTapLeft,
           doubleTapRight: cmd.args[2] != null
-              ? HeadphonesGestureDoubleTap.fromMbbValue(cmd.args[2]![0])
+              ? _headphoneInterface.fromMbbValue(cmd.args[2]![0], _headphoneInterface.doubleTapCommands)
               : lastGestures.doubleTapRight,
         ),
       );
@@ -119,7 +128,7 @@ class HeadphonesImplOtter extends HeadphonesBase {
       _gestureSettingsStreamCtrl.add(
         lastGestures.copyWith(
           holdBoth: (cmd.args[1] != null)
-              ? HeadphonesGestureHold.fromMbbValue(cmd.args[1]![0])
+              ? _headphoneInterface.fromMbbValue(cmd.args[1]![0], _headphoneInterface.holdCommands)
               : lastGestures.holdBoth,
         ),
       );
@@ -135,12 +144,12 @@ class HeadphonesImplOtter extends HeadphonesBase {
   }
 
   Future<void> _initRequestInfo() async {
-    await _sendMbb(MbbCommand.requestBattery);
-    await _sendMbb(MbbCommand.requestAnc);
-    await _sendMbb(MbbCommand.requestAutoPause);
-    await _sendMbb(MbbCommand.requestGestureDoubleTap);
-    await _sendMbb(MbbCommand.requestGestureHold);
-    await _sendMbb(MbbCommand.requestGestureHoldToggledAncModes);
+    await _sendMbb(_headphoneInterface.requestBattery);
+    await _sendMbb(_headphoneInterface.requestAnc);
+    await _sendMbb(_headphoneInterface.requestAutoPause);
+    await _sendMbb(_headphoneInterface.requestGestureDoubleTap);
+    await _sendMbb(_headphoneInterface.requestGestureHold);
+    await _sendMbb(_headphoneInterface.requestGestureHoldToggledAncModes);
   }
 
   // TODO: some .flush() for this
@@ -148,6 +157,9 @@ class HeadphonesImplOtter extends HeadphonesBase {
     logg.t("⬆ Sending mbb cmd: $comm");
     connection.sink.add(comm.toPayload());
   }
+
+  @override
+  final String name;
 
   @override
   final String? alias;
@@ -164,13 +176,13 @@ class HeadphonesImplOtter extends HeadphonesBase {
     late MbbCommand comm;
     switch (mode) {
       case HeadphonesAncMode.noiseCancel:
-        comm = MbbCommand.ancNoiseCancel;
+        comm = _headphoneInterface.ancNoiseCancel;
         break;
       case HeadphonesAncMode.off:
-        comm = MbbCommand.ancOff;
+        comm = _headphoneInterface.ancOff;
         break;
       case HeadphonesAncMode.awareness:
-        comm = MbbCommand.ancAware;
+        comm = _headphoneInterface.ancAware;
         break;
     }
     await _sendMbb(comm);
@@ -181,8 +193,10 @@ class HeadphonesImplOtter extends HeadphonesBase {
 
   @override
   Future<void> setAutoPause(bool enabled) async {
-    await _sendMbb(enabled ? MbbCommand.autoPauseOn : MbbCommand.autoPauseOff);
-    await _sendMbb(MbbCommand.requestAutoPause);
+    await _sendMbb(enabled
+        ? _headphoneInterface.autoPauseOn
+        : _headphoneInterface.autoPauseOff);
+    await _sendMbb(_headphoneInterface.requestAutoPause);
   }
 
   @override
@@ -196,24 +210,25 @@ class HeadphonesImplOtter extends HeadphonesBase {
   Future<void> setGestureSettings(HeadphonesGestureSettings settings) async {
     // double tap
     if (settings.doubleTapLeft != null) {
-      await _sendMbb(MbbCommand.gestureDoubleTapLeft(settings.doubleTapLeft!));
+      await _sendMbb(
+          _headphoneInterface.gestureDoubleTapLeft(settings.doubleTapLeft!));
     }
     if (settings.doubleTapRight != null) {
       await _sendMbb(
-          MbbCommand.gestureDoubleTapRight(settings.doubleTapRight!));
+          _headphoneInterface.gestureDoubleTapRight(settings.doubleTapRight!));
     }
     if (settings.doubleTapLeft != null || settings.doubleTapRight != null) {
-      await _sendMbb(MbbCommand.requestGestureDoubleTap);
+      await _sendMbb(_headphoneInterface.requestGestureDoubleTap);
     }
     // hold
     if (settings.holdBoth != null) {
-      await _sendMbb(MbbCommand.gestureHold(settings.holdBoth!));
-      await _sendMbb(MbbCommand.requestGestureHold);
+      await _sendMbb(_headphoneInterface.gestureHold(settings.holdBoth!));
+      await _sendMbb(_headphoneInterface.requestGestureHold);
     }
     if (settings.holdBothToggledAncModes != null) {
-      await _sendMbb(MbbCommand.gestureHoldToggledAncModes(
-          settings.holdBothToggledAncModes!));
-      await _sendMbb(MbbCommand.requestGestureHoldToggledAncModes);
+      await _sendMbb(_headphoneInterface
+          .gestureHoldToggledAncModes(settings.holdBothToggledAncModes!));
+      await _sendMbb(_headphoneInterface.requestGestureHoldToggledAncModes);
     }
   }
 }

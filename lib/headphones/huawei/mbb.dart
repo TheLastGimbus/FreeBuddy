@@ -147,46 +147,215 @@ class MbbCommand {
     }
     return cmds;
   }
+}
 
-  static const ancNoiseCancel = MbbCommand(43, 4, {
+mixin mbbTools {
+  fromMbbValue(int mbbValue, Map commandMap)=>
+    commandMap.keys.firstWhere((k) => commandMap[k] == mbbValue);
+}
+
+abstract class GenericHeadphoneCommands with mbbTools{
+  Map<HeadphonesGestureDoubleTap, int> get doubleTapCommands;
+
+  Map<HeadphonesGestureHold, int> get holdCommands;
+
+  MbbCommand get ancNoiseCancel;
+
+  MbbCommand get ancOff;
+
+  MbbCommand get ancAware;
+
+  MbbCommand get requestBattery;
+
+  MbbCommand get requestAnc;
+
+  MbbCommand get requestAutoPause;
+
+  MbbCommand get autoPauseOn;
+
+  MbbCommand get autoPauseOff;
+
+  MbbCommand get requestGestureDoubleTap;
+
+  dynamic gestureDoubleTapLeft(HeadphonesGestureDoubleTap left);
+
+  dynamic gestureDoubleTapRight(HeadphonesGestureDoubleTap right);
+
+  MbbCommand get requestGestureHold;
+
+  dynamic gestureHold(HeadphonesGestureHold gestureHold);
+
+  MbbCommand get requestGestureHoldToggledAncModes;
+
+  dynamic gestureHoldToggledAncModes(Set<HeadphonesAncMode> toggledModes);
+}
+
+class Freebuds3iCommands extends GenericHeadphoneCommands {
+  @override
+  var doubleTapCommands = {
+    HeadphonesGestureDoubleTap.nothing: 255,
+    HeadphonesGestureDoubleTap.voiceAssistant: 0,
+    HeadphonesGestureDoubleTap.playPause: 1,
+    HeadphonesGestureDoubleTap.next: 4,
+    HeadphonesGestureDoubleTap.previous: 8
+  };
+  @override
+  var holdCommands = {
+    HeadphonesGestureHold.nothing: 255,
+    HeadphonesGestureHold.cycleAnc: 3,
+  };
+
+  @override
+  var ancNoiseCancel = const MbbCommand(43, 4, {
     1: [1, 255]
   });
-  static const ancOff = MbbCommand(43, 4, {
+  @override
+  var ancOff = const MbbCommand(43, 4, {
     1: [0, 0]
   });
-  static const ancAware = MbbCommand(43, 4, {
+  @override
+  var ancAware = const MbbCommand(43, 4, {
     1: [2, 255]
   });
-  static const requestBattery = MbbCommand(1, 8, {});
-  static const requestAnc = MbbCommand(43, 42, {});
-  static const requestAutoPause = MbbCommand(43, 17, {});
-  static const autoPauseOn = MbbCommand(43, 16, {
+  @override
+  var requestBattery = const MbbCommand(1, 8, {});
+  @override
+  var requestAnc = const MbbCommand(43, 42, {});
+
+  //Freebuds 3i doesn't seem to support auto pause, and this should never get sent,
+  //but just in case it does, send an opcode that doesn't do anything.
+  //should investigate the possibility of getting autopause to work sometime.
+  @override
+  var requestAutoPause = const MbbCommand(43, 17, {});
+  @override
+  var autoPauseOn = const MbbCommand(43, 17, {});
+  @override
+  var autoPauseOff = const MbbCommand(43, 17, {});
+
+  @override
+  var requestGestureDoubleTap = const MbbCommand(1, 32, {});
+
+  @override
+  dynamic gestureDoubleTapLeft(HeadphonesGestureDoubleTap left) =>
+      MbbCommand(1, 31, {
+        1: [doubleTapCommands[left]!],
+      });
+
+  @override
+  dynamic gestureDoubleTapRight(HeadphonesGestureDoubleTap right) =>
+      MbbCommand(1, 31, {
+        2: [doubleTapCommands[right]!],
+      });
+
+  @override
+  var requestGestureHold = const MbbCommand(43, 23, {});
+
+  @override
+  dynamic gestureHold(HeadphonesGestureHold gestureHold) => MbbCommand(43, 22, {
+        1: [holdCommands[gestureHold]!],
+      });
+
+  @override
+  var requestGestureHoldToggledAncModes = const MbbCommand(43, 25, {});
+
+  @override
+  dynamic gestureHoldToggledAncModes(Set<HeadphonesAncMode> toggledModes) {
+    int? mbbValue;
+    const se = SetEquality();
+    if (![2, 3].contains(toggledModes.length)) {
+      throw Exception(
+          "toggledModes must have 2 or 3 elements, not ${toggledModes.length}}");
+    }
+    if (toggledModes.length == 3) mbbValue = 9;
+    if (se.equals(
+        toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel})) {
+      mbbValue = 3;
+    }
+    if (se.equals(toggledModes,
+        {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness})) {
+      mbbValue = 6;
+    }
+    if (se.equals(
+        toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.awareness})) {
+      mbbValue = 5;
+    }
+    if (mbbValue == null) throw Exception("Unknown mbbValue for $toggledModes");
+    return MbbCommand(43, 22, {
+      1: [mbbValue],
+      2: [mbbValue]
+    });
+  }
+}
+
+class Freebuds4iCommands extends GenericHeadphoneCommands {
+  @override
+  var doubleTapCommands = {
+    HeadphonesGestureDoubleTap.nothing: 255,
+    HeadphonesGestureDoubleTap.voiceAssistant: 0,
+    HeadphonesGestureDoubleTap.playPause: 1,
+    HeadphonesGestureDoubleTap.next: 2,
+    HeadphonesGestureDoubleTap.previous: 7
+  };
+  @override
+  var holdCommands = {
+    HeadphonesGestureHold.nothing: 255,
+    HeadphonesGestureHold.cycleAnc: 10,
+  };
+
+  @override
+  var ancNoiseCancel = const MbbCommand(43, 4, {
+    1: [1, 255]
+  });
+  @override
+  var ancOff = const MbbCommand(43, 4, {
+    1: [0, 0]
+  });
+  @override
+  var ancAware = const MbbCommand(43, 4, {
+    1: [2, 255]
+  });
+  @override
+  var requestBattery = const MbbCommand(1, 8, {});
+  @override
+  var requestAnc = const MbbCommand(43, 42, {});
+  @override
+  var requestAutoPause = const MbbCommand(43, 17, {});
+  @override
+  var autoPauseOn = const MbbCommand(43, 16, {
     1: [1]
   });
-  static const autoPauseOff = MbbCommand(43, 16, {
+  @override
+  var autoPauseOff = const MbbCommand(43, 16, {
     1: [0]
   });
-  static const requestGestureDoubleTap = MbbCommand(1, 32, {});
+  @override
+  var requestGestureDoubleTap = const MbbCommand(1, 32, {});
 
-  static gestureDoubleTapLeft(HeadphonesGestureDoubleTap left) =>
+  @override
+  dynamic gestureDoubleTapLeft(HeadphonesGestureDoubleTap left) =>
       MbbCommand(1, 31, {
-        1: [left.mbbValue],
+        1: [doubleTapCommands[left]!],
       });
 
-  static gestureDoubleTapRight(HeadphonesGestureDoubleTap right) =>
+  @override
+  dynamic gestureDoubleTapRight(HeadphonesGestureDoubleTap right) =>
       MbbCommand(1, 31, {
-        2: [right.mbbValue],
+        2: [doubleTapCommands[right]!],
       });
 
-  static const requestGestureHold = MbbCommand(43, 23, {});
+  @override
+  var requestGestureHold = const MbbCommand(43, 23, {});
 
-  static gestureHold(HeadphonesGestureHold gestureHold) => MbbCommand(43, 22, {
-        1: [gestureHold.mbbValue],
+  @override
+  dynamic gestureHold(HeadphonesGestureHold gestureHold) => MbbCommand(43, 22, {
+        1: [holdCommands[gestureHold]!],
       });
 
-  static const requestGestureHoldToggledAncModes = MbbCommand(43, 25, {});
+  @override
+  var requestGestureHoldToggledAncModes = const MbbCommand(43, 25, {});
 
-  static gestureHoldToggledAncModes(Set<HeadphonesAncMode> toggledModes) {
+  @override
+  dynamic gestureHoldToggledAncModes(Set<HeadphonesAncMode> toggledModes) {
     int? mbbValue;
     const se = SetEquality();
     if (![2, 3].contains(toggledModes.length)) {
