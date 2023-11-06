@@ -159,6 +159,8 @@ abstract class GenericHeadphoneCommands with mbbTools{
 
   Map<HeadphonesGestureHold, int> get holdCommands;
 
+  Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue);
+
   MbbCommand get ancNoiseCancel;
 
   MbbCommand get ancOff;
@@ -251,7 +253,8 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
   var requestGestureHold = const MbbCommand(43, 23, {});
 
   @override
-  dynamic gestureHold(HeadphonesGestureHold gestureHold) => MbbCommand(43, 22, {
+  dynamic gestureHold(HeadphonesGestureHold gestureHold) =>
+      MbbCommand(43, 22, {
         1: [holdCommands[gestureHold]!],
       });
 
@@ -264,9 +267,10 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
     const se = SetEquality();
     if (![2, 3].contains(toggledModes.length)) {
       throw Exception(
-          "toggledModes must have 2 or 3 elements, not ${toggledModes.length}}");
+          "toggledModes must have 2 or 3 elements, not ${toggledModes
+              .length}}");
     }
-    if (toggledModes.length == 3) mbbValue = 9;
+    if (toggledModes.length == 3) mbbValue = 5;
     if (se.equals(
         toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel})) {
       mbbValue = 3;
@@ -277,13 +281,34 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
     }
     if (se.equals(
         toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.awareness})) {
-      mbbValue = 5;
+      mbbValue = 9;
     }
     if (mbbValue == null) throw Exception("Unknown mbbValue for $toggledModes");
     return MbbCommand(43, 22, {
       1: [mbbValue],
       2: [mbbValue]
     });
+  }
+
+  @override
+  Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
+    switch (mbbValue) {
+      case 3:
+        return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
+      case 5:
+        return HeadphonesAncMode.values.toSet();
+      case 6:
+        return const {
+          HeadphonesAncMode.noiseCancel,
+          HeadphonesAncMode.awareness
+        };
+      case 9:
+        return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
+      case 255:
+        return {};
+      default:
+        throw Exception("Unknown mbbValue for $mbbValue");
+    }
   }
 }
 
@@ -380,6 +405,24 @@ class Freebuds4iCommands extends GenericHeadphoneCommands {
       1: [mbbValue],
       2: [mbbValue]
     });
+  }
+
+  @override
+  Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
+  switch (mbbValue) {
+    case 2:
+      return HeadphonesAncMode.values.toSet();
+    case 3:
+      return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
+    case 5:
+      return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
+    case 6:
+      return const {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness};
+    case 255:
+      return {};
+    default:
+      throw Exception("Unknown mbbValue for $mbbValue");
+  }
   }
 }
 

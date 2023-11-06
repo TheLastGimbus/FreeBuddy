@@ -26,9 +26,8 @@ class HeadphonesImplOtter extends HeadphonesBase {
       _headphoneInterface = Freebuds4iCommands();
     } else if (name.contains('3i')) {
       _headphoneInterface = Freebuds3iCommands();
-    }
-    else {
-      throw("Unknown headphone model, cannot determine required opcodes, throwing");
+    } else {
+      throw ("Unknown headphone model, cannot determine required opcodes, throwing");
     }
 
     connection.stream.listen((event) {
@@ -117,30 +116,53 @@ class HeadphonesImplOtter extends HeadphonesBase {
       _gestureSettingsStreamCtrl.add(
         lastGestures.copyWith(
           doubleTapLeft: cmd.args[1] != null
-              ? _headphoneInterface.fromMbbValue(cmd.args[1]![0], _headphoneInterface.doubleTapCommands)
+              ? _headphoneInterface.fromMbbValue(
+                  cmd.args[1]![0], _headphoneInterface.doubleTapCommands)
               : lastGestures.doubleTapLeft,
           doubleTapRight: cmd.args[2] != null
-              ? _headphoneInterface.fromMbbValue(cmd.args[2]![0], _headphoneInterface.doubleTapCommands)
+              ? _headphoneInterface.fromMbbValue(
+                  cmd.args[2]![0], _headphoneInterface.doubleTapCommands)
               : lastGestures.doubleTapRight,
         ),
       );
-    } else if ((cmd.serviceId == 43 && cmd.commandId == 23)) {
-      _gestureSettingsStreamCtrl.add(
-        lastGestures.copyWith(
-          holdBoth: (cmd.args[1] != null)
-              ? _headphoneInterface.fromMbbValue(cmd.args[1]![0], _headphoneInterface.holdCommands)
-              : lastGestures.holdBoth,
-        ),
-      );
-    } else if (cmd.serviceId == 43 && cmd.commandId == 25) {
-      _gestureSettingsStreamCtrl.add(
-        lastGestures.copyWith(
-          holdBothToggledAncModes: (cmd.args[1] != null)
-              ? gestureHoldFromMbbValue(cmd.args[1]![0])
-              : lastGestures.holdBothToggledAncModes,
-        ),
-      );
     }
+
+    if (_headphoneInterface.runtimeType == Freebuds3iCommands) {
+      if ((cmd.serviceId == 43 && cmd.commandId == 23)) {
+        _gestureSettingsStreamCtrl.add(
+          lastGestures.copyWith(
+            holdBoth: (cmd.args[1]![0] == 3 || cmd.args[1]![0] == 255)
+                ? _headphoneInterface.fromMbbValue(
+                    cmd.args[1]![0], _headphoneInterface.holdCommands)
+                : lastGestures.holdBoth,
+              holdBothToggledAncModes:  (cmd.args[2] != null)
+                  ? _headphoneInterface
+                  .gestureHoldFromMbbValue(cmd.args[2]![0])
+                  :lastGestures.holdBothToggledAncModes,
+          ),
+        );
+      }
+    } else if (_headphoneInterface.runtimeType == Freebuds4iCommands) {
+      if ((cmd.serviceId == 43 && cmd.commandId == 23)) {
+        _gestureSettingsStreamCtrl.add(
+          lastGestures.copyWith(
+            holdBoth: (cmd.args[1] != null)
+                ? _headphoneInterface.fromMbbValue(
+                    cmd.args[1]![0], _headphoneInterface.holdCommands)
+                : lastGestures.holdBoth,
+          ),
+        );
+      } else if (cmd.serviceId == 43 && cmd.commandId == 25) {
+        _gestureSettingsStreamCtrl.add(
+          lastGestures.copyWith(
+            holdBothToggledAncModes: (cmd.args[1] != null)
+                ? _headphoneInterface.gestureHoldFromMbbValue(cmd.args[1]![0])
+                : lastGestures.holdBothToggledAncModes,
+          ),
+        );
+      }
+    }
+    ;
   }
 
   Future<void> _initRequestInfo() async {

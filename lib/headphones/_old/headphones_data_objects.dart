@@ -107,35 +107,51 @@ enum HeadphonesGestureHold {
 }
 
 // TODO: Move this to mbb class or smth
-extension MbbStuff on Set<HeadphonesAncMode> {
-  int get mbbValue {
-    if (isEmpty) return 1;
-    if (length == 3) return 2;
-    if (this == {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness}) {
-      return 3;
-    }
-    if (this == {HeadphonesAncMode.off, HeadphonesAncMode.awareness}) {
-      return 4;
-    }
-    throw Exception("Unknown mbbValue for $this");
-  }
-}
+// extension MbbStuff on Set<HeadphonesAncMode> {
+//   int get mbbValue {
+//     if (isEmpty) return 1;
+//     if (length == 3) return 2;
+//     if (this == {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness}) {
+//       return 3;
+//     }
+//     if (this == {HeadphonesAncMode.off, HeadphonesAncMode.awareness}) {
+//       return 4;
+//     }
+//     throw Exception("Unknown mbbValue for $this");
+//   }
+// }
 
-Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
-  switch (mbbValue) {
-    // For some reason this is also 0 not 1 🤷
-    case 0:
-    case 1:
-      return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
-    case 2:
-      return HeadphonesAncMode.values.toSet();
-    case 3:
-      return const {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness};
-    case 4:
-      return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
-    case 255:
-      return {};
-    default:
-      throw Exception("Unknown mbbValue for $mbbValue");
-  }
-}
+// Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
+//   switch (mbbValue) {
+//     // For some reason this is also 0 not 1 🤷
+//     case 0:
+//     case 1:
+//       return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
+//     case 2:
+//       return HeadphonesAncMode.values.toSet();
+//     case 3:
+//       return const {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness};
+//     case 4:
+//       return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
+//     case 255:
+//       return {};
+//     default:
+//       throw Exception("Unknown mbbValue for $mbbValue");
+//   }
+// }
+// Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
+//   switch (mbbValue) {
+//     case 2:
+//       return HeadphonesAncMode.values.toSet();
+//     case 3:
+//       return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
+//     case 5:
+//       return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
+//     case 6:
+//       return const {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness};
+//     case 255:
+//       return {};
+//     default:
+//       throw Exception("Unknown mbbValue for $mbbValue");
+//   }
+// }
