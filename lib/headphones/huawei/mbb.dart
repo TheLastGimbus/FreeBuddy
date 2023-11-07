@@ -255,11 +255,11 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
   @override
   dynamic gestureHold(HeadphonesGestureHold gestureHold) =>
       MbbCommand(43, 22, {
-        1: [holdCommands[gestureHold]!],
+        2: [holdCommands[gestureHold]!],
       });
 
   @override
-  var requestGestureHoldToggledAncModes = const MbbCommand(43, 25, {});
+  var requestGestureHoldToggledAncModes = const MbbCommand(43, 23, {});
 
   @override
   dynamic gestureHoldToggledAncModes(Set<HeadphonesAncMode> toggledModes) {

@@ -131,11 +131,11 @@ class HeadphonesImplOtter extends HeadphonesBase {
       if ((cmd.serviceId == 43 && cmd.commandId == 23)) {
         _gestureSettingsStreamCtrl.add(
           lastGestures.copyWith(
-            holdBoth: (cmd.args[1]![0] == 3 || cmd.args[1]![0] == 255)
+            holdBoth: (cmd.args[2]![0] == 3 || cmd.args[2]![0] == 255)
                 ? _headphoneInterface.fromMbbValue(
-                    cmd.args[1]![0], _headphoneInterface.holdCommands)
+                    cmd.args[2]![0], _headphoneInterface.holdCommands)
                 : lastGestures.holdBoth,
-              holdBothToggledAncModes:  (cmd.args[2] != null)
+              holdBothToggledAncModes:  (cmd.args[2]![0] != 255 && cmd.args[2] != null)
                   ? _headphoneInterface
                   .gestureHoldFromMbbValue(cmd.args[2]![0])
                   :lastGestures.holdBothToggledAncModes,
