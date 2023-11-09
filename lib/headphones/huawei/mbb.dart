@@ -204,7 +204,13 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
   @override
   var holdCommands = {
     HeadphonesGestureHold.nothing: 255,
-    HeadphonesGestureHold.cycleAnc: 3,
+    /*
+    * This is not ideal. Setting this to 5 means that whenever the user turns ON the "hold to change",
+    * all the 3 ANC modes will be set, instead of remembering whatever user had set before turning "hold to change" off.
+    * There seems to exist an unused positional argument "1" that can be set with 43 22 and read with 43 23 respectively,
+    * so that it could be used to save user's settings and restore them. This needs more looking into, however.
+    * */
+    HeadphonesGestureHold.cycleAnc: 5,
   };
 
   @override
@@ -285,7 +291,9 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
     }
     if (mbbValue == null) throw Exception("Unknown mbbValue for $toggledModes");
     return MbbCommand(43, 22, {
+      //first positional argument should be used to remember the last used modi after disabling/enabling hold gestures.
       1: [mbbValue],
+      //second positional argument sets the actual mode.
       2: [mbbValue]
     });
   }

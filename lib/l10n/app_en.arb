@@ -40,7 +40,7 @@
   "pageHeadphonesSettingsHold": "Touch and hold",
   "pageHeadphonesSettingsHoldDesc": "Holding a bud will toggle these ANC modes:",
 
-  "ancNoiseCancel": "Noise canceling 🔇",
+  "ancNoiseCancel": "Noise cancellation 🔇",
   "ancNoiseCancelDesc": "Reduces noise around you",
   "ancOff": "Off 🤷",
   "ancOffDesc": "Turns ANC off",

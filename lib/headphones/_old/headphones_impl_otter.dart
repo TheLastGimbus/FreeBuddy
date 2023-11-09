@@ -131,14 +131,18 @@ class HeadphonesImplOtter extends HeadphonesBase {
       if ((cmd.serviceId == 43 && cmd.commandId == 23)) {
         _gestureSettingsStreamCtrl.add(
           lastGestures.copyWith(
-            holdBoth: (cmd.args[2]![0] == 3 || cmd.args[2]![0] == 255)
-                ? _headphoneInterface.fromMbbValue(
-                    cmd.args[2]![0], _headphoneInterface.holdCommands)
-                : lastGestures.holdBoth,
-              holdBothToggledAncModes:  (cmd.args[2]![0] != 255 && cmd.args[2] != null)
-                  ? _headphoneInterface
-                  .gestureHoldFromMbbValue(cmd.args[2]![0])
-                  :lastGestures.holdBothToggledAncModes,
+            //because there is no separate way to queue just the anc/nothing mode on long press,
+            //we need to do this mental gymnastics (if hold != 255 (not off), force the holdBoth to enabled and process the actual opcode later)
+            //by the way, the first argument doesn't seem to do anything no matter what you set it to, only the second matters.
+            holdBoth: (cmd.args[2]![0] != 255)
+                ? HeadphonesGestureHold.cycleAnc
+                : (cmd.args[2]![0] == 255)
+                    ? HeadphonesGestureHold.nothing
+                    : lastGestures.holdBoth,
+            holdBothToggledAncModes: (cmd.args[2]![0] != 255 &&
+                    cmd.args[2] != null)
+                ? _headphoneInterface.gestureHoldFromMbbValue(cmd.args[2]![0])
+                : lastGestures.holdBothToggledAncModes,
           ),
         );
       }
@@ -162,7 +166,6 @@ class HeadphonesImplOtter extends HeadphonesBase {
         );
       }
     }
-    ;
   }
 
   Future<void> _initRequestInfo() async {
@@ -179,6 +182,7 @@ class HeadphonesImplOtter extends HeadphonesBase {
     logg.t("⬆ Sending mbb cmd: $comm");
     connection.sink.add(comm.toPayload());
   }
+
 
   @override
   final String name;
