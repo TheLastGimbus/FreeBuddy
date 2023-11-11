@@ -228,7 +228,7 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
   @override
   var requestBattery = const MbbCommand(1, 8, {});
   @override
-  var requestAnc = const MbbCommand(43, 42, {});
+  var requestAnc = const MbbCommand(43, 5, {});
 
   //Freebuds 3i doesn't seem to support auto pause, and this should never get sent,
   //but just in case it does, send an opcode that doesn't do anything.
@@ -291,7 +291,7 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
     }
     if (mbbValue == null) throw Exception("Unknown mbbValue for $toggledModes");
     return MbbCommand(43, 22, {
-      //first positional argument should be used to remember the last used modi after disabling/enabling hold gestures.
+      //first positional argument should (could?) be used to remember the last used modi after disabling/enabling hold gestures.
       1: [mbbValue],
       //second positional argument sets the actual mode.
       2: [mbbValue]

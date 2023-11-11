@@ -62,7 +62,9 @@ class HeadphonesImplOtter extends HeadphonesBase {
       if ([
         batteryData.valueOrNull,
         ancMode.valueOrNull,
-        autoPause.valueOrNull,
+        // 3i doesn't even support querying the autopause status, so let's just build a workaround
+        // so that the app doesn't futilely spam the headphones to get the autopause mode
+        (_headphoneInterface.runtimeType == Freebuds3iCommands ? autoPause.valueOrNull : true),
         gestureSettings.valueOrNull?.doubleTapLeft,
         gestureSettings.valueOrNull?.doubleTapRight,
         gestureSettings.valueOrNull?.holdBothToggledAncModes,
@@ -75,11 +77,12 @@ class HeadphonesImplOtter extends HeadphonesBase {
   void _evalMbbCommand(MbbCommand cmd) {
     final lastGestures = _gestureSettingsStreamCtrl.valueOrNull ??
         const HeadphonesGestureSettings();
-    if (cmd.serviceId == 43 && cmd.commandId == 42 && cmd.args.containsKey(1)) {
+    if (cmd.serviceId == 43 && (cmd.commandId == 42 || cmd.commandId == 5) && cmd.args.containsKey(1)) {
       late HeadphonesAncMode newMode;
       // TODO: Add some constants for this globally
       // because 0 1 and 2 seem to be constant bytes representing the modes
-      final modeByte = cmd.args[1]![1];
+      // and once again, 3i just doesn't do it the way 4i does.
+      final modeByte = _headphoneInterface.runtimeType == Freebuds4iCommands ? cmd.args[1]![1] : cmd.args[1]![0];
       if (modeByte == 1) {
         newMode = HeadphonesAncMode.noiseCancel;
       } else if (modeByte == 0) {
