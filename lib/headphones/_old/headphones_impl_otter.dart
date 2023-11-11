@@ -215,6 +215,8 @@ class HeadphonesImplOtter extends HeadphonesBase {
         break;
     }
     await _sendMbb(comm);
+    //needed to avoid UI lag after changing modes
+    await _sendMbb(_headphoneInterface.requestAnc);
   }
 
   @override
