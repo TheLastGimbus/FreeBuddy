@@ -13,7 +13,7 @@ import '../../../../headphones/headphones_base.dart';
 class BatteryCard extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const BatteryCard(this.headphones, {Key? key}) : super(key: key);
+  const BatteryCard(this.headphones, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +106,7 @@ class _BatteryContainer extends StatelessWidget {
   final double? value;
   final Widget? child;
 
-  const _BatteryContainer({Key? key, this.value, this.child}) : super(key: key);
+  const _BatteryContainer({this.value, this.child});
 
   @override
   Widget build(BuildContext context) {

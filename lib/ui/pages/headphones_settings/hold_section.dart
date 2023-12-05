@@ -10,7 +10,7 @@ import '../disabled.dart';
 class HoldSection extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const HoldSection({Key? key, required this.headphones}) : super(key: key);
+  const HoldSection({super.key, required this.headphones});
 
   @override
   Widget build(BuildContext context) {
@@ -61,9 +61,7 @@ class _HoldSettingsCard extends StatelessWidget {
   final void Function(
       MapEntry<HeadphonesGestureHold?, Set<HeadphonesAncMode>?>)? onChanged;
 
-  const _HoldSettingsCard(
-      {Key? key, required this.enabledModes, this.onChanged})
-      : super(key: key);
+  const _HoldSettingsCard({required this.enabledModes, this.onChanged});
 
   bool checkboxChecked(HeadphonesAncMode mode) =>
       enabledModes.value?.contains(mode) ?? false;

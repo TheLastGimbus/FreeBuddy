@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
 
 class DisconnectedInfoWidget extends StatelessWidget {
-  const DisconnectedInfoWidget({Key? key}) : super(key: key);
+  const DisconnectedInfoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
 
 class ConnectedClosedWidget extends StatelessWidget {
-  const ConnectedClosedWidget({Key? key}) : super(key: key);
+  const ConnectedClosedWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

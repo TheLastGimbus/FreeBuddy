@@ -4,7 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class FreebuddyIntroduction extends StatelessWidget {
-  const FreebuddyIntroduction({Key? key}) : super(key: key);
+  const FreebuddyIntroduction({super.key});
 
   // I wanted to add "copy on long press" here, but recognizer can detect only
   // one :sob:

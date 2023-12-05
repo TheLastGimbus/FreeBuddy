@@ -9,7 +9,7 @@ import '../../../common/constrained_spacer.dart';
 class AncCard extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const AncCard(this.headphones, {Key? key}) : super(key: key);
+  const AncCard(this.headphones, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -66,11 +66,10 @@ class _AncButton extends StatelessWidget {
   final VoidCallback? onPressed;
 
   const _AncButton({
-    Key? key,
     required this.icon,
     required this.isSelected,
     this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

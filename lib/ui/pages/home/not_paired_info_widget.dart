@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher_string.dart';
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
 
 class NotPairedInfoWidget extends StatelessWidget {
-  const NotPairedInfoWidget({Key? key}) : super(key: key);
+  const NotPairedInfoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

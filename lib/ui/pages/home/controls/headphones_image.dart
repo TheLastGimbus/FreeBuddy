@@ -10,7 +10,7 @@ import '../../../../headphones/headphones_base.dart';
 class HeadphonesImage extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const HeadphonesImage(this.headphones, {Key? key}) : super(key: key);
+  const HeadphonesImage(this.headphones, {super.key});
 
   @override
   Widget build(BuildContext context) {

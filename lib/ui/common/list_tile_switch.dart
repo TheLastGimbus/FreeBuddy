@@ -7,12 +7,12 @@ class ListTileSwitch extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   const ListTileSwitch({
-    Key? key,
+    super.key,
     required this.value,
     this.onChanged,
     this.title,
     this.subtitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
 
 class NoPermissionInfoWidget extends StatelessWidget {
-  const NoPermissionInfoWidget({Key? key}) : super(key: key);
+  const NoPermissionInfoWidget({super.key});
 
   @override
   Widget build(BuildContext context) {

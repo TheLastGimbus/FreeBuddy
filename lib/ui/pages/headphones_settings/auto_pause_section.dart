@@ -7,8 +7,7 @@ import '../../common/list_tile_switch.dart';
 class AutoPauseSection extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const AutoPauseSection({Key? key, required this.headphones})
-      : super(key: key);
+  const AutoPauseSection({super.key, required this.headphones});
 
   @override
   Widget build(BuildContext context) {

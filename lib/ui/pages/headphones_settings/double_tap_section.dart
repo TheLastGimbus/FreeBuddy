@@ -10,8 +10,7 @@ import '../disabled.dart';
 class DoubleTapSection extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const DoubleTapSection({Key? key, required this.headphones})
-      : super(key: key);
+  const DoubleTapSection({super.key, required this.headphones});
 
   @override
   Widget build(BuildContext context) {
@@ -97,11 +96,10 @@ class _DoubleTapSetting extends StatelessWidget {
   final void Function(HeadphonesGestureDoubleTap?)? onChanged;
 
   const _DoubleTapSetting({
-    Key? key,
     required this.value,
     this.onChanged,
     this.title,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -19,8 +19,7 @@ import 'headphones_image.dart';
 class HeadphonesControlsWidget extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const HeadphonesControlsWidget({Key? key, required this.headphones})
-      : super(key: key);
+  const HeadphonesControlsWidget({super.key, required this.headphones});
 
   @override
   Widget build(BuildContext context) {
@@ -85,8 +84,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
 class _HeadphonesSettingsButton extends StatelessWidget {
   final HeadphonesBase headphones;
 
-  const _HeadphonesSettingsButton(this.headphones, {Key? key})
-      : super(key: key);
+  const _HeadphonesSettingsButton(this.headphones);
 
   @override
   Widget build(BuildContext context) {

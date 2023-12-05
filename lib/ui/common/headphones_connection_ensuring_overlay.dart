@@ -31,8 +31,7 @@ class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
   final Widget Function(BuildContext context, HeadphonesBase headphones)
       builder;
 
-  const HeadphonesConnectionEnsuringOverlay({Key? key, required this.builder})
-      : super(key: key);
+  const HeadphonesConnectionEnsuringOverlay({super.key, required this.builder});
 
   Widget _padded(Widget child) =>
       Padding(padding: const EdgeInsets.all(16), child: child);

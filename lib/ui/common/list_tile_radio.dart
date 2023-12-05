@@ -9,14 +9,14 @@ class ListTileRadio<T> extends StatelessWidget {
   final bool? dense;
 
   const ListTileRadio({
-    Key? key,
+    super.key,
     this.title,
     this.subtitle,
     this.onChanged,
     required this.value,
     this.groupValue,
     this.dense,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

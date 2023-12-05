@@ -7,7 +7,7 @@ import '../../common/headphones_connection_ensuring_overlay.dart';
 import 'controls/headphones_controls_widget.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();

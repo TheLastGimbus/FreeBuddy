@@ -7,12 +7,12 @@ class ListTileCheckbox extends StatelessWidget {
   final ValueChanged<bool>? onChanged;
 
   const ListTileCheckbox({
-    Key? key,
+    super.key,
     required this.value,
     this.onChanged,
     this.title,
     this.subtitle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -7,7 +7,7 @@ import 'double_tap_section.dart';
 import 'hold_section.dart';
 
 class HeadphonesSettingsPage extends StatelessWidget {
-  const HeadphonesSettingsPage({Key? key}) : super(key: key);
+  const HeadphonesSettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
