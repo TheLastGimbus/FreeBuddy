@@ -13,7 +13,7 @@ import androidx.core.app.ActivityCompat
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import be.tramckrijte.workmanager.BackgroundWorker
+import dev.fluttercommunity.workmanager.BackgroundWorker
 
 /**
  * This reacts to a new bluetooth device being connected (literally any)
@@ -54,7 +54,7 @@ class BluetoothDeviceConnectedReceiver : BroadcastReceiver() {
                     return
                 }
                 Log.i(TAG, "Scheduling one time work to update widget n stuff...")
-                // this is stuff imported from be.tramckrijte.workmanager
+                // this is stuff imported from dev.fluttercommunity.workmanager
                 val oneOffTaskRequest = OneTimeWorkRequest.Builder(BackgroundWorker::class.java)
                     .setInputData(
                         Data.Builder()
