@@ -1,3 +1,10 @@
+# Hi!!!!!! 👋👋👋👋👋
+You're coding and want to help out/explore around here? That's great!!!
+
+Okay, so - UI code is as pure-flutter-future-stream as possible, and most stuff has comments/documentation, so just look around and read those 👍
+
+Interesting rev-eng stuff is in `headphones/` folder, and there is dedicated [headphones/README.md](headphones/README.md) - head there 🫡
+
 # Development notes - philosophies, TODOs etc
 
 ## Migration to framework-ish organisation

@@ -5,15 +5,13 @@
 [![resolved Github issues](https://img.shields.io/github/issues-closed/TheLastGimbus/FreeBuddy?label=resolved%20issues)](https://github.com/TheLastGimbus/FreeBuddy/issues)
 [![commit activity](https://img.shields.io/github/commit-activity/y/TheLastGimbus/FreeBuddy)](https://github.com/TheLastGimbus/FreeBuddy/graphs/contributors)
 
-Free and open source app for Huawei Freebuds 4i headphones 🎧
+Free <sup>(and open source)</sup> buddy app for bluetooth headphones 🎧
 
 ## Why 🧐
 
-I wanted to quickly switch ANC modes on my headphones...
+I wanted to quickly switch ANC modes on my headphones... but official apps are usually bloated as hell 😑 (at least Huawei's was - enough to motivate me to create *this*)
 
-but official app is... well, bloated as hell 😑 - it weights 100mb, and takes (on my phone) 10 seconds to open...
-
-Also, it doesn't have features like "find lost headphones", etc...
+Also, they sometimes lack features that *are possible* to implement - like "find lost headphones", etc...
 
 So I got mad and decided to make my own... and here it is 🌈
 
@@ -21,17 +19,16 @@ So I got mad and decided to make my own... and here it is 🌈
 
 <img alt="Freebuddy home widget light mode" src="https://github.com/TheLastGimbus/FreeBuddy/assets/40139196/a7c46a10-ebb6-45c8-a4c3-5b2597ab2d3f"  width=250px> <img alt="Freebuddy home widget dark mode" src="https://github.com/TheLastGimbus/FreeBuddy/assets/40139196/348ae011-ab18-4ff4-a497-30d3f2fecc8b" width=250px>
 
+## Supported headphones 🗂️
+
+Right now FreeBuddy only supports handful of models, but this is ment to expand in future 🤞 (psst, if you would like to help, head over to [the.lastgimbus.com/freebuddy/dev/](https://the.lastgimbus.com/freebuddy/dev/))
+
+- Huawei FreeBuds 4i
+
 ## Features 🔨
 
-- [x] Show battery levels
-- [x] Switch ANC modes
-- [x] Change settings
-  - [x] Smart wear
-  - [x] Tap actions
-- [x] Cool features:
-  - [x] Home screen widget with battery charge 🔋
-  - [ ] ANC lock - lock on certain ANC mode no matter what
-  - [ ] Find lost
+FreeBuddy can already do everything that stock apps can, while adding own features:
+ - Home screen widget with battery charge 🔋
 
 ## Download 📦
 
