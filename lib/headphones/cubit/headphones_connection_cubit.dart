@@ -10,8 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
+import '../huawei/freebuds4i.dart';
 import '../huawei/freebuds4i_impl.dart';
-import '../huawei/otter/otter_constants.dart';
 import 'headphones_cubit_objects.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
@@ -60,6 +60,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   Future<void> connect() async => _connect(await _bluetooth.pairedDevices);
 
+  // TODO/MIGRATION: This whole big-ass connection/detection loop 🤯
   Future<void> _connect(List<BluetoothDevice> devices) async {
     if (!await _bluetooth.isEnabled()) {
       emit(HeadphonesBluetoothDisabled());
@@ -67,7 +68,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     }
     if (_connection != null) return; // already connected and working, skip
     final otter = devices
-        .firstWhereOrNull((d) => OtterConst.btDevNameRegex.hasMatch(d.name));
+        .firstWhereOrNull((d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name));
     if (otter == null) {
       emit(HeadphonesNotPaired());
       return;
@@ -106,7 +107,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     emit(
       ((await _bluetooth.pairedDevices)
                   .firstWhereOrNull(
-                      (d) => OtterConst.btDevNameRegex.hasMatch(d.name))
+                      (d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name))
                   ?.isConnected ??
               false)
           ? HeadphonesConnectedClosed()
