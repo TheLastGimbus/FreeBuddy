@@ -2,25 +2,26 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:freebuddy/headphones/headphones_data_objects.dart';
+import 'package:freebuddy/headphones/framework/anc.dart';
+import 'package:freebuddy/headphones/framework/lrc_battery.dart';
+import 'package:freebuddy/headphones/huawei/freebuds4i_impl.dart';
 import 'package:freebuddy/headphones/huawei/mbb.dart';
-import 'package:freebuddy/headphones/huawei/otter/headphones_impl_otter.dart';
 import 'package:stream_channel/stream_channel.dart';
 
 void main() {
-  group("Otter implementation tests", () {
+  group("FreeBuds 4i implementation tests", () {
     // test with keyword "info" test if impl reacts to info *from* buds
     // ones with "set" test if impl sends correct bytes *to* buds
 
     late StreamController<Uint8List> inputCtrl;
     late StreamController<Uint8List> outputCtrl;
     late StreamChannel<Uint8List> channel;
-    late HeadphonesImplOtter otter;
+    late HuaweiFreeBuds4iImpl fb4i;
     setUp(() {
       inputCtrl = StreamController<Uint8List>.broadcast();
       outputCtrl = StreamController<Uint8List>();
       channel = StreamChannel<Uint8List>(inputCtrl.stream, outputCtrl.sink);
-      otter = HeadphonesImplOtter(channel);
+      fb4i = HuaweiFreeBuds4iImpl(channel);
     });
     tearDown(() {
       inputCtrl.close();
@@ -36,7 +37,7 @@ void main() {
       );
     });
     test("ANC mode set", () async {
-      await otter.setAncMode(HeadphonesAncMode.noiseCancel);
+      await fb4i.setAncMode(AncMode.noiseCancelling);
       expect(
         outputCtrl.stream.bytesToList(),
         emitsThrough([90, 0, 7, 0, 43, 4, 1, 2, 1, 255, 255, 236]),
@@ -61,12 +62,12 @@ void main() {
         inputCtrl.add(c.toPayload());
       }
       expect(
-        otter.ancMode,
+        fb4i.ancMode,
         emitsInOrder([
-          HeadphonesAncMode.noiseCancel,
-          HeadphonesAncMode.off,
-          HeadphonesAncMode.awareness,
-          HeadphonesAncMode.awareness,
+          AncMode.noiseCancelling,
+          AncMode.off,
+          AncMode.transparency,
+          AncMode.transparency,
         ]),
       );
     });
@@ -77,16 +78,16 @@ void main() {
         3: [1, 0, 1]
       }).toPayload());
       expect(
-        otter.batteryData,
-        emits(HeadphonesBatteryData(35, 70, 99, true, false, true)),
+        fb4i.lrcBattery,
+        emits(const LRCBatteryLevels(35, 70, 99, true, false, true)),
       );
     });
     test("Properly closes", () async {
       expectLater(
-        otter.ancMode,
-        emitsInOrder([HeadphonesAncMode.noiseCancel, emitsDone]),
+        fb4i.ancMode,
+        emitsInOrder([AncMode.noiseCancelling, emitsDone]),
       );
-      expectLater(otter.batteryData, emitsDone);
+      expectLater(fb4i.lrcBattery, emitsDone);
       inputCtrl.add(const MbbCommand(43, 42, {
         1: [4, 1]
       }).toPayload());
