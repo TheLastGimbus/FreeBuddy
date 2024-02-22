@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:collection/collection.dart';
 import 'package:crclib/catalog.dart';
 
-import '../headphones_data_objects.dart';
+import '../_old/headphones_data_objects.dart';
 
 /// Helper class for Mbb protocol used to communicate with headphones
 class MbbUtils {

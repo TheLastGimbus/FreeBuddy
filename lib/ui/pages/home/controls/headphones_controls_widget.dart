@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../headphones/_old/headphones_base.dart';
 import '../../../../headphones/framework/anc.dart';
 import '../../../../headphones/framework/bluetooth_headphones.dart';
 import '../../../../headphones/framework/headphones_info.dart';
 import '../../../../headphones/framework/lrc_battery.dart';
-import '../../../../headphones/headphones_base.dart';
 import '../../../theme/layouts.dart';
 import 'anc_card.dart';
 import 'battery_card.dart';

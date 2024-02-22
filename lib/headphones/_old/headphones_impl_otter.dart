@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';
 
-import '../../../logger.dart';
-import '../../headphones_base.dart';
-import '../../headphones_data_objects.dart';
-import '../mbb.dart';
+import '../../logger.dart';
+import '../huawei/mbb.dart';
+import 'headphones_base.dart';
+import 'headphones_data_objects.dart';
 
 class HeadphonesImplOtter extends HeadphonesBase {
   final StreamChannel<Uint8List> connection;
