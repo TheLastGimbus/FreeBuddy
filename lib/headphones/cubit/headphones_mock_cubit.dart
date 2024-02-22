@@ -8,7 +8,8 @@ import 'headphones_cubit_objects.dart';
 
 class HeadphonesMockCubit extends Cubit<HeadphonesConnectionState>
     implements HeadphonesConnectionCubit {
-  HeadphonesMockCubit() : super(HeadphonesDisconnected()) {
+  HeadphonesMockCubit()
+      : super(const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder())) {
     // i do this because otherwise initial data isn't even emitted and
     // [BlocListener]s don't work >:(
     Future.microtask(

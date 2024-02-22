@@ -29,6 +29,7 @@ Future<bool> routineUpdateCallback() async {
         "because cubit is already running");
     return true;
   }
+  // TODO: Multi-headphones BIG decisions here 😬😬 - possibly impossible to resolve without nuking all of this
   // NOT_SURE: Also use real/mock logic here?? idk, but if you want,
   // feel free to make some proper DI for this to be shared in UI and here
   final cubit = di.getHeadphonesCubit();

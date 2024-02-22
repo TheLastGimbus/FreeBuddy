@@ -1,21 +1,41 @@
 import '../framework/bluetooth_headphones.dart';
 
-abstract class HeadphonesConnectionState {}
+abstract class HeadphonesConnectionState {
+  const HeadphonesConnectionState();
+}
 
-class HeadphonesNoPermission extends HeadphonesConnectionState {}
+class HeadphonesNoPermission extends HeadphonesConnectionState {
+  const HeadphonesNoPermission();
+}
 
-class HeadphonesBluetoothDisabled extends HeadphonesConnectionState {}
+class HeadphonesBluetoothDisabled extends HeadphonesConnectionState {
+  const HeadphonesBluetoothDisabled();
+}
 
-class HeadphonesNotPaired extends HeadphonesConnectionState {}
+class HeadphonesNotPaired extends HeadphonesConnectionState {
+  const HeadphonesNotPaired();
+}
 
-class HeadphonesDisconnected extends HeadphonesConnectionState {}
+class HeadphonesDisconnected extends HeadphonesConnectionState {
+  final BluetoothHeadphones placeholder;
 
-class HeadphonesConnecting extends HeadphonesConnectionState {}
+  const HeadphonesDisconnected(this.placeholder);
+}
+
+class HeadphonesConnecting extends HeadphonesConnectionState {
+  final BluetoothHeadphones placeholder;
+
+  const HeadphonesConnecting(this.placeholder);
+}
 
 class HeadphonesConnectedOpen extends HeadphonesConnectionState {
   final BluetoothHeadphones headphones;
 
-  HeadphonesConnectedOpen(this.headphones);
+  const HeadphonesConnectedOpen(this.headphones);
 }
 
-class HeadphonesConnectedClosed extends HeadphonesConnectionState {}
+class HeadphonesConnectedClosed extends HeadphonesConnectionState {
+  final BluetoothHeadphones placeholder;
+
+  const HeadphonesConnectedClosed(this.placeholder);
+}

@@ -12,6 +12,7 @@ import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 import '../../logger.dart';
 import '../huawei/freebuds4i.dart';
 import '../huawei/freebuds4i_impl.dart';
+import '../huawei/freebuds4i_sim.dart';
 import 'headphones_cubit_objects.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
@@ -61,6 +62,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   Future<void> connect() async => _connect(await _bluetooth.pairedDevices);
 
   // TODO/MIGRATION: This whole big-ass connection/detection loop 🤯
+  // for example, all placeholders assume we have 4i... not good
   Future<void> _connect(List<BluetoothDevice> devices) async {
     if (!await _bluetooth.isEnabled()) {
       emit(HeadphonesBluetoothDisabled());
@@ -75,10 +77,10 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     }
     if (!otter.isConnected) {
       // not connected to device at all
-      emit(HeadphonesDisconnected());
+      emit(const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()));
       return;
     }
-    emit(HeadphonesConnecting());
+    emit(const HeadphonesConnecting(HuaweiFreeBuds4iSimPlaceholder()));
     try {
       // when Ai Life takes over our socket, the connecting always succeeds at
       // 2'nd try 🤔
@@ -110,8 +112,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
                       (d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name))
                   ?.isConnected ??
               false)
-          ? HeadphonesConnectedClosed()
-          : HeadphonesDisconnected(),
+          ? const HeadphonesConnectedClosed(HuaweiFreeBuds4iSimPlaceholder())
+          : const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()),
     );
   }
 

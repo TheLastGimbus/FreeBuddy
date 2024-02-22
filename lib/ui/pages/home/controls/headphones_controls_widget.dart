@@ -6,7 +6,6 @@ import '../../../../headphones/framework/bluetooth_headphones.dart';
 import '../../../../headphones/framework/headphones_info.dart';
 import '../../../../headphones/framework/lrc_battery.dart';
 import '../../../../headphones/headphones_base.dart';
-import '../../../../headphones/huawei/freebuds4i.dart';
 import '../../../theme/layouts.dart';
 import 'anc_card.dart';
 import 'battery_card.dart';
@@ -30,70 +29,79 @@ class HeadphonesControlsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
-    // TODO MIGRATION: Whole big ass branching here in detecting whether hp
-    // support different features
-    if (headphones is HuaweiFreeBuds4i) {
-      return Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: WindowSizeClass.of(context) == WindowSizeClass.compact
-            ? Column(
-                children: [
-                  StreamBuilder(
-                    stream: headphones.bluetoothAlias,
-                    builder: (_, snap) => Text(
-                      snap.data ?? headphones.bluetoothName,
-                      style: tt.headlineMedium,
-                    ),
+    // TODO here:
+    // - [ ] Make this clearer - this padding shouldn't be here?
+    // - [ ] De-duplicate responsive stuff
+    // - [ ] Think what to put when we have no image, or generally not many
+    //       features 🤷
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: WindowSizeClass.of(context) == WindowSizeClass.compact
+          ? Column(
+              children: [
+                StreamBuilder(
+                  stream: headphones.bluetoothAlias,
+                  builder: (_, snap) => Text(
+                    snap.data ?? headphones.bluetoothName,
+                    style: tt.headlineMedium,
                   ),
-                  HeadphonesImage(headphones as HeadphonesModelInfo),
-                  // TODO MIGRATION: hp settings not yet implemented
-                  // Align(
-                  //   alignment: Alignment.centerRight,
-                  //   child: _HeadphonesSettingsButton(headphones),
-                  // ),
+                ),
+                if (headphones is HeadphonesModelInfo)
+                  HeadphonesImage(headphones as HeadphonesModelInfo)
+                else
+                  // TODO: This is ugly. Very
+                  const Expanded(child: Icon(Icons.headphones, size: 64)),
+                // TODO MIGRATION: hp settings not yet implemented
+                // Align(
+                //   alignment: Alignment.centerRight,
+                //   child: _HeadphonesSettingsButton(headphones),
+                // ),
+                if (headphones is LRCBattery)
                   BatteryCard(headphones as LRCBattery),
-                  AncCard(headphones as Anc),
-                ],
-              )
-            : Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: [
-                        StreamBuilder(
-                          stream: headphones.bluetoothAlias,
-                          builder: (_, snap) => Text(
-                            snap.data ?? headphones.bluetoothName,
-                            style: tt.headlineMedium,
-                          ),
+                if (headphones is Anc) AncCard(headphones as Anc),
+              ],
+            )
+          : Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      StreamBuilder(
+                        stream: headphones.bluetoothAlias,
+                        builder: (_, snap) => Text(
+                          snap.data ?? headphones.bluetoothName,
+                          style: tt.headlineMedium,
                         ),
-                        HeadphonesImage(headphones as HeadphonesModelInfo),
+                      ),
+                      if (headphones is HeadphonesModelInfo)
+                        HeadphonesImage(headphones as HeadphonesModelInfo)
+                      else
+                        // TODO: This is ugly. Very
+                        const Expanded(child: Icon(Icons.headphones, size: 64)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // TODO MIGRATION: hp settings not yet implemented
+                        // Align(
+                        //   alignment: Alignment.centerRight,
+                        //   child: _HeadphonesSettingsButton(headphones),
+                        // ),
+                        if (headphones is LRCBattery)
+                          BatteryCard(headphones as LRCBattery),
+                        if (headphones is Anc) AncCard(headphones as Anc),
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          // TODO MIGRATION: hp settings not yet implemented
-                          // Align(
-                          //   alignment: Alignment.centerRight,
-                          //   child: _HeadphonesSettingsButton(headphones),
-                          // ),
-                          BatteryCard(headphones as LRCBattery),
-                          AncCard(headphones as Anc),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-      );
-    } else {
-      return const Text("no i dupa");
-    }
+                ),
+              ],
+            ),
+    );
   }
 }
 

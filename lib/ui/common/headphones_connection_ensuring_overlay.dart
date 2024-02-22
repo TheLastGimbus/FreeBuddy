@@ -6,7 +6,6 @@ import '../../headphones/cubit/headphones_connection_cubit.dart';
 import '../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../headphones/framework/bluetooth_headphones.dart';
 import '../../headphones/headphones_mocks.dart';
-import '../../headphones/huawei/freebuds4i_sim.dart';
 import '../pages/disabled.dart';
 import '../pages/home/bluetooth_disabled_info_widget.dart';
 import '../pages/home/connected_closed_widget.dart';
@@ -73,13 +72,14 @@ class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
             },
             child: builder(
               context,
-              state is HeadphonesConnectedOpen
-                  ? state.headphones
-                  // TODO MIGRATION: Think about this mock - should it be
-                  // headphone-specific or generic or what. Should mocks be
-                  // as easily detected as concrete headphones, to properly mock
-                  // display mock in grayed-out ui when not connected?
-                  : HuaweiFreeBuds4iSim(),
+              switch (state) {
+                HeadphonesConnectedOpen(headphones: final hp) => hp,
+                HeadphonesDisconnected(placeholder: final ph) ||
+                HeadphonesConnecting(placeholder: final ph) ||
+                HeadphonesConnectedClosed(placeholder: final ph) =>
+                  ph,
+                _ => throw 'impossible :O'
+              },
             ),
           ),
         _ => Text(l.pageHomeUnknown),

@@ -12,6 +12,8 @@ import '../framework/lrc_battery.dart';
 /// features they implement), and some basic info for easy simulation
 abstract base class HuaweiFreeBuds4i
     implements BluetoothHeadphones, HeadphonesModelInfo, LRCBattery, Anc {
+  const HuaweiFreeBuds4i();
+
   @override
   String get vendor => "Huawei";
 
