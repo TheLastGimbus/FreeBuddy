@@ -3,6 +3,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../headphones/framework/anc.dart';
 import '../../../../headphones/framework/bluetooth_headphones.dart';
+import '../../../../headphones/framework/headphones_info.dart';
 import '../../../../headphones/framework/lrc_battery.dart';
 import '../../../../headphones/headphones_base.dart';
 import '../../../../headphones/huawei/freebuds4i.dart';
@@ -44,11 +45,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
                       style: tt.headlineMedium,
                     ),
                   ),
-                  // TODO MIGRATION: Some way to assign images to models
-                  // should base class contain path to img or should there be
-                  // fancy function that does some logic? Such funtion would be
-                  // nice to detect colors (this was requested by some users)
-                  const HeadphonesImage(),
+                  HeadphonesImage(headphones as HeadphonesModelInfo),
                   // TODO MIGRATION: hp settings not yet implemented
                   // Align(
                   //   alignment: Alignment.centerRight,
@@ -71,8 +68,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
                             style: tt.headlineMedium,
                           ),
                         ),
-                        // TODO MIGRATION: Another image
-                        const HeadphonesImage(),
+                        HeadphonesImage(headphones as HeadphonesModelInfo),
                       ],
                     ),
                   ),

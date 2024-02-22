@@ -1,3 +1,5 @@
+import 'package:rxdart/rxdart.dart';
+
 import '../framework/anc.dart';
 import '../framework/bluetooth_headphones.dart';
 import '../framework/headphones_info.dart';
@@ -15,4 +17,10 @@ abstract base class HuaweiFreeBuds4i
 
   @override
   String get name => "FreeBuds 4i";
+
+  // NOTE/WARNING: Again as in HeadphonesModelInfo - i'm not sure if it's safe
+  // to just leave it like that, but I will 🥰🥰
+  @override
+  ValueStream<String> get imageAssetPath =>
+      BehaviorSubject.seeded('assets/app_icons/ic_launcher.png');
 }

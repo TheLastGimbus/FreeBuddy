@@ -13,3 +13,8 @@ TODO:
   - [ ] Some database stuf... ehhhh... to distinguish between them, remember their last time etc
     This is potentially waaayyy ahead todo as it requires *serious* decisions that will affect *everything* wayyy ahead in later development, so better not fuck it up
     - [ ] Selecting headphones when making new widget
+
+## Future features:
+- [ ] Detect hp colors and assign proper image
+- [ ] ANC control widget
+  This will require whole big background stuff, so that's far offs
