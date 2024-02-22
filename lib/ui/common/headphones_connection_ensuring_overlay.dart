@@ -5,7 +5,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../headphones/cubit/headphones_connection_cubit.dart';
 import '../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../headphones/framework/bluetooth_headphones.dart';
-import '../../headphones/headphones_mocks.dart';
 import '../pages/disabled.dart';
 import '../pages/home/bluetooth_disabled_info_widget.dart';
 import '../pages/home/connected_closed_widget.dart';
