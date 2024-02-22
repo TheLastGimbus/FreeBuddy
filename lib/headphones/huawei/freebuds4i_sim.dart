@@ -27,7 +27,7 @@ final class HuaweiFreeBuds4iSimPlaceholder extends HuaweiFreeBuds4i {
   ValueStream<String> get bluetoothAlias => BehaviorSubject();
 
   @override
-  String get bluetoothName => super.vendor + super.name;
+  String get bluetoothName => '${super.vendor} ${super.name}';
 
   @override
   ValueStream<LRCBatteryLevels> get lrcBattery => BehaviorSubject();

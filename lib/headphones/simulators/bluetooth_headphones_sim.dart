@@ -13,7 +13,7 @@ mixin BluetoothHeadphonesSim on HeadphonesModelInfo
   String get macAddress => "AA:BB:CC:DD:EE:FF";
 
   @override
-  String get bluetoothName => vendor + name;
+  String get bluetoothName => '$vendor $name';
 
   @override
   ValueStream<String> get bluetoothAlias => Stream.value(name).shareValue();

@@ -171,11 +171,11 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
 
   @override
   // TODO: implement bluetoothAlias
-  ValueStream<String> get bluetoothAlias => throw UnimplementedError();
+  ValueStream<String> get bluetoothAlias => BehaviorSubject();
 
   @override
   // TODO: implement bluetoothName
-  String get bluetoothName => throw UnimplementedError();
+  String get bluetoothName => '${super.vendor} ${super.name}';
 
   @override
   // TODO: implement macAddress
