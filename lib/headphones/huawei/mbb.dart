@@ -34,7 +34,7 @@ class MbbUtils {
         sum[1] == payload[payload.length - 1];
   }
 
-  /// Will throw exception if anything wrong. Otherwise does nothing.
+  /// Will return exception if anything wrong. Otherwise does nothing.
   static Exception? verifyIntegrity(Uint8List payload) {
     // 3 magic bytes, 1 length, 1 service, 1 command, 2 checksum
     if (payload.length < 3 + 1 + 1 + 1 + 2) {
