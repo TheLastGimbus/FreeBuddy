@@ -65,14 +65,14 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   // for example, all placeholders assume we have 4i... not good
   Future<void> _connect(List<BluetoothDevice> devices) async {
     if (!await _bluetooth.isEnabled()) {
-      emit(HeadphonesBluetoothDisabled());
+      emit(const HeadphonesBluetoothDisabled());
       return;
     }
     if (_connection != null) return; // already connected and working, skip
     final otter = devices
         .firstWhereOrNull((d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name));
     if (otter == null) {
-      emit(HeadphonesNotPaired());
+      emit(const HeadphonesNotPaired());
       return;
     }
     if (!otter.isConnected) {
@@ -119,7 +119,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
-        super(HeadphonesNotPaired()) {
+        super(const HeadphonesNotPaired()) {
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
     IsolateNameServer.registerPortWithName(
         _pingReceivePort.sendPort, pingReceivePortName);
@@ -133,12 +133,12 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   Future<void> _init() async {
     // it's down here to be sure that we do have device connected so
     if (!await Permission.bluetoothConnect.isGranted) {
-      emit(HeadphonesNoPermission());
+      emit(const HeadphonesNoPermission());
       return;
     }
     _btStream = _bluetooth.adapterInfoStream.listen((event) {
       _btEnabledCache = event.isEnabled;
-      if (!event.isEnabled) emit(HeadphonesBluetoothDisabled());
+      if (!event.isEnabled) emit(const HeadphonesBluetoothDisabled());
     });
     // logic of connect() is so universal we can use it on every change
     _devStream = _bluetooth.pairedDevicesStream.listen(_connect);
