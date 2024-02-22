@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import '../../../../headphones/framework/anc.dart';
+import '../../../../headphones/framework/bluetooth_headphones.dart';
+import '../../../../headphones/framework/lrc_battery.dart';
 import '../../../../headphones/headphones_base.dart';
+import '../../../../headphones/huawei/freebuds4i.dart';
 import '../../../theme/layouts.dart';
 import 'anc_card.dart';
 import 'battery_card.dart';
@@ -17,7 +21,7 @@ import 'headphones_image.dart';
 /// you can give it [HeadphonesMockNever] object, and previous values will stay
 /// because it won't override them
 class HeadphonesControlsWidget extends StatelessWidget {
-  final HeadphonesBase headphones;
+  final BluetoothHeadphones headphones;
 
   const HeadphonesControlsWidget({super.key, required this.headphones});
 
@@ -25,58 +29,75 @@ class HeadphonesControlsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
-    return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: WindowSizeClass.of(context) == WindowSizeClass.compact
-          ? Column(
-              children: [
-                Text(
-                  // TODO: This hardcode
-                  headphones.alias ?? 'FreeBuds 4i',
-                  style: tt.headlineMedium,
-                ),
-                HeadphonesImage(headphones),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: _HeadphonesSettingsButton(headphones),
-                ),
-                BatteryCard(headphones),
-                AncCard(headphones),
-              ],
-            )
-          : Row(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        // TODO: This hardcode
-                        headphones.alias ?? 'FreeBuds 4i',
-                        style: tt.headlineMedium,
-                      ),
-                      HeadphonesImage(headphones),
-                    ],
+    // TODO MIGRATION: Whole big ass branching here in detecting whether hp
+    // support different features
+    if (headphones is HuaweiFreeBuds4i) {
+      return Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: WindowSizeClass.of(context) == WindowSizeClass.compact
+            ? Column(
+                children: [
+                  StreamBuilder(
+                    stream: headphones.bluetoothAlias,
+                    builder: (_, snap) => Text(
+                      snap.data ?? headphones.bluetoothName,
+                      style: tt.headlineMedium,
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
+                  // TODO MIGRATION: Some way to assign images to models
+                  // should base class contain path to img or should there be
+                  // fancy function that does some logic? Such funtion would be
+                  // nice to detect colors (this was requested by some users)
+                  const HeadphonesImage(),
+                  // TODO MIGRATION: hp settings not yet implemented
+                  // Align(
+                  //   alignment: Alignment.centerRight,
+                  //   child: _HeadphonesSettingsButton(headphones),
+                  // ),
+                  BatteryCard(headphones as LRCBattery),
+                  AncCard(headphones as Anc),
+                ],
+              )
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: _HeadphonesSettingsButton(headphones),
+                        StreamBuilder(
+                          stream: headphones.bluetoothAlias,
+                          builder: (_, snap) => Text(
+                            snap.data ?? headphones.bluetoothName,
+                            style: tt.headlineMedium,
+                          ),
                         ),
-                        BatteryCard(headphones),
-                        AncCard(headphones),
+                        // TODO MIGRATION: Another image
+                        const HeadphonesImage(),
                       ],
                     ),
                   ),
-                ),
-              ],
-            ),
-    );
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // TODO MIGRATION: hp settings not yet implemented
+                          // Align(
+                          //   alignment: Alignment.centerRight,
+                          //   child: _HeadphonesSettingsButton(headphones),
+                          // ),
+                          BatteryCard(headphones as LRCBattery),
+                          AncCard(headphones as Anc),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+      );
+    } else {
+      return const Text("no i dupa");
+    }
   }
 }
 

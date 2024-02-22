@@ -1,4 +1,4 @@
-import '../headphones_base.dart';
+import '../framework/bluetooth_headphones.dart';
 
 abstract class HeadphonesConnectionState {}
 
@@ -13,7 +13,7 @@ class HeadphonesDisconnected extends HeadphonesConnectionState {}
 class HeadphonesConnecting extends HeadphonesConnectionState {}
 
 class HeadphonesConnectedOpen extends HeadphonesConnectionState {
-  final HeadphonesBase headphones;
+  final BluetoothHeadphones headphones;
 
   HeadphonesConnectedOpen(this.headphones);
 }

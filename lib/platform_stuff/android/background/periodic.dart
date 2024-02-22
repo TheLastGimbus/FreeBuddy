@@ -8,6 +8,7 @@ import 'package:workmanager/workmanager.dart';
 import '../../../di.dart' as di;
 import '../../../headphones/cubit/headphones_connection_cubit.dart';
 import '../../../headphones/cubit/headphones_cubit_objects.dart';
+import '../../../headphones/framework/lrc_battery.dart';
 import '../../../logger.dart';
 import '../appwidgets/battery_appwidget.dart';
 
@@ -41,8 +42,15 @@ Future<bool> routineUpdateCallback() async {
           "${headphones.toString()}");
       return true;
     }
-    final batteryData =
-        await headphones.headphones.batteryData.first.timeout(commonTimeout);
+    if (headphones.headphones is! LRCBattery) {
+      logg.d("Not updating stuff from ROUTINE_UPDATE because connected "
+          "headphones don't support LRCBattery");
+      return true;
+    }
+    final batteryData = await (headphones.headphones as LRCBattery)
+        .lrcBattery
+        .first
+        .timeout(commonTimeout);
     logg.d("udpating widget from bgn: $batteryData");
     await updateBatteryHomeWidget(batteryData);
     await cubit.close(); // remember to close cubit to deregister port name

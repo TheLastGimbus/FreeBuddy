@@ -1,16 +1,12 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../../headphones/headphones_base.dart';
-
 /// Image of the headphones (non-card)
 ///
 /// Selects the correct image for given model
 ///
 /// ...well, in the future :D
 class HeadphonesImage extends StatelessWidget {
-  final HeadphonesBase headphones;
-
-  const HeadphonesImage(this.headphones, {super.key});
+  const HeadphonesImage({super.key});
 
   @override
   Widget build(BuildContext context) {

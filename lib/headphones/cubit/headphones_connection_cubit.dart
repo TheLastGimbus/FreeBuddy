@@ -10,7 +10,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
-import '../huawei/otter/headphones_impl_otter.dart';
+import '../huawei/freebuds4i_impl.dart';
 import '../huawei/otter/otter_constants.dart';
 import 'headphones_cubit_objects.dart';
 
@@ -89,8 +89,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           if (i + 1 >= connectTries) rethrow;
         }
       }
-      emit(HeadphonesConnectedOpen(
-          HeadphonesImplOtter(_connection!.io, otter.alias)));
+      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!.io)));
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷

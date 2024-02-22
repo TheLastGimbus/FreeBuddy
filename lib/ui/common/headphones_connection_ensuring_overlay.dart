@@ -4,8 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../headphones/cubit/headphones_connection_cubit.dart';
 import '../../headphones/cubit/headphones_cubit_objects.dart';
-import '../../headphones/headphones_base.dart';
+import '../../headphones/framework/bluetooth_headphones.dart';
 import '../../headphones/headphones_mocks.dart';
+import '../../headphones/huawei/freebuds4i_sim.dart';
 import '../pages/disabled.dart';
 import '../pages/home/bluetooth_disabled_info_widget.dart';
 import '../pages/home/connected_closed_widget.dart';
@@ -28,7 +29,7 @@ import '../pages/home/not_paired_info_widget.dart';
 class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
   /// Build your widget of desire here - note that headphones may be Mock
   /// (as always 🙄)
-  final Widget Function(BuildContext context, HeadphonesBase headphones)
+  final Widget Function(BuildContext context, BluetoothHeadphones headphones)
       builder;
 
   const HeadphonesConnectionEnsuringOverlay({super.key, required this.builder});
@@ -74,7 +75,11 @@ class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
               context,
               state is HeadphonesConnectedOpen
                   ? state.headphones
-                  : HeadphonesMockNever(),
+                  // TODO MIGRATION: Think about this mock - should it be
+                  // headphone-specific or generic or what. Should mocks be
+                  // as easily detected as concrete headphones, to properly mock
+                  // display mock in grayed-out ui when not connected?
+                  : HuaweiFreeBuds4iSim(),
             ),
           ),
         _ => Text(l.pageHomeUnknown),
