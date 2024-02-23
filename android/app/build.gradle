@@ -1,3 +1,8 @@
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -13,11 +18,6 @@ if (keystorePropertiesFile.exists()) {
     keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
-
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
     flutterVersionCode = '1'
@@ -27,10 +27,6 @@ def flutterVersionName = localProperties.getProperty('flutter.versionName')
 if (flutterVersionName == null) {
     flutterVersionName = '1.0'
 }
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace 'com.lastgimbus.the.freebuddy'
@@ -47,7 +43,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        kotlinCompilerExtensionVersion = "1.5.10"
     }
 
     kotlinOptions {
@@ -99,15 +95,13 @@ flutter {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-
     // All of this for AppWidgets support
-    implementation "androidx.compose.runtime:runtime:1.5.1"
-    implementation "androidx.compose.runtime:runtime-livedata:1.5.1"
-    implementation "androidx.compose.runtime:runtime-rxjava2:1.5.1"
+    implementation "androidx.compose.runtime:runtime:1.6.2"
+    implementation "androidx.compose.runtime:runtime-livedata:1.6.2"
+    implementation "androidx.compose.runtime:runtime-rxjava2:1.6.2"
     implementation "androidx.glance:glance-appwidget:1.0.0"
     implementation "androidx.glance:glance-material3:1.0.0"
-    implementation 'androidx.compose.ui:ui-unit-android:1.5.1'
+    implementation 'androidx.compose.ui:ui-unit-android:1.6.2'
 
     // this is to manually launch our routine update - same version as workmanager plugin 0.5.1
     def work_version = "2.8.1"
