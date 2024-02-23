@@ -55,7 +55,7 @@ class _MyAppWrapperState extends State<MyAppWrapper>
         .firstWhere((e) => e is HeadphonesConnectedOpen)
         .timeout(
           const Duration(seconds: 1),
-          onTimeout: () => HeadphonesNotPaired(), // just placeholder
+          onTimeout: () => const HeadphonesNotPaired(), // just placeholder
         )
         .then((_) => FlutterNativeSplash.remove());
     super.initState();

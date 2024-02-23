@@ -10,8 +10,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
-import '../huawei/otter/headphones_impl_otter.dart';
-import '../huawei/otter/otter_constants.dart';
+import '../huawei/freebuds4i.dart';
+import '../huawei/freebuds4i_impl.dart';
+import '../huawei/freebuds4i_sim.dart';
 import 'headphones_cubit_objects.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
@@ -60,24 +61,26 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   Future<void> connect() async => _connect(await _bluetooth.pairedDevices);
 
+  // TODO/MIGRATION: This whole big-ass connection/detection loop 🤯
+  // for example, all placeholders assume we have 4i... not good
   Future<void> _connect(List<BluetoothDevice> devices) async {
     if (!await _bluetooth.isEnabled()) {
-      emit(HeadphonesBluetoothDisabled());
+      emit(const HeadphonesBluetoothDisabled());
       return;
     }
     if (_connection != null) return; // already connected and working, skip
     final otter = devices
-        .firstWhereOrNull((d) => OtterConst.btDevNameRegex.hasMatch(d.name));
+        .firstWhereOrNull((d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name));
     if (otter == null) {
-      emit(HeadphonesNotPaired());
+      emit(const HeadphonesNotPaired());
       return;
     }
     if (!otter.isConnected) {
       // not connected to device at all
-      emit(HeadphonesDisconnected());
+      emit(const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()));
       return;
     }
-    emit(HeadphonesConnecting());
+    emit(const HeadphonesConnecting(HuaweiFreeBuds4iSimPlaceholder()));
     try {
       // when Ai Life takes over our socket, the connecting always succeeds at
       // 2'nd try 🤔
@@ -89,8 +92,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           if (i + 1 >= connectTries) rethrow;
         }
       }
-      emit(HeadphonesConnectedOpen(
-          HeadphonesImplOtter(_connection!.io, otter.alias)));
+      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!.io)));
       await _connection!.io.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
@@ -107,17 +109,17 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     emit(
       ((await _bluetooth.pairedDevices)
                   .firstWhereOrNull(
-                      (d) => OtterConst.btDevNameRegex.hasMatch(d.name))
+                      (d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name))
                   ?.isConnected ??
               false)
-          ? HeadphonesConnectedClosed()
-          : HeadphonesDisconnected(),
+          ? const HeadphonesConnectedClosed(HuaweiFreeBuds4iSimPlaceholder())
+          : const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()),
     );
   }
 
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
-        super(HeadphonesNotPaired()) {
+        super(const HeadphonesNotPaired()) {
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
     IsolateNameServer.registerPortWithName(
         _pingReceivePort.sendPort, pingReceivePortName);
@@ -131,12 +133,12 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   Future<void> _init() async {
     // it's down here to be sure that we do have device connected so
     if (!await Permission.bluetoothConnect.isGranted) {
-      emit(HeadphonesNoPermission());
+      emit(const HeadphonesNoPermission());
       return;
     }
     _btStream = _bluetooth.adapterInfoStream.listen((event) {
       _btEnabledCache = event.isEnabled;
-      if (!event.isEnabled) emit(HeadphonesBluetoothDisabled());
+      if (!event.isEnabled) emit(const HeadphonesBluetoothDisabled());
     });
     // logic of connect() is so universal we can use it on every change
     _devStream = _bluetooth.pairedDevicesStream.listen(_connect);

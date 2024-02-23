@@ -1,20 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-import '../../../../headphones/headphones_base.dart';
-import '../../../../headphones/headphones_data_objects.dart';
+import '../../../../headphones/framework/anc.dart';
 import '../../../common/constrained_spacer.dart';
 
 /// Card with anc controls
 class AncCard extends StatelessWidget {
-  final HeadphonesBase headphones;
+  final Anc anc;
 
-  const AncCard(this.headphones, {super.key});
+  const AncCard(this.anc, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<HeadphonesAncMode>(
-      stream: headphones.ancMode,
+    return StreamBuilder<AncMode>(
+      stream: anc.ancMode,
       builder: (context, snapshot) {
         final mode = snapshot.data;
         return Card(
@@ -27,24 +26,22 @@ class AncCard extends StatelessWidget {
                     constraints: BoxConstraints(maxWidth: 32)),
                 _AncButton(
                   icon: Symbols.noise_control_on,
-                  isSelected: mode == HeadphonesAncMode.noiseCancel,
-                  onPressed: () =>
-                      headphones.setAncMode(HeadphonesAncMode.noiseCancel),
+                  isSelected: mode == AncMode.noiseCancelling,
+                  onPressed: () => anc.setAncMode(AncMode.noiseCancelling),
                 ),
                 const ConstrainedSpacer(
                     constraints: BoxConstraints(maxWidth: 32)),
                 _AncButton(
                   icon: Symbols.noise_control_off,
-                  isSelected: mode == HeadphonesAncMode.off,
-                  onPressed: () => headphones.setAncMode(HeadphonesAncMode.off),
+                  isSelected: mode == AncMode.off,
+                  onPressed: () => anc.setAncMode(AncMode.off),
                 ),
                 const ConstrainedSpacer(
                     constraints: BoxConstraints(maxWidth: 32)),
                 _AncButton(
                   icon: Symbols.noise_aware,
-                  isSelected: mode == HeadphonesAncMode.awareness,
-                  onPressed: () =>
-                      headphones.setAncMode(HeadphonesAncMode.awareness),
+                  isSelected: mode == AncMode.transparency,
+                  onPressed: () => anc.setAncMode(AncMode.transparency),
                 ),
                 const ConstrainedSpacer(
                     constraints: BoxConstraints(maxWidth: 32)),

@@ -1,27 +1,26 @@
 import 'package:flutter/widgets.dart';
 
-import '../../../../headphones/headphones_base.dart';
+import '../../../../headphones/framework/headphones_info.dart';
 
-/// Image of the headphones (non-card)
-///
-/// Selects the correct image for given model
-///
-/// ...well, in the future :D
 class HeadphonesImage extends StatelessWidget {
-  final HeadphonesBase headphones;
+  final HeadphonesModelInfo modelInfo;
 
-  const HeadphonesImage(this.headphones, {super.key});
+  const HeadphonesImage(this.modelInfo, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Switch image based on headphones
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 64),
-        child: Image.asset(
-          'assets/app_icons/ic_launcher.png',
-          fit: BoxFit.contain,
-          filterQuality: FilterQuality.none,
+        child: StreamBuilder(
+          stream: modelInfo.imageAssetPath,
+          builder: (_, snap) => snap.data != null
+              ? Image.asset(
+                  snap.data!,
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.none,
+                )
+              : const SizedBox(),
         ),
       ),
     );

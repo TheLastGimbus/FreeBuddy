@@ -4,16 +4,16 @@ import 'package:material_color_utilities/material_color_utilities.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../../gen/freebuddy_icons.dart';
-import '../../../../headphones/headphones_base.dart';
+import '../../../../headphones/framework/lrc_battery.dart';
 
 /// Android12-Google-Battery-Widget-style battery card
 ///
 /// https://9to5google.com/2022/03/07/google-pixel-battery-widget/
 /// https://9to5google.com/2022/09/29/pixel-battery-widget-time/
 class BatteryCard extends StatelessWidget {
-  final HeadphonesBase headphones;
+  final LRCBattery lrcBattery;
 
-  const BatteryCard(this.headphones, {super.key});
+  const BatteryCard(this.lrcBattery, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class BatteryCard extends StatelessWidget {
           ),
         );
     return StreamBuilder(
-      stream: headphones.batteryData,
+      stream: lrcBattery.lrcBattery,
       builder: (context, snapshot) {
         final b = snapshot.data;
         return Card(

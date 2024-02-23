@@ -4,8 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../headphones/cubit/headphones_connection_cubit.dart';
 import '../../headphones/cubit/headphones_cubit_objects.dart';
-import '../../headphones/headphones_base.dart';
-import '../../headphones/headphones_mocks.dart';
+import '../../headphones/framework/bluetooth_headphones.dart';
 import '../pages/disabled.dart';
 import '../pages/home/bluetooth_disabled_info_widget.dart';
 import '../pages/home/connected_closed_widget.dart';
@@ -28,7 +27,7 @@ import '../pages/home/not_paired_info_widget.dart';
 class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
   /// Build your widget of desire here - note that headphones may be Mock
   /// (as always 🙄)
-  final Widget Function(BuildContext context, HeadphonesBase headphones)
+  final Widget Function(BuildContext context, BluetoothHeadphones headphones)
       builder;
 
   const HeadphonesConnectionEnsuringOverlay({super.key, required this.builder});
@@ -72,9 +71,14 @@ class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
             },
             child: builder(
               context,
-              state is HeadphonesConnectedOpen
-                  ? state.headphones
-                  : HeadphonesMockNever(),
+              switch (state) {
+                HeadphonesConnectedOpen(headphones: final hp) => hp,
+                HeadphonesDisconnected(placeholder: final ph) ||
+                HeadphonesConnecting(placeholder: final ph) ||
+                HeadphonesConnectedClosed(placeholder: final ph) =>
+                  ph,
+                _ => throw 'impossible :O'
+              },
             ),
           ),
         _ => Text(l.pageHomeUnknown),
