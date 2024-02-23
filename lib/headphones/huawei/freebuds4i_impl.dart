@@ -10,6 +10,7 @@ import '../framework/anc.dart';
 import '../framework/lrc_battery.dart';
 import 'freebuds4i.dart';
 import 'mbb.dart';
+import 'settings.dart';
 
 final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   /// Bluetooth serial port that we communicate over
@@ -21,6 +22,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   final _bluetoothNameCtrl = BehaviorSubject<String>();
   final _lrcBatteryCtrl = BehaviorSubject<LRCBatteryLevels>();
   final _ancModeCtrl = BehaviorSubject<AncMode>();
+  final _settingsCtrl = BehaviorSubject<HuaweiFreeBuds4iSettings>();
 
   // stream controllers *
 
@@ -52,6 +54,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
       _bluetoothNameCtrl.close();
       _lrcBatteryCtrl.close();
       _ancModeCtrl.close();
+      _settingsCtrl.close();
 
       _watchdogStreamSub.cancel();
     });
@@ -202,5 +205,14 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
         break;
     }
     await _sendMbb(comm);
+  }
+
+  @override
+  ValueStream<HuaweiFreeBuds4iSettings> get settings => _settingsCtrl.stream;
+
+  @override
+  Future<void> setSettings(newSettings) {
+    // TODO: implement setSettings
+    throw UnimplementedError();
   }
 }
