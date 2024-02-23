@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../headphones/_old/headphones_base.dart';
 import '../../../../headphones/framework/anc.dart';
 import '../../../../headphones/framework/bluetooth_headphones.dart';
 import '../../../../headphones/framework/headphones_info.dart';
+import '../../../../headphones/framework/headphones_settings.dart';
 import '../../../../headphones/framework/lrc_battery.dart';
 import '../../../theme/layouts.dart';
 import 'anc_card.dart';
@@ -51,11 +51,11 @@ class HeadphonesControlsWidget extends StatelessWidget {
                 else
                   // TODO: This is ugly. Very
                   const Expanded(child: Icon(Icons.headphones, size: 64)),
-                // TODO MIGRATION: hp settings not yet implemented
-                // Align(
-                //   alignment: Alignment.centerRight,
-                //   child: _HeadphonesSettingsButton(headphones),
-                // ),
+                if (headphones is HeadphonesSettings)
+                  const Align(
+                    alignment: Alignment.centerRight,
+                    child: _HeadphonesSettingsButton(),
+                  ),
                 if (headphones is LRCBattery)
                   BatteryCard(headphones as LRCBattery),
                 if (headphones is Anc) AncCard(headphones as Anc),
@@ -87,11 +87,11 @@ class HeadphonesControlsWidget extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        // TODO MIGRATION: hp settings not yet implemented
-                        // Align(
-                        //   alignment: Alignment.centerRight,
-                        //   child: _HeadphonesSettingsButton(headphones),
-                        // ),
+                        if (headphones is HeadphonesSettings)
+                          const Align(
+                            alignment: Alignment.centerRight,
+                            child: _HeadphonesSettingsButton(),
+                          ),
                         if (headphones is LRCBattery)
                           BatteryCard(headphones as LRCBattery),
                         if (headphones is Anc) AncCard(headphones as Anc),
@@ -107,9 +107,7 @@ class HeadphonesControlsWidget extends StatelessWidget {
 
 /// Simple button leading to headphones settings page
 class _HeadphonesSettingsButton extends StatelessWidget {
-  final HeadphonesBase headphones;
-
-  const _HeadphonesSettingsButton(this.headphones);
+  const _HeadphonesSettingsButton();
 
   @override
   Widget build(BuildContext context) {

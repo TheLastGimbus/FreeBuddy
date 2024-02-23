@@ -17,6 +17,23 @@ class HuaweiFreeBuds4iSettings {
     this.holdBothToggledAncModes,
     this.autoPause,
   });
+
+  // don't want to use codegen *yet*
+  HuaweiFreeBuds4iSettings copyWith({
+    DoubleTap? doubleTapLeft,
+    DoubleTap? doubleTapRight,
+    Hold? holdBoth,
+    Set<AncMode>? holdBothToggledAncModes,
+    bool? autoPause,
+  }) =>
+      HuaweiFreeBuds4iSettings(
+        doubleTapLeft: doubleTapLeft ?? this.doubleTapLeft,
+        doubleTapRight: doubleTapRight ?? this.doubleTapRight,
+        holdBoth: holdBoth ?? this.holdBoth,
+        holdBothToggledAncModes:
+            holdBothToggledAncModes ?? this.holdBothToggledAncModes,
+        autoPause: autoPause ?? this.autoPause,
+      );
 }
 
 // i don't have idea how to public/privatise those and how to name them

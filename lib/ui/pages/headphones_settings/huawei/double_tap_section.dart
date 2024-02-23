@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../headphones/_old/headphones_base.dart';
-import '../../../headphones/_old/headphones_data_objects.dart';
-import '../../common/list_tile_radio.dart';
-import '../../common/list_tile_switch.dart';
-import '../disabled.dart';
+import '../../../../headphones/framework/headphones_settings.dart';
+import '../../../../headphones/huawei/settings.dart';
+import '../../../common/list_tile_radio.dart';
+import '../../../common/list_tile_switch.dart';
+import '../../disabled.dart';
 
 class DoubleTapSection extends StatelessWidget {
-  final HeadphonesBase headphones;
+  final HeadphonesSettings<HuaweiFreeBuds4iSettings> headphones;
 
-  const DoubleTapSection({super.key, required this.headphones});
+  const DoubleTapSection(this.headphones, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
     final l = AppLocalizations.of(context)!;
-    return StreamBuilder<HeadphonesGestureSettings>(
-      stream: headphones.gestureSettings,
-      initialData: headphones.gestureSettings.valueOrNull ??
-          const HeadphonesGestureSettings(),
-      builder: (context, snapshot) {
-        final gs = snapshot.data!;
+    return StreamBuilder(
+      stream: headphones.settings
+          .map((s) => (l: s.doubleTapLeft, r: s.doubleTapRight)),
+      initialData: (l: null, r: null),
+      builder: (context, snap) {
+        final dt = snap.data!;
         final enabled =
-            (gs.doubleTapLeft != HeadphonesGestureDoubleTap.nothing ||
-                gs.doubleTapRight != HeadphonesGestureDoubleTap.nothing);
+            (dt.l != DoubleTap.nothing || dt.r != DoubleTap.nothing);
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,14 +33,9 @@ class DoubleTapSection extends StatelessWidget {
               subtitle: Text(l.pageHeadphonesSettingsDoubleTapDesc),
               value: enabled,
               onChanged: (newVal) {
-                final g = newVal
-                    ? HeadphonesGestureDoubleTap.playPause
-                    : HeadphonesGestureDoubleTap.nothing;
-                headphones.setGestureSettings(
-                  HeadphonesGestureSettings(
-                    doubleTapLeft: g,
-                    doubleTapRight: g,
-                  ),
+                final g = newVal ? DoubleTap.playPause : DoubleTap.nothing;
+                headphones.setSettings(
+                  HuaweiFreeBuds4iSettings(doubleTapLeft: g, doubleTapRight: g),
                 );
               },
             ),
@@ -57,10 +51,10 @@ class DoubleTapSection extends StatelessWidget {
                           l.pageHeadphonesSettingsLeftBud,
                           style: tt.titleMedium,
                         ),
-                        value: gs.doubleTapLeft,
+                        value: dt.l,
                         onChanged: enabled
-                            ? (g) => headphones.setGestureSettings(
-                                  HeadphonesGestureSettings(doubleTapLeft: g),
+                            ? (g) => headphones.setSettings(
+                                  HuaweiFreeBuds4iSettings(doubleTapLeft: g),
                                 )
                             : null,
                       ),
@@ -71,10 +65,10 @@ class DoubleTapSection extends StatelessWidget {
                           l.pageHeadphonesSettingsRightBud,
                           style: tt.titleMedium,
                         ),
-                        value: gs.doubleTapRight,
+                        value: dt.r,
                         onChanged: enabled
-                            ? (g) => headphones.setGestureSettings(
-                                  HeadphonesGestureSettings(doubleTapRight: g),
+                            ? (g) => headphones.setSettings(
+                                  HuaweiFreeBuds4iSettings(doubleTapRight: g),
                                 )
                             : null,
                       ),
@@ -92,8 +86,8 @@ class DoubleTapSection extends StatelessWidget {
 
 class _DoubleTapSetting extends StatelessWidget {
   final Widget? title;
-  final HeadphonesGestureDoubleTap? value;
-  final void Function(HeadphonesGestureDoubleTap?)? onChanged;
+  final DoubleTap? value;
+  final void Function(DoubleTap?)? onChanged;
 
   const _DoubleTapSetting({
     required this.value,
@@ -117,35 +111,35 @@ class _DoubleTapSetting extends StatelessWidget {
           ],
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapPlayPause),
-            value: HeadphonesGestureDoubleTap.playPause,
+            value: DoubleTap.playPause,
             dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapNextSong),
-            value: HeadphonesGestureDoubleTap.next,
+            value: DoubleTap.next,
             dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapPrevSong),
-            value: HeadphonesGestureDoubleTap.previous,
+            value: DoubleTap.previous,
             dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapAssist),
-            value: HeadphonesGestureDoubleTap.voiceAssistant,
+            value: DoubleTap.voiceAssistant,
             dense: true,
             groupValue: value,
             onChanged: onChanged,
           ),
           ListTileRadio(
             title: Text(l.pageHeadphonesSettingsDoubleTapNone),
-            value: HeadphonesGestureDoubleTap.nothing,
+            value: DoubleTap.nothing,
             dense: true,
             groupValue: value,
             onChanged: onChanged,

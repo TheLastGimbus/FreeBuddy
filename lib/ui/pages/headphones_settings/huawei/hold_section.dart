@@ -1,48 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../headphones/_old/headphones_base.dart';
-import '../../../headphones/_old/headphones_data_objects.dart';
-import '../../common/list_tile_checkbox.dart';
-import '../../common/list_tile_switch.dart';
-import '../disabled.dart';
+import '../../../../headphones/framework/anc.dart';
+import '../../../../headphones/framework/headphones_settings.dart';
+import '../../../../headphones/huawei/settings.dart';
+import '../../../common/list_tile_checkbox.dart';
+import '../../../common/list_tile_switch.dart';
+import '../../disabled.dart';
 
 class HoldSection extends StatelessWidget {
-  final HeadphonesBase headphones;
+  final HeadphonesSettings<HuaweiFreeBuds4iSettings> headphones;
 
-  const HoldSection({super.key, required this.headphones});
+  const HoldSection(this.headphones, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    return StreamBuilder<HeadphonesGestureSettings>(
-      stream: headphones.gestureSettings,
-      initialData: headphones.gestureSettings.valueOrNull ??
-          const HeadphonesGestureSettings(),
-      builder: (context, snapshot) {
-        final gs = snapshot.data!;
-        final enabled = gs.holdBoth == HeadphonesGestureHold.cycleAnc;
+    return StreamBuilder(
+      stream: headphones.settings
+          .map((s) => (holdBoth: s.holdBoth, anc: s.holdBothToggledAncModes)),
+      initialData: (holdBoth: null, anc: null),
+      builder: (context, snap) {
+        final gs = snap.data!;
+        final enabled = gs.holdBoth == Hold.cycleAnc;
         return Column(
           children: [
             ListTileSwitch(
               title: Text(l.pageHeadphonesSettingsHold),
               subtitle: Text(l.pageHeadphonesSettingsHoldDesc),
               value: enabled,
-              onChanged: (newVal) => headphones.setGestureSettings(
-                HeadphonesGestureSettings(
-                  holdBoth: newVal
-                      ? HeadphonesGestureHold.cycleAnc
-                      : HeadphonesGestureHold.nothing,
+              onChanged: (newVal) => headphones.setSettings(
+                HuaweiFreeBuds4iSettings(
+                  holdBoth: newVal ? Hold.cycleAnc : Hold.nothing,
                 ),
               ),
             ),
             Disabled(
               disabled: !enabled,
               child: _HoldSettingsCard(
-                enabledModes: MapEntry(snapshot.data!.holdBoth,
-                    snapshot.data!.holdBothToggledAncModes),
-                onChanged: (m) => headphones.setGestureSettings(
-                  HeadphonesGestureSettings(
+                enabledModes: MapEntry(gs.holdBoth, gs.anc),
+                onChanged: (m) => headphones.setSettings(
+                  HuaweiFreeBuds4iSettings(
                     holdBoth: m.key,
                     holdBothToggledAncModes: m.value,
                   ),
@@ -57,23 +55,21 @@ class HoldSection extends StatelessWidget {
 }
 
 class _HoldSettingsCard extends StatelessWidget {
-  final MapEntry<HeadphonesGestureHold?, Set<HeadphonesAncMode>?> enabledModes;
-  final void Function(
-      MapEntry<HeadphonesGestureHold?, Set<HeadphonesAncMode>?>)? onChanged;
+  final MapEntry<Hold?, Set<AncMode>?> enabledModes;
+  final void Function(MapEntry<Hold?, Set<AncMode>?>)? onChanged;
 
   const _HoldSettingsCard({required this.enabledModes, this.onChanged});
 
-  bool checkboxChecked(HeadphonesAncMode mode) =>
+  bool checkboxChecked(AncMode mode) =>
       enabledModes.value?.contains(mode) ?? false;
 
-  bool checkboxEnabled(bool enabled) =>
-      (enabledModes.key == HeadphonesGestureHold.cycleAnc &&
-          onChanged != null &&
-          enabledModes.value != null &&
-          // either all modes are enabled, or this is the disabled one
-          (enabledModes.value!.length > 2 || !enabled));
+  bool checkboxEnabled(bool enabled) => (enabledModes.key == Hold.cycleAnc &&
+      onChanged != null &&
+      enabledModes.value != null &&
+      // either all modes are enabled, or this is the disabled one
+      (enabledModes.value!.length > 2 || !enabled));
 
-  Widget modeCheckbox(String title, String desc, HeadphonesAncMode mode) {
+  Widget modeCheckbox(String title, String desc, AncMode mode) {
     final checked = checkboxChecked(mode);
     return ListTileCheckbox(
       title: Text(title),
@@ -105,17 +101,17 @@ class _HoldSettingsCard extends StatelessWidget {
             modeCheckbox(
               l.ancNoiseCancel,
               l.ancNoiseCancelDesc,
-              HeadphonesAncMode.noiseCancel,
+              AncMode.noiseCancelling,
             ),
             modeCheckbox(
               l.ancOff,
               l.ancOffDesc,
-              HeadphonesAncMode.off,
+              AncMode.off,
             ),
             modeCheckbox(
               l.ancAwareness,
               l.ancAwarenessDesc,
-              HeadphonesAncMode.awareness,
+              AncMode.transparency,
             ),
           ],
         ),
