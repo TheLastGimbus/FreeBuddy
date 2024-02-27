@@ -35,7 +35,7 @@ dependencies:
   the_last_bluetooth:
     git:
       url: https://github.com/TheLastGimbus/the_last_bluetooth.git
-      ref: master
+      ref: jni-rewrite
     # path: "../the_last_bluetooth"
   app_settings: ^5.1.1
   url_launcher: ^6.2.5

@@ -7,6 +7,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stream_channel/stream_channel.dart';
+import 'package:the_last_bluetooth/src/bluetooth_device.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
@@ -17,7 +19,7 @@ import 'headphones_cubit_objects.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final TheLastBluetooth _bluetooth;
-  BluetoothConnection? _connection;
+  StreamChannel<Uint8List>? _connection;
   StreamSubscription? _btStream;
   StreamSubscription? _devStream;
   bool _btEnabledCache = false;
@@ -59,23 +61,23 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
 
-  Future<void> connect() async => _connect(await _bluetooth.pairedDevices);
+  Future<void> connect() async => _connect(_bluetooth.pairedDevices.value);
 
   // TODO/MIGRATION: This whole big-ass connection/detection loop 🤯
   // for example, all placeholders assume we have 4i... not good
-  Future<void> _connect(List<BluetoothDevice> devices) async {
-    if (!await _bluetooth.isEnabled()) {
+  Future<void> _connect(Iterable<BluetoothDevice> devices) async {
+    if (!await _bluetooth.isEnabled.first) {
       emit(const HeadphonesBluetoothDisabled());
       return;
     }
     if (_connection != null) return; // already connected and working, skip
-    final otter = devices
-        .firstWhereOrNull((d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name));
+    final otter = devices.firstWhereOrNull(
+        (d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name.value));
     if (otter == null) {
       emit(const HeadphonesNotPaired());
       return;
     }
-    if (!otter.isConnected) {
+    if (!otter.isConnected.value) {
       // not connected to device at all
       emit(const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()));
       return;
@@ -86,14 +88,15 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       // 2'nd try 🤔
       for (var i = 0; i < connectTries; i++) {
         try {
-          _connection = await _bluetooth.connectRfcomm(otter, sppUuid);
+          _connection = _bluetooth.connectRfcomm(otter, sppUuid);
+          break;
         } on PlatformException catch (_) {
           logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
           if (i + 1 >= connectTries) rethrow;
         }
       }
-      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!.io)));
-      await _connection!.io.stream.listen((event) {}).asFuture();
+      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!)));
+      await _connection!.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
       // so that it nicely goes again and we emit HeadphonesDisconnected()
@@ -101,16 +104,17 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       logg.e("PlatformError while connecting to socket",
           error: e, stackTrace: s);
     }
-    await _connection?.io.sink.close();
+    await _connection?.sink.close();
     _connection = null;
     // if disconnected because of bluetooth, don't emit
     // this is because we made async gap when awaiting stream close
     if (!_btEnabledCache) return;
     emit(
-      ((await _bluetooth.pairedDevices)
-                  .firstWhereOrNull(
-                      (d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name))
-                  ?.isConnected ??
+      ((_bluetooth.pairedDevices.value
+                  .firstWhereOrNull((d) =>
+                      HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name.value))
+                  ?.isConnected
+                  .value) ??
               false)
           ? const HeadphonesConnectedClosed(HuaweiFreeBuds4iSimPlaceholder())
           : const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()),
@@ -136,12 +140,12 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       emit(const HeadphonesNoPermission());
       return;
     }
-    _btStream = _bluetooth.adapterInfoStream.listen((event) {
-      _btEnabledCache = event.isEnabled;
-      if (!event.isEnabled) emit(const HeadphonesBluetoothDisabled());
+    _btStream = _bluetooth.isEnabled.listen((event) {
+      _btEnabledCache = event;
+      if (!event) emit(const HeadphonesBluetoothDisabled());
     });
     // logic of connect() is so universal we can use it on every change
-    _devStream = _bluetooth.pairedDevicesStream.listen(_connect);
+    _devStream = _bluetooth.pairedDevices.listen(_connect);
   }
 
   // TODO:
@@ -160,7 +164,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     await _pingReceivePortSS.cancel();
     _pingReceivePort.close();
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
-    await _connection?.io.sink.close();
+    await _connection?.sink.close();
     await _btStream?.cancel();
     await _devStream?.cancel();
     super.close();
