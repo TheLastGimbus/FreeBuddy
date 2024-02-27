@@ -95,7 +95,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           if (i + 1 >= connectTries) rethrow;
         }
       }
-      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!)));
+      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!, otter)));
       await _connection!.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
