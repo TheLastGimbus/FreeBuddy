@@ -66,6 +66,8 @@ Future<bool> routineUpdateCallback() async {
 void callbackDispatcher() {
   // this $task is a name, not id?? wtf??
   Workmanager().executeTask((task, inputData) {
+    logg.w("Skipping periodic task because it crashes right now :/");
+    return Future.value(true);
     logg.d("Running periodic task $task"
         "${inputData != null ? " - input data: $inputData" : ""}");
     try {
