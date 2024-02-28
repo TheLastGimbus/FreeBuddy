@@ -188,6 +188,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     await _connection?.sink.close();
     await _btEnabledStream?.cancel();
     await _devStream?.cancel();
+    for (final sub in _watchedKnownDevices.values) {
+      await sub.cancel();
+    }
     super.close();
   }
 }
