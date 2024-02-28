@@ -75,7 +75,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
         lrcBattery.valueOrNull,
         ancMode.valueOrNull,
       ].any((e) => e == null)) {
-        // _initRequestInfo();
+        _initRequestInfo();
       }
     });
   }
