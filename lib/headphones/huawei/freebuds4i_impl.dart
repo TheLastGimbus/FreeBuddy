@@ -34,7 +34,9 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
 
   HuaweiFreeBuds4iImpl(this._rfcomm, this._bluetoothDevice) {
     // hope this will nicely play with closing, idk honestly
-    _bluetoothDevice.alias.pipe(_bluetoothAliasCtrl);
+    final aliasStreamSub = _bluetoothDevice.alias
+        .listen((alias) => _bluetoothAliasCtrl.add(alias));
+    _bluetoothAliasCtrl.onCancel = () => aliasStreamSub.cancel();
 
     _rfcomm.stream.listen((event) {
       List<MbbCommand>? commands;
@@ -73,7 +75,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
         lrcBattery.valueOrNull,
         ancMode.valueOrNull,
       ].any((e) => e == null)) {
-        _initRequestInfo();
+        // _initRequestInfo();
       }
     });
   }

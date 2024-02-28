@@ -3,7 +3,6 @@ import 'dart:isolate';
 import 'dart:ui';
 
 import 'package:app_settings/app_settings.dart';
-import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,6 +18,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   StreamChannel<Uint8List>? _connection;
   StreamSubscription? _btEnabledStream;
   StreamSubscription? _devStream;
+  Map<BluetoothDevice, StreamSubscription> _watchedKnownDevices = {};
   static const connectTries = 3;
 
   // I needed a way to tell (from background task) if app is currently running.
@@ -57,6 +57,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
 
+  // todo: make this work
   Future<void> connect() async => _connect(_bluetooth.pairedDevices.value);
 
   // TODO/MIGRATION: This whole big-ass connection/detection loop 🤯
@@ -76,48 +77,63 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       emit(const HeadphonesNotPaired());
       return;
     }
-    final otter = knownHeadphones
-        .firstWhereOrNull((hp) => hp.device.isConnected.valueOrNull ?? false);
-    if (otter == null) {
-      // not connected to device at all
-      emit(HeadphonesDisconnected(knownHeadphones.first.match!.placeholder));
-      return;
-    }
-    emit(HeadphonesConnecting(otter.match!.placeholder));
-    try {
-      // when Ai Life takes over our socket, the connecting always succeeds at
-      // 2'nd try 🤔
-      for (var i = 0; i < connectTries; i++) {
-        try {
-          _connection = _bluetooth.connectRfcomm(otter.device, sppUuid);
-          break;
-        } catch (_) {
-          logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
-          if (i + 1 >= connectTries) rethrow;
-        }
+
+    for (final hp in knownHeadphones) {
+      if (!_watchedKnownDevices.containsKey(hp.device)) {
+        // todo: maybe move this big ass listen somewhere else
+        _watchedKnownDevices[hp.device] =
+            hp.device.isConnected.listen((connected) async {
+          final placeholder = hp.match!.placeholder;
+          if (connected) {
+            emit(HeadphonesConnecting(placeholder));
+            try {
+              // when Ai Life takes over our socket, the connecting always succeeds at
+              // 2'nd try 🤔
+              for (var i = 0; i < connectTries; i++) {
+                try {
+                  _connection = _bluetooth.connectRfcomm(hp.device, sppUuid);
+                  break;
+                } catch (_) {
+                  logg.w(
+                      'Error when connecting socket: ${i + 1}/$connectTries tries');
+                  if (i + 1 >= connectTries) rethrow;
+                }
+              }
+              emit(
+                HeadphonesConnectedOpen(
+                  hp.match!.builder(_connection!, hp.device),
+                ),
+              );
+              await _connection!.stream.listen((event) {}).asFuture();
+              // when device disconnects, future completes and we free the
+              // hopefully this happens *before* next stream event with data 🤷
+              // so that it nicely goes again and we emit HeadphonesDisconnected()
+            } catch (e, s) {
+              logg.e("Error while connecting to socket",
+                  error: e, stackTrace: s);
+            }
+            await _connection?.sink.close();
+            _connection = null;
+            // if disconnected because of bluetooth, don't emit
+            // this is because we made async gap when awaiting stream close
+            if (!(_bluetooth.isEnabled.valueOrNull ?? false)) return;
+            emit(
+              (hp.device.isConnected.valueOrNull ?? false)
+                  ? HeadphonesConnectedClosed(placeholder)
+                  : HeadphonesDisconnected(placeholder),
+            );
+          } else {
+            emit(HeadphonesDisconnected(placeholder));
+          }
+        });
       }
-      emit(
-        HeadphonesConnectedOpen(
-          otter.match!.builder(_connection!, otter.device),
-        ),
-      );
-      await _connection!.stream.listen((event) {}).asFuture();
-      // when device disconnects, future completes and we free the
-      // hopefully this happens *before* next stream event with data 🤷
-      // so that it nicely goes again and we emit HeadphonesDisconnected()
-    } catch (e, s) {
-      logg.e("Error while connecting to socket", error: e, stackTrace: s);
     }
-    await _connection?.sink.close();
-    _connection = null;
-    // if disconnected because of bluetooth, don't emit
-    // this is because we made async gap when awaiting stream close
-    if (!(_bluetooth.isEnabled.valueOrNull ?? false)) return;
-    emit(
-      (otter.device.isConnected.valueOrNull ?? false)
-          ? HeadphonesConnectedClosed(otter.match!.placeholder)
-          : HeadphonesDisconnected(otter.match!.placeholder),
-    );
+    for (final dev in _watchedKnownDevices.keys) {
+      if (!knownHeadphones.map((e) => e.device).contains(dev)) {
+        _watchedKnownDevices[dev]!.cancel();
+        _watchedKnownDevices.remove(dev);
+      }
+    }
   }
 
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
