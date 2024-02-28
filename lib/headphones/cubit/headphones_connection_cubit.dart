@@ -119,6 +119,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       return;
     }
 
+    // "Add all devices that are in knownHp but not in _watched
     for (final hp in knownHeadphones) {
       if (!_watchedKnownDevices.containsKey(hp.device)) {
         _watchedKnownDevices[hp.device] =
@@ -134,6 +135,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
         });
       }
     }
+    // "Remove any device from _watched that's not in knownHp"
     for (final dev in _watchedKnownDevices.keys) {
       if (!knownHeadphones.map((e) => e.device).contains(dev)) {
         _watchedKnownDevices[dev]!.cancel();
