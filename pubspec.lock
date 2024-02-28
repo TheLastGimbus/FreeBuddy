@@ -693,11 +693,9 @@ packages:
   the_last_bluetooth:
     dependency: "direct main"
     description:
-      path: "."
-      ref: jni-rewrite
-      resolved-ref: e74eb7915fca7e7ec839a0c7c6eb5fdf5a2d23fe
-      url: "https://github.com/TheLastGimbus/the_last_bluetooth.git"
-    source: git
+      path: "../the_last_bluetooth"
+      relative: true
+    source: path
     version: "0.0.1"
   tuple:
     dependency: transitive

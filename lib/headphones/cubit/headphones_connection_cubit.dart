@@ -20,9 +20,8 @@ import 'headphones_cubit_objects.dart';
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final TheLastBluetooth _bluetooth;
   StreamChannel<Uint8List>? _connection;
-  StreamSubscription? _btStream;
+  StreamSubscription? _btEnabledStream;
   StreamSubscription? _devStream;
-  bool _btEnabledCache = false;
   static const connectTries = 3;
 
   // I needed a way to tell (from background task) if app is currently running.
@@ -66,7 +65,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   // TODO/MIGRATION: This whole big-ass connection/detection loop 🤯
   // for example, all placeholders assume we have 4i... not good
   Future<void> _connect(Iterable<BluetoothDevice> devices) async {
-    if (!await _bluetooth.isEnabled.first) {
+    if (!(_bluetooth.isEnabled.valueOrNull ?? false)) {
       emit(const HeadphonesBluetoothDisabled());
       return;
     }
@@ -77,7 +76,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       emit(const HeadphonesNotPaired());
       return;
     }
-    if (!otter.isConnected.value) {
+    if (!(otter.isConnected.valueOrNull ?? false)) {
       // not connected to device at all
       emit(const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()));
       return;
@@ -90,7 +89,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
         try {
           _connection = _bluetooth.connectRfcomm(otter, sppUuid);
           break;
-        } on PlatformException catch (_) {
+        } catch (_) {
           logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
           if (i + 1 >= connectTries) rethrow;
         }
@@ -100,21 +99,20 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
       // so that it nicely goes again and we emit HeadphonesDisconnected()
-    } on PlatformException catch (e, s) {
-      logg.e("PlatformError while connecting to socket",
-          error: e, stackTrace: s);
+    } catch (e, s) {
+      logg.e("Error while connecting to socket", error: e, stackTrace: s);
     }
     await _connection?.sink.close();
     _connection = null;
     // if disconnected because of bluetooth, don't emit
     // this is because we made async gap when awaiting stream close
-    if (!_btEnabledCache) return;
+    if (!(_bluetooth.isEnabled.valueOrNull ?? false)) return;
     emit(
       ((_bluetooth.pairedDevices.value
                   .firstWhereOrNull((d) =>
                       HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name.value))
                   ?.isConnected
-                  .value) ??
+                  .valueOrNull) ??
               false)
           ? const HeadphonesConnectedClosed(HuaweiFreeBuds4iSimPlaceholder())
           : const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()),
@@ -140,9 +138,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       emit(const HeadphonesNoPermission());
       return;
     }
-    _btStream = _bluetooth.isEnabled.listen((event) {
-      _btEnabledCache = event;
-      if (!event) emit(const HeadphonesBluetoothDisabled());
+    _bluetooth.init();
+    _btEnabledStream = _bluetooth.isEnabled.listen((enabled) {
+      if (!enabled) emit(const HeadphonesBluetoothDisabled());
     });
     // logic of connect() is so universal we can use it on every change
     _devStream = _bluetooth.pairedDevices.listen(_connect);
@@ -165,7 +163,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     _pingReceivePort.close();
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
     await _connection?.sink.close();
-    await _btStream?.cancel();
+    await _btEnabledStream?.cancel();
     await _devStream?.cancel();
     super.close();
   }
