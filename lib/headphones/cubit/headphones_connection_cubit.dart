@@ -8,14 +8,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:stream_channel/stream_channel.dart';
-import 'package:the_last_bluetooth/src/bluetooth_device.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
-import '../huawei/freebuds4i.dart';
-import '../huawei/freebuds4i_impl.dart';
-import '../huawei/freebuds4i_sim.dart';
 import 'headphones_cubit_objects.dart';
+import 'model_matching.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final TheLastBluetooth _bluetooth;
@@ -70,31 +67,40 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       return;
     }
     if (_connection != null) return; // already connected and working, skip
-    final otter = devices.firstWhereOrNull(
-        (d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name.value));
-    if (otter == null) {
+
+    final knownHeadphones = devices
+        .map((dev) => (device: dev, match: matchModel(dev)))
+        .where((m) => m.match != null);
+
+    if (knownHeadphones.isEmpty) {
       emit(const HeadphonesNotPaired());
       return;
     }
-    if (!(otter.isConnected.valueOrNull ?? false)) {
+    final otter = knownHeadphones
+        .firstWhereOrNull((hp) => hp.device.isConnected.valueOrNull ?? false);
+    if (otter == null) {
       // not connected to device at all
-      emit(const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()));
+      emit(HeadphonesDisconnected(knownHeadphones.first.match!.placeholder));
       return;
     }
-    emit(const HeadphonesConnecting(HuaweiFreeBuds4iSimPlaceholder()));
+    emit(HeadphonesConnecting(otter.match!.placeholder));
     try {
       // when Ai Life takes over our socket, the connecting always succeeds at
       // 2'nd try 🤔
       for (var i = 0; i < connectTries; i++) {
         try {
-          _connection = _bluetooth.connectRfcomm(otter, sppUuid);
+          _connection = _bluetooth.connectRfcomm(otter.device, sppUuid);
           break;
         } catch (_) {
           logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
           if (i + 1 >= connectTries) rethrow;
         }
       }
-      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!, otter)));
+      emit(
+        HeadphonesConnectedOpen(
+          otter.match!.builder(_connection!, otter.device),
+        ),
+      );
       await _connection!.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
@@ -108,14 +114,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     // this is because we made async gap when awaiting stream close
     if (!(_bluetooth.isEnabled.valueOrNull ?? false)) return;
     emit(
-      ((_bluetooth.pairedDevices.value
-                  .firstWhereOrNull((d) =>
-                      HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name.value))
-                  ?.isConnected
-                  .valueOrNull) ??
-              false)
-          ? const HeadphonesConnectedClosed(HuaweiFreeBuds4iSimPlaceholder())
-          : const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()),
+      (otter.device.isConnected.valueOrNull ?? false)
+          ? HeadphonesConnectedClosed(otter.match!.placeholder)
+          : HeadphonesDisconnected(otter.match!.placeholder),
     );
   }
 
