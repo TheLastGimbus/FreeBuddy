@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';
-import 'package:the_last_bluetooth/src/bluetooth_device.dart' as tlb;
+import 'package:the_last_bluetooth/the_last_bluetooth.dart' as tlb;
 
 import '../../logger.dart';
 import '../framework/anc.dart';
