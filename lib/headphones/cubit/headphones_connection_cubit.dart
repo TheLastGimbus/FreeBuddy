@@ -43,16 +43,14 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   // This is so fucking embarrassing......
   // Race conditions??? FUCK YES
-  static Future<bool> cubitAlreadyRunningSomewhere() async {
+  static Future<bool> cubitAlreadyRunningSomewhere(
+      {Duration timeout = const Duration(seconds: 1)}) async {
     final ping = IsolateNameServer.lookupPortByName(
         HeadphonesConnectionCubit.pingReceivePortName);
     if (ping == null) return false;
     final pong = ReceivePort(); // this is not right naming, i know
     ping.send(pong.sendPort);
-    return await pong.first.timeout(
-      const Duration(milliseconds: 50),
-      onTimeout: () => false,
-    ) as bool;
+    return await pong.first.timeout(timeout, onTimeout: () => false) as bool;
   }
 
   // todo: make this professional
@@ -187,15 +185,15 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   @override
   Future<void> close() async {
-    await _pingReceivePortSS.cancel();
-    _pingReceivePort.close();
-    IsolateNameServer.removePortNameMapping(pingReceivePortName);
     await _connection?.sink.close();
     await _btEnabledStream?.cancel();
     await _devStream?.cancel();
     for (final sub in _watchedKnownDevices.values) {
       await sub.cancel();
     }
+    await _pingReceivePortSS.cancel();
+    _pingReceivePort.close();
+    IsolateNameServer.removePortNameMapping(pingReceivePortName);
     super.close();
   }
 }
