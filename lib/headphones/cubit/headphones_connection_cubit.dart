@@ -158,6 +158,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   }
 
   Future<void> _init() async {
+    // note: freezes the whole app if two cubits (jni plugins therefore) run
+    //       at the same time
+    // TODO: Check if already running, in cases when we open *just* when bgn
     // it's down here to be sure that we do have device connected so
     if (!await Permission.bluetoothConnect.isGranted) {
       emit(const HeadphonesNoPermission());
