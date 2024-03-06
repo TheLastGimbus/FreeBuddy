@@ -18,7 +18,7 @@
   "pageHomeBluetoothDisabled": "Bluetooth jest wyłączony 📶🚫",
   "pageHomeBluetoothDisabledEnable": "Włącz ☝",
   "pageHomeBluetoothDisabledOpenSettings": "Otwórz ustawienia żeby włączyć 💙",
-  "pageHomeNotPaired": "Nie masz sparowanych Freebuds z telefonem 😿",
+  "pageHomeNotPaired": "Nie masz żadnych wspieranych słuchawek sparowanych z telefonem 😿",
   "pageHomeNotPairedPairOpenSettings": "Otwórz ustawienia bluetooth żeby sparować 🔌",
   "pageHomeNotPairedPairOpenDemo": "Wypróbuj apke bez słuchawek 🌐",
   "pageHomeConnectedClosed": "Słuchawki są połączone, ale nie z FreeBuddy 🤨",
@@ -66,7 +66,7 @@
   "pageAboutOpenSourceLicensesBtn": "Licencje open source",
   "pageIntroTitle": "Witaj we FreeBuddy 👋",
   "pageIntroWhatIsThis": "FreeBuddy to open-source aplikacja do twoich słuchaweczek 🎧",
-  "pageIntroSupported": "Obecnie wspierane są:\n - Huawei Freebuds 4i, Huawei Freebuds 3i",
+  "pageIntroSupported": "Obecnie wspierane są:\n - Huawei FreeBuds 4i\n - Huawei FreeBuds 3i",
   "pageIntroShortPrivacyPolicy": "Ta aplikacja nie zbiera żadnych maili, identyfikatorów, czy innych osobistych danych 🎉 Możesz o tym poczytać tutaj: ",
   "pageIntroAnyQuestions": "Jeśli masz jakiekolwiek pytania, napisz do mnie śmiało 💌 Wejdź w \"Ustawienia->O aplikacji\" po moje socjale!",
   "pageIntroQuit": "Oki doki 👍"
