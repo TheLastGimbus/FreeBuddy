@@ -21,3 +21,18 @@ mixin BluetoothHeadphonesSim on HeadphonesModelInfo
   @override
   ValueStream<int> get batteryLevel => Stream.value(100).shareValue();
 }
+
+mixin BluetoothHeadphonesSimPlaceholder on HeadphonesModelInfo
+    implements BluetoothHeadphones {
+  @override
+  String get macAddress => "";
+
+  @override
+  String get bluetoothName => '$vendor $name';
+
+  @override
+  ValueStream<String> get bluetoothAlias => BehaviorSubject();
+
+  @override
+  ValueStream<int> get batteryLevel => BehaviorSubject();
+}

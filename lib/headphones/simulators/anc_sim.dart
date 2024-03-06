@@ -12,3 +12,11 @@ mixin AncSim implements Anc {
   @override
   Future<void> setAncMode(AncMode mode) async => _ancModeCtrl.add(mode);
 }
+
+mixin AncSimPlaceholder implements Anc {
+  @override
+  ValueStream<AncMode> get ancMode => BehaviorSubject();
+
+  @override
+  Future<void> setAncMode(AncMode mode) async {}
+}

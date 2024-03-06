@@ -7,20 +7,19 @@ import 'package:collection/collection.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stream_channel/stream_channel.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 import '../../logger.dart';
-import '../huawei/freebuds4i.dart';
-import '../huawei/freebuds4i_impl.dart';
-import '../huawei/freebuds4i_sim.dart';
 import 'headphones_cubit_objects.dart';
+import 'model_matching.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final TheLastBluetooth _bluetooth;
-  BluetoothConnection? _connection;
-  StreamSubscription? _btStream;
+  StreamChannel<Uint8List>? _connection;
+  StreamSubscription? _btEnabledStream;
   StreamSubscription? _devStream;
-  bool _btEnabledCache = false;
+  final Map<BluetoothDevice, StreamSubscription> _watchedKnownDevices = {};
   static const connectTries = 3;
 
   // I needed a way to tell (from background task) if app is currently running.
@@ -44,77 +43,103 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   // This is so fucking embarrassing......
   // Race conditions??? FUCK YES
-  static Future<bool> cubitAlreadyRunningSomewhere() async {
+  static Future<bool> cubitAlreadyRunningSomewhere(
+      {Duration timeout = const Duration(seconds: 1)}) async {
     final ping = IsolateNameServer.lookupPortByName(
         HeadphonesConnectionCubit.pingReceivePortName);
     if (ping == null) return false;
     final pong = ReceivePort(); // this is not right naming, i know
     ping.send(pong.sendPort);
-    return await pong.first.timeout(
-      const Duration(milliseconds: 50),
-      onTimeout: () => false,
-    ) as bool;
+    return await pong.first.timeout(timeout, onTimeout: () => false) as bool;
   }
 
   // todo: make this professional
   static const sppUuid = "00001101-0000-1000-8000-00805f9b34fb";
 
-  Future<void> connect() async => _connect(await _bluetooth.pairedDevices);
+  Future<void> connect() async {
+    if (_connection != null) return;
+    final connected = _watchedKnownDevices.keys
+        .firstWhereOrNull((dev) => dev.isConnected.valueOrNull ?? false);
+    if (connected != null) {
+      _connect(connected, matchModel(connected)!);
+    }
+  }
 
-  // TODO/MIGRATION: This whole big-ass connection/detection loop 🤯
-  // for example, all placeholders assume we have 4i... not good
-  Future<void> _connect(List<BluetoothDevice> devices) async {
-    if (!await _bluetooth.isEnabled()) {
-      emit(const HeadphonesBluetoothDisabled());
-      return;
-    }
-    if (_connection != null) return; // already connected and working, skip
-    final otter = devices
-        .firstWhereOrNull((d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name));
-    if (otter == null) {
-      emit(const HeadphonesNotPaired());
-      return;
-    }
-    if (!otter.isConnected) {
-      // not connected to device at all
-      emit(const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()));
-      return;
-    }
-    emit(const HeadphonesConnecting(HuaweiFreeBuds4iSimPlaceholder()));
+  Future<void> _connect(BluetoothDevice dev, MatchedModel model) async {
+    final placeholder = model.placeholder;
+    emit(HeadphonesConnecting(placeholder));
     try {
       // when Ai Life takes over our socket, the connecting always succeeds at
       // 2'nd try 🤔
       for (var i = 0; i < connectTries; i++) {
         try {
-          _connection = await _bluetooth.connectRfcomm(otter, sppUuid);
-        } on PlatformException catch (_) {
+          _connection = _bluetooth.connectRfcomm(dev, sppUuid);
+          break;
+        } catch (_) {
           logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
           if (i + 1 >= connectTries) rethrow;
         }
       }
-      emit(HeadphonesConnectedOpen(HuaweiFreeBuds4iImpl(_connection!.io)));
-      await _connection!.io.stream.listen((event) {}).asFuture();
+      emit(
+        HeadphonesConnectedOpen(model.builder(_connection!, dev)),
+      );
+      await _connection!.stream.listen((event) {}).asFuture();
       // when device disconnects, future completes and we free the
       // hopefully this happens *before* next stream event with data 🤷
       // so that it nicely goes again and we emit HeadphonesDisconnected()
-    } on PlatformException catch (e, s) {
-      logg.e("PlatformError while connecting to socket",
-          error: e, stackTrace: s);
+    } catch (e, s) {
+      logg.e("Error while connecting to socket", error: e, stackTrace: s);
     }
-    await _connection?.io.sink.close();
+    await _connection?.sink.close();
     _connection = null;
     // if disconnected because of bluetooth, don't emit
     // this is because we made async gap when awaiting stream close
-    if (!_btEnabledCache) return;
+    if (!(_bluetooth.isEnabled.valueOrNull ?? false)) return;
     emit(
-      ((await _bluetooth.pairedDevices)
-                  .firstWhereOrNull(
-                      (d) => HuaweiFreeBuds4i.idNameRegex.hasMatch(d.name))
-                  ?.isConnected ??
-              false)
-          ? const HeadphonesConnectedClosed(HuaweiFreeBuds4iSimPlaceholder())
-          : const HeadphonesDisconnected(HuaweiFreeBuds4iSimPlaceholder()),
+      (dev.isConnected.valueOrNull ?? false)
+          ? HeadphonesConnectedClosed(placeholder)
+          : HeadphonesDisconnected(placeholder),
     );
+  }
+
+  Future<void> _pairedDevicesHandle(Iterable<BluetoothDevice> devices) async {
+    if (!(_bluetooth.isEnabled.valueOrNull ?? false)) {
+      emit(const HeadphonesBluetoothDisabled());
+      return;
+    }
+
+    final knownHeadphones = devices
+        .map((dev) => (device: dev, match: matchModel(dev)))
+        .where((m) => m.match != null);
+
+    if (knownHeadphones.isEmpty) {
+      emit(const HeadphonesNotPaired());
+      return;
+    }
+
+    // "Add all devices that are in knownHp but not in _watched
+    for (final hp in knownHeadphones) {
+      if (!_watchedKnownDevices.containsKey(hp.device)) {
+        _watchedKnownDevices[hp.device] =
+            hp.device.isConnected.listen((connected) {
+          if (connected) {
+            if (_connection != null) return; // already connected, skip
+            _connect(hp.device, hp.match!);
+          } else {
+            _connection?.sink.close();
+            _connection = null;
+            emit(HeadphonesDisconnected(hp.match!.placeholder));
+          }
+        });
+      }
+    }
+    // "Remove any device from _watched that's not in knownHp"
+    for (final dev in _watchedKnownDevices.keys) {
+      if (!knownHeadphones.map((e) => e.device).contains(dev)) {
+        _watchedKnownDevices[dev]!.cancel();
+        _watchedKnownDevices.remove(dev);
+      }
+    }
   }
 
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
@@ -131,17 +156,20 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   }
 
   Future<void> _init() async {
+    // note: freezes the whole app if two cubits (jni plugins therefore) run
+    //       at the same time
+    // TODO: Check if already running, in cases when we open *just* when bgn
     // it's down here to be sure that we do have device connected so
     if (!await Permission.bluetoothConnect.isGranted) {
       emit(const HeadphonesNoPermission());
       return;
     }
-    _btStream = _bluetooth.adapterInfoStream.listen((event) {
-      _btEnabledCache = event.isEnabled;
-      if (!event.isEnabled) emit(const HeadphonesBluetoothDisabled());
+    _bluetooth.init();
+    _btEnabledStream = _bluetooth.isEnabled.listen((enabled) {
+      if (!enabled) emit(const HeadphonesBluetoothDisabled());
     });
     // logic of connect() is so universal we can use it on every change
-    _devStream = _bluetooth.pairedDevicesStream.listen(_connect);
+    _devStream = _bluetooth.pairedDevices.listen(_pairedDevicesHandle);
   }
 
   // TODO:
@@ -157,12 +185,15 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
 
   @override
   Future<void> close() async {
+    await _connection?.sink.close();
+    await _btEnabledStream?.cancel();
+    await _devStream?.cancel();
+    for (final sub in _watchedKnownDevices.values) {
+      await sub.cancel();
+    }
     await _pingReceivePortSS.cancel();
     _pingReceivePort.close();
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
-    await _connection?.io.sink.close();
-    await _btStream?.cancel();
-    await _devStream?.cancel();
     super.close();
   }
 }

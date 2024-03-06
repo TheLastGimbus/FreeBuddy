@@ -4,6 +4,7 @@ import 'dart:typed_data';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';
+import 'package:the_last_bluetooth/the_last_bluetooth.dart' as tlb;
 
 import '../../logger.dart';
 import '../framework/anc.dart';
@@ -13,6 +14,8 @@ import 'mbb.dart';
 import 'settings.dart';
 
 final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
+  final tlb.BluetoothDevice _bluetoothDevice;
+
   /// Bluetooth serial port that we communicate over
   final StreamChannel<Uint8List> _rfcomm;
 
@@ -29,7 +32,12 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   /// This watches if we are still missing any info and re-requests it
   late StreamSubscription _watchdogStreamSub;
 
-  HuaweiFreeBuds4iImpl(this._rfcomm) {
+  HuaweiFreeBuds4iImpl(this._rfcomm, this._bluetoothDevice) {
+    // hope this will nicely play with closing, idk honestly
+    final aliasStreamSub = _bluetoothDevice.alias
+        .listen((alias) => _bluetoothAliasCtrl.add(alias));
+    _bluetoothAliasCtrl.onCancel = () => aliasStreamSub.cancel();
+
     _rfcomm.stream.listen((event) {
       List<MbbCommand>? commands;
       try {
@@ -172,17 +180,18 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
       .where((b) => b >= 0)
       .shareValue();
 
+  // i could pass btDevice.alias directly here, but Headphones take care
+  // of closing everything
   @override
-  // TODO: implement bluetoothAlias
-  ValueStream<String> get bluetoothAlias => BehaviorSubject();
+  ValueStream<String> get bluetoothAlias => _bluetoothAliasCtrl.stream;
+
+  // huh, my past self thought that names will not change... and my future
+  // (implementing TLB) thought otherwise 🤷🤷
+  @override
+  String get bluetoothName => _bluetoothDevice.name.valueOrNull ?? "Unknown";
 
   @override
-  // TODO: implement bluetoothName
-  String get bluetoothName => '${super.vendor} ${super.name}';
-
-  @override
-  // TODO: implement macAddress
-  String get macAddress => throw UnimplementedError();
+  String get macAddress => _bluetoothDevice.mac;
 
   @override
   ValueStream<LRCBatteryLevels> get lrcBattery => _lrcBatteryCtrl.stream;

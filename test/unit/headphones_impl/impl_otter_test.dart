@@ -6,7 +6,9 @@ import 'package:freebuddy/headphones/framework/anc.dart';
 import 'package:freebuddy/headphones/framework/lrc_battery.dart';
 import 'package:freebuddy/headphones/huawei/freebuds4i_impl.dart';
 import 'package:freebuddy/headphones/huawei/mbb.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';
+import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
 void main() {
   group("FreeBuds 4i implementation tests", () {
@@ -21,7 +23,7 @@ void main() {
       inputCtrl = StreamController<Uint8List>.broadcast();
       outputCtrl = StreamController<Uint8List>();
       channel = StreamChannel<Uint8List>(inputCtrl.stream, outputCtrl.sink);
-      fb4i = HuaweiFreeBuds4iImpl(channel);
+      fb4i = HuaweiFreeBuds4iImpl(channel, const FakeBtDev());
     });
     tearDown(() {
       inputCtrl.close();
@@ -94,6 +96,29 @@ void main() {
       await inputCtrl.close();
     });
   });
+}
+
+class FakeBtDev implements BluetoothDevice {
+  const FakeBtDev();
+
+  @override
+  ValueStream<String> get alias => Stream.value("FreeBuds 😺").shareValue();
+
+  @override
+  ValueStream<int> get battery => Stream.value(100).shareValue();
+
+  @override
+  ValueStream<bool> get isConnected => Stream.value(true).shareValue();
+
+  @override
+  String get mac => "00:11:22:33:44:55";
+
+  @override
+  ValueStream<String> get name =>
+      Stream.value("HUAWEI FreeBuds 4i").shareValue();
+
+  @override
+  Future<Set<String>> get uuids => Future.value({});
 }
 
 extension on Stream<Uint8List> {

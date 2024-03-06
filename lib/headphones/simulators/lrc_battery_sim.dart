@@ -21,3 +21,8 @@ mixin LRCBatteryAlwaysFullSim implements LRCBattery {
         ),
       ).shareValue();
 }
+
+mixin LRCBatteryAlwaysFullSimPlaceholder implements LRCBattery {
+  @override
+  ValueStream<LRCBatteryLevels> get lrcBattery => BehaviorSubject();
+}
