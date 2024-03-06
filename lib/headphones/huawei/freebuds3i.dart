@@ -25,7 +25,7 @@ abstract base class HuaweiFreeBuds3i
 // TODO: Make their own icon
   @override
   ValueStream<String> get imageAssetPath =>
-      BehaviorSubject.seeded('assets/app_icons/ic_launcher.png');
+      BehaviorSubject.seeded('assets/headphones/huawei/freebuds3i.png');
 
   // As I said everywhere else - i have no good idea where to put this stuff :/
   // This will be a bit of chaos for now 👍👍

@@ -112,16 +112,15 @@ flutter_native_splash:
 flutter:
   # Generate stuff (for i18n etc)
   generate: true
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
+  # Proudly state authors here:
   assets:
+    # Owner: @TheLastGimbus
     - "assets/app_icons/ic_launcher.png"
-    - "assets/app_icons/freebuds-3i.png"
+    # Owner: @TheLastGimbus
+    # 'og' because no resizing was done, because it only made it larger
+    - "assets/headphones/huawei/freebuds3i_og.png"
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
