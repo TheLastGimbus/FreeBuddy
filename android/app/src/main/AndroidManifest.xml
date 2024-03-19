@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lastgimbus.the.freebuddy">
 
@@ -8,7 +9,7 @@
     <!--    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />-->
 
     <!-- Request legacy Bluetooth permissions on ekhm ALL devices, thx xiaomi ;) -->
-    <uses-permission android:name="android.permission.BLUETOOTH" tools:remove="android:maxSdkVersion" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
     <!-- Needed only if your app communicates with already-paired Bluetooth devices. -->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
 
