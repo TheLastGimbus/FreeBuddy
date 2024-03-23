@@ -2,7 +2,7 @@ import 'dart:math';
 
 // Potentially, some day, make cubit emit this enum + headphones object to use.
 // It could emit fake headphones on "not paired" or "last known state"
-// headphoens on "disconnected"
+// headphones on "disconnected"
 // commenting it now since it collides with headphones_base.dart
 // enum HeadphonesConnectionState {
 //   connected,
@@ -94,64 +94,14 @@ class HeadphonesGestureSettings {
 }
 
 enum HeadphonesGestureDoubleTap {
-  nothing(255), // should be -1 but our implementation doesn't see negative
-  voiceAssistant(0),
-  playPause(1),
-  next(2),
-  previous(7);
-
-  // this kinda mixes the protocol into pure abstraction layer 🤔
-  // hmm.... i dont care 😎
-  final int mbbValue;
-
-  const HeadphonesGestureDoubleTap(this.mbbValue);
-
-  static fromMbbValue(int mbbValue) => HeadphonesGestureDoubleTap.values
-      .firstWhere((e) => e.mbbValue == mbbValue);
+  nothing, // should be -1 but our implementation doesn't see negative
+  voiceAssistant,
+  playPause,
+  next,
+  previous;
 }
 
 enum HeadphonesGestureHold {
-  nothing(255), // should be -1 but our implementation doesn't see negative
-  cycleAnc(10);
-
-  final int mbbValue;
-
-  const HeadphonesGestureHold(this.mbbValue);
-
-  static fromMbbValue(int mbbValue) =>
-      HeadphonesGestureHold.values.firstWhere((e) => e.mbbValue == mbbValue);
-}
-
-// TODO: Move this to mbb class or smth
-extension MbbStuff on Set<HeadphonesAncMode> {
-  int get mbbValue {
-    if (isEmpty) return 1;
-    if (length == 3) return 2;
-    if (this == {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness}) {
-      return 3;
-    }
-    if (this == {HeadphonesAncMode.off, HeadphonesAncMode.awareness}) {
-      return 4;
-    }
-    throw Exception("Unknown mbbValue for $this");
-  }
-}
-
-Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
-  switch (mbbValue) {
-    // For some reason this is also 0 not 1 🤷
-    case 0:
-    case 1:
-      return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
-    case 2:
-      return HeadphonesAncMode.values.toSet();
-    case 3:
-      return const {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness};
-    case 4:
-      return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
-    case 255:
-      return {};
-    default:
-      throw Exception("Unknown mbbValue for $mbbValue");
-  }
+  nothing,
+  cycleAnc;
 }

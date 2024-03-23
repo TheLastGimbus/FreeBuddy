@@ -12,7 +12,7 @@ import '../pages/home/disconnected_info_widget.dart';
 import '../pages/home/no_permission_info_widget.dart';
 import '../pages/home/not_paired_info_widget.dart';
 
-/// This listens to [HeadphonesConnectionCubit] and (thorugh big-ass switch
+/// This listens to [HeadphonesConnectionCubit] and (through big-ass switch
 /// machinery), decides whether to:
 /// - show card about not having bluetooth granted/enabled
 /// - show disabled widget from builder, covered with info about disconnection
@@ -22,7 +22,7 @@ import '../pages/home/not_paired_info_widget.dart';
 /// widget a [HeadphonesMockNever] object (so be aware of that!), prevents
 /// user form tapping it and shows appropriate message 👍
 ///
-/// This is ment to be used on pretty much every screens that requires connected
+/// This is meant to be used on pretty much every screens that requires connected
 /// headphones
 class HeadphonesConnectionEnsuringOverlay extends StatelessWidget {
   /// Build your widget of desire here - note that headphones may be Mock
