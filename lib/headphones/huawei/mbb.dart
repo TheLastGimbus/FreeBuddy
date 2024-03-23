@@ -60,7 +60,13 @@ class MbbCommand {
   final int commandId;
   final Map<int, List<int>> args;
 
-  const MbbCommand(this.serviceId, this.commandId, this.args);
+  const MbbCommand(this.serviceId, this.commandId, [this.args = const {}]);
+
+  /// Is the command *about* the same thing as [other]? Not necessary same args
+  ///
+  /// Compares serviceId and commandId
+  bool isAbout(MbbCommand other) =>
+      serviceId == other.serviceId && commandId == other.commandId;
 
   @override
   String toString() => 'MbbCommand(serviceId: $serviceId, '
