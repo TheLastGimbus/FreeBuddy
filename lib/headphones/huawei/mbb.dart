@@ -39,21 +39,21 @@ class MbbUtils {
   }
 
   /// Will return exception if anything wrong. Otherwise does nothing.
-  static Exception? verifyIntegrity(Uint8List payload) {
+  static void verifyIntegrity(Uint8List payload) {
     // 3 magic bytes, 1 length, 1 service, 1 command, 2 checksum
     if (payload.length < 3 + 1 + 1 + 1 + 2) {
-      return Exception("Payload $payload is too short");
+      throw Exception("Payload $payload is too short");
     }
-    if (!payload.sublist(0, 2).elementsEqual([90, 0]) || payload[3] != 0) {
-      return Exception("Payload $payload has invalid magic bytes");
+    final magicBytes = (payload[0], payload[1], payload[3]);
+    if (magicBytes != (90, 0, 0)) {
+      throw Exception("Payload $payload has invalid magic bytes");
     }
     if (payload.length - 6 + 1 != payload[2]) {
-      return Exception("Length data from $payload doesn't match length byte");
+      throw Exception("Length data from $payload doesn't match length byte");
     }
     if (!verifyChecksum(payload)) {
-      return Exception("Checksum from $payload doesn't match");
+      throw Exception("Checksum from $payload doesn't match");
     }
-    return null;
   }
 }
 
@@ -83,7 +83,7 @@ class MbbCommand {
           runtimeType == other.runtimeType &&
           serviceId == other.serviceId &&
           commandId == other.commandId &&
-          args.elementsEqual(other.args);
+          const MapEquality().equals(args, other.args);
 
   @override
   int get hashCode => serviceId.hashCode ^ commandId.hashCode ^ args.hashCode;
@@ -135,10 +135,7 @@ class MbbCommand {
     }
     final cmds = <MbbCommand>[];
     for (final divPay in divided) {
-      if (verify) {
-        final e = MbbUtils.verifyIntegrity(divPay);
-        if (e != null) throw e;
-      }
+      if (verify) MbbUtils.verifyIntegrity(divPay);
       final serviceId = divPay[4];
       final commandId = divPay[5];
       final dataBytes = divPay.sublist(6, divPay.length - 2);
@@ -464,17 +461,5 @@ class Freebuds4iCommands extends GenericHeadphoneCommands {
       default:
         throw Exception("Unknown mbbValue for $mbbValue");
     }
-  }
-}
-
-extension _ListUtils on List {
-  bool elementsEqual(List other) {
-    return const ListEquality().equals(this, other);
-  }
-}
-
-extension _MapUtils on Map {
-  bool elementsEqual(Map other) {
-    return const MapEquality().equals(this, other);
   }
 }
