@@ -201,8 +201,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
       _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
     }
     if ((newSettings.autoPause ?? prev.autoPause) != prev.autoPause) {
-      _mbb.sink
-          .add(newSettings.autoPause! ? _Cmd.autoPauseOn : _Cmd.autoPauseOff);
+      _mbb.sink.add(_Cmd.autoPause(newSettings.autoPause!));
       _mbb.sink.add(_Cmd.getAutoPause);
     }
   }
@@ -279,13 +278,10 @@ abstract class _Cmd {
   }
 
   static const getAutoPause = MbbCommand(43, 17);
-  static const autoPauseOn = MbbCommand(43, 16, {
-    1: [1]
-  });
 
-  static const autoPauseOff = MbbCommand(43, 16, {
-    1: [0]
-  });
+  static MbbCommand autoPause(bool enabled) => MbbCommand(43, 16, {
+        1: [enabled ? 1 : 0]
+      });
 }
 
 extension _FB4iAncMode on AncMode {
