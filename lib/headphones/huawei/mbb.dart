@@ -1,8 +1,12 @@
+import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:crclib/catalog.dart';
+import 'package:stream_channel/stream_channel.dart';
 
+import '../../logger.dart';
 import '../_old/headphones_data_objects.dart';
 
 /// Helper class for Mbb protocol used to communicate with headphones
@@ -155,12 +159,34 @@ class MbbCommand {
   }
 }
 
+StreamChannel<MbbCommand> mbbChannel(StreamChannel<Uint8List> rfcomm) =>
+    rfcomm.transform(
+      StreamChannelTransformer(
+        StreamTransformer.fromHandlers(
+          handleData: (data, stream) {
+            try {
+              for (final cmd in MbbCommand.fromPayload(data)) {
+                // FILTER THE SHIT OUT
+                if (cmd.serviceId == 10 && cmd.commandId == 13) continue;
+                stream.add(cmd);
+              }
+            } catch (e, s) {
+              logg.e("mbb parsing error", error: e, stackTrace: s);
+            }
+          },
+        ),
+        StreamSinkTransformer.fromHandlers(
+          handleData: (data, sink) => rfcomm.sink.add(data.toPayload()),
+        ),
+      ),
+    );
+
 mixin mbbTools {
-  fromMbbValue(int mbbValue, Map commandMap)=>
-    commandMap.keys.firstWhere((k) => commandMap[k] == mbbValue);
+  fromMbbValue(int mbbValue, Map commandMap) =>
+      commandMap.keys.firstWhere((k) => commandMap[k] == mbbValue);
 }
 
-abstract class GenericHeadphoneCommands with mbbTools{
+abstract class GenericHeadphoneCommands with mbbTools {
   Map<HeadphonesGestureDoubleTap, int> get doubleTapCommands;
 
   Map<HeadphonesGestureHold, int> get holdCommands;
@@ -265,8 +291,7 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
   var requestGestureHold = const MbbCommand(43, 23, {});
 
   @override
-  dynamic gestureHold(HeadphonesGestureHold gestureHold) =>
-      MbbCommand(43, 22, {
+  dynamic gestureHold(HeadphonesGestureHold gestureHold) => MbbCommand(43, 22, {
         2: [holdCommands[gestureHold]!],
       });
 
@@ -279,8 +304,7 @@ class Freebuds3iCommands extends GenericHeadphoneCommands {
     const se = SetEquality();
     if (![2, 3].contains(toggledModes.length)) {
       throw Exception(
-          "toggledModes must have 2 or 3 elements, not ${toggledModes
-              .length}}");
+          "toggledModes must have 2 or 3 elements, not ${toggledModes.length}}");
     }
     if (toggledModes.length == 3) mbbValue = 5;
     if (se.equals(
@@ -423,20 +447,23 @@ class Freebuds4iCommands extends GenericHeadphoneCommands {
 
   @override
   Set<HeadphonesAncMode> gestureHoldFromMbbValue(int mbbValue) {
-  switch (mbbValue) {
-    case 2:
-      return HeadphonesAncMode.values.toSet();
-    case 3:
-      return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
-    case 5:
-      return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
-    case 6:
-      return const {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness};
-    case 255:
-      return {};
-    default:
-      throw Exception("Unknown mbbValue for $mbbValue");
-  }
+    switch (mbbValue) {
+      case 2:
+        return HeadphonesAncMode.values.toSet();
+      case 3:
+        return const {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel};
+      case 5:
+        return const {HeadphonesAncMode.off, HeadphonesAncMode.awareness};
+      case 6:
+        return const {
+          HeadphonesAncMode.noiseCancel,
+          HeadphonesAncMode.awareness
+        };
+      case 255:
+        return {};
+      default:
+        throw Exception("Unknown mbbValue for $mbbValue");
+    }
   }
 }
 

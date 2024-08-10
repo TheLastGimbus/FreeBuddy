@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
@@ -18,7 +17,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   final tlb.BluetoothDevice _bluetoothDevice;
 
   /// Bluetooth serial port that we communicate over
-  final StreamChannel<Uint8List> _rfcomm;
+  final StreamChannel<MbbCommand> _mbb;
 
   // * stream controllers
   final _batteryLevelCtrl = BehaviorSubject<int>();
@@ -33,40 +32,26 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   /// This watches if we are still missing any info and re-requests it
   late StreamSubscription _watchdogStreamSub;
 
-  HuaweiFreeBuds4iImpl(this._rfcomm, this._bluetoothDevice) {
+  HuaweiFreeBuds4iImpl(this._mbb, this._bluetoothDevice) {
     // hope this will nicely play with closing, idk honestly
     final aliasStreamSub = _bluetoothDevice.alias
         .listen((alias) => _bluetoothAliasCtrl.add(alias));
     _bluetoothAliasCtrl.onCancel = () => aliasStreamSub.cancel();
 
-    _rfcomm.stream.listen((event) {
-      List<MbbCommand>? commands;
-      try {
-        commands = MbbCommand.fromPayload(event);
-      } catch (e, s) {
-        logg.e("mbb parsing error", error: e, stackTrace: s);
-      }
-      for (final cmd in commands ?? <MbbCommand>[]) {
-        // FILTER THE SHIT OUT
-        if (cmd.serviceId == 10 && cmd.commandId == 13) return;
-        try {
-          _evalMbbCommand(cmd);
-        } on RangeError catch (e, s) {
-          logg.e('Error while parsing mbb cmd - (probably missing bytes)',
-              error: e, stackTrace: s);
-        }
-      }
-    }, onDone: () {
-      // close all streams
-      _batteryLevelCtrl.close();
-      _bluetoothAliasCtrl.close();
-      _bluetoothNameCtrl.close();
-      _lrcBatteryCtrl.close();
-      _ancModeCtrl.close();
-      _settingsCtrl.close();
+    _mbb.stream.listen(
+      _evalMbbCommand,
+      onDone: () {
+        // close all streams
+        _batteryLevelCtrl.close();
+        _bluetoothAliasCtrl.close();
+        _bluetoothNameCtrl.close();
+        _lrcBatteryCtrl.close();
+        _ancModeCtrl.close();
+        _settingsCtrl.close();
 
-      _watchdogStreamSub.cancel();
-    });
+        _watchdogStreamSub.cancel();
+      },
+    );
     _initRequestInfo();
     _watchdogStreamSub =
         Stream.periodic(const Duration(seconds: 3)).listen((_) {
@@ -144,18 +129,12 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   }
 
   Future<void> _initRequestInfo() async {
-    await _sendMbb(_Cmd.getBattery);
-    await _sendMbb(_Cmd.getAnc);
-    await _sendMbb(_Cmd.getAutoPause);
-    await _sendMbb(_Cmd.getGestureDoubleTap);
-    await _sendMbb(_Cmd.getGestureHold);
-    await _sendMbb(_Cmd.getGestureHoldToggledAncModes);
-  }
-
-  // TODO: some .flush() for this
-  Future<void> _sendMbb(MbbCommand comm) async {
-    logg.t("⬆ Sending mbb cmd: $comm");
-    _rfcomm.sink.add(comm.toPayload());
+    _mbb.sink.add(_Cmd.getBattery);
+    _mbb.sink.add(_Cmd.getAnc);
+    _mbb.sink.add(_Cmd.getAutoPause);
+    _mbb.sink.add(_Cmd.getGestureDoubleTap);
+    _mbb.sink.add(_Cmd.getGestureHold);
+    _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
   }
 
   // TODO: Get this from basic bluetooth object (when we actually have those)
@@ -186,7 +165,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   ValueStream<AncMode> get ancMode => _ancModeCtrl.stream;
 
   @override
-  Future<void> setAncMode(AncMode mode) => _sendMbb(_Cmd.anc(mode));
+  Future<void> setAncMode(AncMode mode) async => _mbb.sink.add(_Cmd.anc(mode));
 
   @override
   ValueStream<HuaweiFreeBuds4iSettings> get settings => _settingsCtrl.stream;
@@ -200,30 +179,30 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
     // or make some other abstraction for it - maybe some day
     if ((newSettings.doubleTapLeft ?? prev.doubleTapLeft) !=
         prev.doubleTapLeft) {
-      await _sendMbb(_Cmd.gestureDoubleTapLeft(newSettings.doubleTapLeft!));
-      await _sendMbb(_Cmd.getGestureDoubleTap);
+      _mbb.sink.add(_Cmd.gestureDoubleTapLeft(newSettings.doubleTapLeft!));
+      _mbb.sink.add(_Cmd.getGestureDoubleTap);
     }
     if ((newSettings.doubleTapRight ?? prev.doubleTapRight) !=
         prev.doubleTapRight) {
-      await _sendMbb(_Cmd.gestureDoubleTapRight(newSettings.doubleTapRight!));
-      await _sendMbb(_Cmd.getGestureDoubleTap);
+      _mbb.sink.add(_Cmd.gestureDoubleTapRight(newSettings.doubleTapRight!));
+      _mbb.sink.add(_Cmd.getGestureDoubleTap);
     }
     if ((newSettings.holdBoth ?? prev.holdBoth) != prev.holdBoth) {
-      await _sendMbb(_Cmd.gestureHold(newSettings.holdBoth!));
-      await _sendMbb(_Cmd.getGestureHold);
-      await _sendMbb(_Cmd.getGestureHoldToggledAncModes);
+      _mbb.sink.add(_Cmd.gestureHold(newSettings.holdBoth!));
+      _mbb.sink.add(_Cmd.getGestureHold);
+      _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
     }
     if ((newSettings.holdBothToggledAncModes ?? prev.holdBothToggledAncModes) !=
         prev.holdBothToggledAncModes) {
-      await _sendMbb(_Cmd.gestureHoldToggledAncModes(
+      _mbb.sink.add(_Cmd.gestureHoldToggledAncModes(
           newSettings.holdBothToggledAncModes!));
-      await _sendMbb(_Cmd.getGestureHold);
-      await _sendMbb(_Cmd.getGestureHoldToggledAncModes);
+      _mbb.sink.add(_Cmd.getGestureHold);
+      _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
     }
     if ((newSettings.autoPause ?? prev.autoPause) != prev.autoPause) {
-      await _sendMbb(
-          newSettings.autoPause! ? _Cmd.autoPauseOn : _Cmd.autoPauseOff);
-      await _sendMbb(_Cmd.getAutoPause);
+      _mbb.sink
+          .add(newSettings.autoPause! ? _Cmd.autoPauseOn : _Cmd.autoPauseOff);
+      _mbb.sink.add(_Cmd.getAutoPause);
     }
   }
 }

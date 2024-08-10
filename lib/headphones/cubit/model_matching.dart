@@ -9,6 +9,7 @@ import '../huawei/freebuds3i_impl.dart';
 import '../huawei/freebuds4i.dart';
 import '../huawei/freebuds4i_impl.dart';
 import '../huawei/freebuds4i_sim.dart';
+import '../huawei/mbb.dart';
 
 typedef HeadphonesBuilder = BluetoothHeadphones Function(
     StreamChannel<Uint8List> io, BluetoothDevice device);
@@ -22,7 +23,7 @@ MatchedModel? matchModel(BluetoothDevice matchedDevice) {
   final name = matchedDevice.name.value;
   return switch (name) {
     _ when HuaweiFreeBuds4i.idNameRegex.hasMatch(name) => (
-        builder: (io, dev) => HuaweiFreeBuds4iImpl(io, dev),
+        builder: (io, dev) => HuaweiFreeBuds4iImpl(mbbChannel(io), dev),
         placeholder: const HuaweiFreeBuds4iSimPlaceholder(),
       ) as MatchedModel,
     _ when HuaweiFreeBuds3i.idNameRegex.hasMatch(name) => (
