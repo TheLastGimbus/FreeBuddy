@@ -180,12 +180,12 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
     // or make some other abstraction for it - maybe some day
     if ((newSettings.doubleTapLeft ?? prev.doubleTapLeft) !=
         prev.doubleTapLeft) {
-      _mbb.sink.add(_Cmd.gestureDoubleTapLeft(newSettings.doubleTapLeft!));
+      _mbb.sink.add(_Cmd.gestureDoubleTap(left: newSettings.doubleTapLeft!));
       _mbb.sink.add(_Cmd.getGestureDoubleTap);
     }
     if ((newSettings.doubleTapRight ?? prev.doubleTapRight) !=
         prev.doubleTapRight) {
-      _mbb.sink.add(_Cmd.gestureDoubleTapRight(newSettings.doubleTapRight!));
+      _mbb.sink.add(_Cmd.gestureDoubleTap(right: newSettings.doubleTapRight!));
       _mbb.sink.add(_Cmd.getGestureDoubleTap);
     }
     if ((newSettings.holdBoth ?? prev.holdBoth) != prev.holdBoth) {
@@ -224,13 +224,10 @@ abstract class _Cmd {
 
   static const getGestureDoubleTap = MbbCommand(1, 32);
 
-  static MbbCommand gestureDoubleTapLeft(DoubleTap left) => MbbCommand(1, 31, {
-        1: [left.mbbCode]
-      });
-
-  static MbbCommand gestureDoubleTapRight(DoubleTap right) =>
+  static MbbCommand gestureDoubleTap({DoubleTap? left, DoubleTap? right}) =>
       MbbCommand(1, 31, {
-        2: [right.mbbCode]
+        if (left != null) 1: [left.mbbCode],
+        if (right != null) 2: [right.mbbCode],
       });
 
   static const getGestureHold = MbbCommand(43, 23);
