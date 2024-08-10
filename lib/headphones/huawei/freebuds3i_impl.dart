@@ -174,9 +174,7 @@ final class HuaweiFreeBuds3iImpl extends HuaweiFreeBuds3i {
       _mbb.sink.add(_Cmd.gestureDoubleTapRight(newSettings.doubleTapRight!));
       _mbb.sink.add(_Cmd.getGestureDoubleTap);
     }
-    if ((newSettings.holdBoth ?? prev.holdBoth) != prev.holdBoth ||
-        (newSettings.holdBothToggledAncModes ?? prev.holdBothToggledAncModes) !=
-            prev.holdBothToggledAncModes) {
+    if ((newSettings.holdBoth ?? prev.holdBoth) != prev.holdBoth) {
       _mbb.sink.add(_Cmd.gestureHold(newSettings.holdBoth!));
       _mbb.sink.add(_Cmd.getGestureHold);
     }
