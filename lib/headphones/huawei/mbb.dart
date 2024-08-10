@@ -6,7 +6,6 @@ import 'package:collection/collection.dart';
 import 'package:crclib/catalog.dart';
 import 'package:stream_channel/stream_channel.dart';
 
-import '../../logger.dart';
 import '../_old/headphones_data_objects.dart';
 
 /// Helper class for Mbb protocol used to communicate with headphones
@@ -128,7 +127,7 @@ class MbbCommand {
     }
     if (divided.isEmpty) {
       if (verify) {
-        throw Exception("No commands found in payload");
+        throw Exception("No commands found in $payload");
       } else {
         return [];
       }
@@ -161,14 +160,10 @@ StreamChannel<MbbCommand> mbbChannel(StreamChannel<Uint8List> rfcomm) =>
       StreamChannelTransformer(
         StreamTransformer.fromHandlers(
           handleData: (data, stream) {
-            try {
-              for (final cmd in MbbCommand.fromPayload(data)) {
-                // FILTER THE SHIT OUT
-                if (cmd.serviceId == 10 && cmd.commandId == 13) continue;
-                stream.add(cmd);
-              }
-            } catch (e, s) {
-              logg.e("mbb parsing error", error: e, stackTrace: s);
+            for (final cmd in MbbCommand.fromPayload(data)) {
+              // FILTER THE SHIT OUT
+              if (cmd.serviceId == 10 && cmd.commandId == 13) continue;
+              stream.add(cmd);
             }
           },
         ),

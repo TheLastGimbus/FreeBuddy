@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
@@ -39,8 +38,17 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
     _bluetoothAliasCtrl.onCancel = () => aliasStreamSub.cancel();
 
     _mbb.stream.listen(
-      _evalMbbCommand,
+      (e) {
+        try {
+          _evalMbbCommand(e);
+        } catch (e, s) {
+          logg.e(e, stackTrace: s);
+        }
+      },
+      onError: logg.onError,
       onDone: () {
+        _watchdogStreamSub.cancel();
+
         // close all streams
         _batteryLevelCtrl.close();
         _bluetoothAliasCtrl.close();
@@ -48,8 +56,6 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
         _lrcBatteryCtrl.close();
         _ancModeCtrl.close();
         _settingsCtrl.close();
-
-        _watchdogStreamSub.cancel();
       },
     );
     _initRequestInfo();
@@ -60,14 +66,13 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
         // no alias because it's okay to be null 👍
         lrcBattery.valueOrNull,
         ancMode.valueOrNull,
+        settings.valueOrNull,
       ].any((e) => e == null)) {
         _initRequestInfo();
       }
     });
   }
 
-  // TODO: Do something smart about this for @starw1nd_ :)
-  // TODO: Decide how we treat exceptions here
   void _evalMbbCommand(MbbCommand cmd) {
     final lastSettings =
         _settingsCtrl.valueOrNull ?? const HuaweiFreeBuds4iSettings();
@@ -137,13 +142,8 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
     _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
   }
 
-  // TODO: Get this from basic bluetooth object (when we actually have those)
-  // but this is fairly good for now
   @override
-  ValueStream<int> get batteryLevel => _lrcBatteryCtrl.stream
-      .map((l) => max(l.levelLeft ?? -1, l.levelRight ?? -1))
-      .where((b) => b >= 0)
-      .shareValue();
+  ValueStream<int> get batteryLevel => _bluetoothDevice.battery;
 
   // i could pass btDevice.alias directly here, but Headphones take care
   // of closing everything
@@ -255,6 +255,7 @@ abstract class _Cmd {
   static MbbCommand gestureHoldToggledAncModes(Set<AncMode> toggledModes) {
     int? mbbValue;
     const se = SetEquality();
+    // can't really do that with pattern matching because it's a Set
     if (se.equals(toggledModes, {AncMode.off, AncMode.noiseCancelling})) {
       mbbValue = 1;
     }
