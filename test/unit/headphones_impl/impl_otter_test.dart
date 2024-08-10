@@ -23,7 +23,7 @@ void main() {
       inputCtrl = StreamController<Uint8List>.broadcast();
       outputCtrl = StreamController<Uint8List>();
       channel = StreamChannel<Uint8List>(inputCtrl.stream, outputCtrl.sink);
-      fb4i = HuaweiFreeBuds4iImpl(channel, const FakeBtDev());
+      fb4i = HuaweiFreeBuds4iImpl(mbbChannel(channel), const FakeBtDev());
     });
     tearDown(() {
       inputCtrl.close();
