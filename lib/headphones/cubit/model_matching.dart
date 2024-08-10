@@ -27,7 +27,7 @@ MatchedModel? matchModel(BluetoothDevice matchedDevice) {
         placeholder: const HuaweiFreeBuds4iSimPlaceholder(),
       ) as MatchedModel,
     _ when HuaweiFreeBuds3i.idNameRegex.hasMatch(name) => (
-        builder: (io, dev) => HuaweiFreeBuds3iImpl(io, dev),
+        builder: (io, dev) => HuaweiFreeBuds3iImpl(mbbChannel(io), dev),
         placeholder: const HuaweiFreeBuds4iSimPlaceholder(),
       ) as MatchedModel,
     _ => null,
