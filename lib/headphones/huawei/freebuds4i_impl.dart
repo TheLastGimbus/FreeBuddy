@@ -130,6 +130,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
                 _Cmd.gestureHoldToggledAncModesFromMbbValue(modesCode),
           ),
         );
+        break;
     }
   }
 
