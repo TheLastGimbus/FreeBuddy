@@ -84,67 +84,62 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   // TODO: Do something smart about this for @starw1nd_ :)
   // TODO: Decide how we treat exceptions here
   void _evalMbbCommand(MbbCommand cmd) {
-    // TODO/MISSING: Gesture settings
     final lastSettings =
         _settingsCtrl.valueOrNull ?? const HuaweiFreeBuds4iSettings();
-    // todo: try pattern matching here
-    if (cmd.isAbout(_Cmd.getAnc) && cmd.args.containsKey(1)) {
-      // 0 1 and 2 seem to be constant bytes representing the modes
-      _ancModeCtrl.add(switch (cmd.args[1]![1]) {
-        1 => AncMode.noiseCancelling,
-        0 => AncMode.off,
-        2 => AncMode.transparency,
-        _ => throw "Unknown ANC mode: ${cmd.args[1]}",
-      });
-    } else if (cmd.serviceId == 1 &&
-        (cmd.commandId == 39 || cmd.commandId == 8) &&
-        cmd.args.length >= 3) {
-      final level = cmd.args[2];
-      final status = cmd.args[3];
-      if (level == null || status == null) {
-        logg.w("Battery data is missing level or status");
-        return;
-      }
-      _lrcBatteryCtrl.add(LRCBatteryLevels(
-        level[0] == 0 ? null : level[0],
-        level[1] == 0 ? null : level[1],
-        level[2] == 0 ? null : level[2],
-        status[0] == 1,
-        status[1] == 1,
-        status[2] == 1,
-      ));
-    } else if (cmd.isAbout(_Cmd.getAutoPause) && cmd.args.containsKey(1)) {
-      _settingsCtrl.add(lastSettings.copyWith(autoPause: cmd.args[1]![0] == 1));
-    } else if (cmd.isAbout(_Cmd.getGestureDoubleTap)) {
-      _settingsCtrl.add(
-        lastSettings.copyWith(
-          doubleTapLeft: cmd.args[1] != null
-              ? DoubleTap.values
-                  .firstWhereOrNull((e) => e.mbbCode == cmd.args[1]![0])
-              : lastSettings.doubleTapLeft,
-          doubleTapRight: cmd.args[2] != null
-              ? DoubleTap.values
-                  .firstWhereOrNull((e) => e.mbbCode == cmd.args[2]![0])
-              : lastSettings.doubleTapRight,
-        ),
-      );
-    } else if (cmd.isAbout(_Cmd.getGestureHold)) {
-      _settingsCtrl.add(
-        lastSettings.copyWith(
-          holdBoth: cmd.args[1] != null
-              ? Hold.values
-                  .firstWhereOrNull((e) => e.mbbCode == cmd.args[1]![0])
-              : lastSettings.holdBoth,
-        ),
-      );
-    } else if (cmd.isAbout(_Cmd.getGestureHoldToggledAncModes)) {
-      _settingsCtrl.add(
-        lastSettings.copyWith(
-          holdBothToggledAncModes: cmd.args[1] != null
-              ? _Cmd.gestureHoldToggledAncModesFromMbbValue(cmd.args[1]![0])
-              : lastSettings.holdBothToggledAncModes,
-        ),
-      );
+    switch (cmd.args) {
+      // # AncMode
+      case {1: [_, var ancModeCode, ...]} when cmd.isAbout(_Cmd.getAnc):
+        final mode =
+            AncMode.values.firstWhereOrNull((e) => e.mbbCode == ancModeCode);
+        if (mode != null) _ancModeCtrl.add(mode);
+        break;
+      // # BatteryLevels
+      case {2: var level, 3: var status}
+          when cmd.serviceId == 1 &&
+              (cmd.commandId == 39 || cmd.commandId == 8):
+        _lrcBatteryCtrl.add(LRCBatteryLevels(
+          level[0] == 0 ? null : level[0],
+          level[1] == 0 ? null : level[1],
+          level[2] == 0 ? null : level[2],
+          status[0] == 1,
+          status[1] == 1,
+          status[2] == 1,
+        ));
+        break;
+      // # Settings(autoPause)
+      case {1: [var autoPauseCode, ...]} when cmd.isAbout(_Cmd.getAutoPause):
+        _settingsCtrl.add(lastSettings.copyWith(autoPause: autoPauseCode == 1));
+        break;
+      // # Settings(gestureDoubleTap)
+      case {1: [var leftCode, ...], 2: [var rightCode, ...]}
+          when cmd.isAbout(_Cmd.getGestureDoubleTap):
+        _settingsCtrl.add(
+          lastSettings.copyWith(
+            doubleTapLeft:
+                DoubleTap.values.firstWhereOrNull((e) => e.mbbCode == leftCode),
+            doubleTapRight: DoubleTap.values
+                .firstWhereOrNull((e) => e.mbbCode == rightCode),
+          ),
+        );
+        break;
+      // # Settings(hold)
+      case {1: [var holdCode, ...]} when cmd.isAbout(_Cmd.getGestureHold):
+        _settingsCtrl.add(
+          lastSettings.copyWith(
+            holdBoth:
+                Hold.values.firstWhereOrNull((e) => e.mbbCode == holdCode),
+          ),
+        );
+        break;
+      // # Settings(holdModes)
+      case {1: [var modesCode, ...]}
+          when cmd.isAbout(_Cmd.getGestureHoldToggledAncModes):
+        _settingsCtrl.add(
+          lastSettings.copyWith(
+            holdBothToggledAncModes:
+                _Cmd.gestureHoldToggledAncModesFromMbbValue(modesCode),
+          ),
+        );
     }
   }
 
