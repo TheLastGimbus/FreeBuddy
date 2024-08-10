@@ -247,7 +247,6 @@ abstract class _Cmd {
       2 => AncMode.values.toSet(),
       3 => const {AncMode.noiseCancelling, AncMode.transparency},
       4 => const {AncMode.off, AncMode.transparency},
-      255 => {},
       _ => null,
     };
   }
