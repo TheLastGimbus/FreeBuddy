@@ -1,9 +1,10 @@
+import 'dart:async';
 import 'dart:typed_data';
 
+import 'package:async/async.dart';
 import 'package:collection/collection.dart';
 import 'package:crclib/catalog.dart';
-
-import '../_old/headphones_data_objects.dart';
+import 'package:stream_channel/stream_channel.dart';
 
 /// Helper class for Mbb protocol used to communicate with headphones
 class MbbUtils {
@@ -35,21 +36,21 @@ class MbbUtils {
   }
 
   /// Will return exception if anything wrong. Otherwise does nothing.
-  static Exception? verifyIntegrity(Uint8List payload) {
+  static void verifyIntegrity(Uint8List payload) {
     // 3 magic bytes, 1 length, 1 service, 1 command, 2 checksum
     if (payload.length < 3 + 1 + 1 + 1 + 2) {
-      return Exception("Payload $payload is too short");
+      throw Exception("Payload $payload is too short");
     }
-    if (!payload.sublist(0, 2).elementsEqual([90, 0]) || payload[3] != 0) {
-      return Exception("Payload $payload has invalid magic bytes");
+    final magicBytes = (payload[0], payload[1], payload[3]);
+    if (magicBytes != (90, 0, 0)) {
+      throw Exception("Payload $payload has invalid magic bytes");
     }
     if (payload.length - 6 + 1 != payload[2]) {
-      return Exception("Length data from $payload doesn't match length byte");
+      throw Exception("Length data from $payload doesn't match length byte");
     }
     if (!verifyChecksum(payload)) {
-      return Exception("Checksum from $payload doesn't match");
+      throw Exception("Checksum from $payload doesn't match");
     }
-    return null;
   }
 }
 
@@ -60,7 +61,13 @@ class MbbCommand {
   final int commandId;
   final Map<int, List<int>> args;
 
-  const MbbCommand(this.serviceId, this.commandId, this.args);
+  const MbbCommand(this.serviceId, this.commandId, [this.args = const {}]);
+
+  /// Is the command *about* the same thing as [other]? Not necessary same args
+  ///
+  /// Compares serviceId and commandId
+  bool isAbout(MbbCommand other) =>
+      serviceId == other.serviceId && commandId == other.commandId;
 
   @override
   String toString() => 'MbbCommand(serviceId: $serviceId, '
@@ -73,7 +80,7 @@ class MbbCommand {
           runtimeType == other.runtimeType &&
           serviceId == other.serviceId &&
           commandId == other.commandId &&
-          args.elementsEqual(other.args);
+          const MapEquality().equals(args, other.args);
 
   @override
   int get hashCode => serviceId.hashCode ^ commandId.hashCode ^ args.hashCode;
@@ -118,17 +125,14 @@ class MbbCommand {
     }
     if (divided.isEmpty) {
       if (verify) {
-        throw Exception("No commands found in payload");
+        throw Exception("No commands found in $payload");
       } else {
         return [];
       }
     }
     final cmds = <MbbCommand>[];
     for (final divPay in divided) {
-      if (verify) {
-        final e = MbbUtils.verifyIntegrity(divPay);
-        if (e != null) throw e;
-      }
+      if (verify) MbbUtils.verifyIntegrity(divPay);
       final serviceId = divPay[4];
       final commandId = divPay[5];
       final dataBytes = divPay.sublist(6, divPay.length - 2);
@@ -147,81 +151,22 @@ class MbbCommand {
     }
     return cmds;
   }
-
-  static const ancNoiseCancel = MbbCommand(43, 4, {
-    1: [1, 255]
-  });
-  static const ancOff = MbbCommand(43, 4, {
-    1: [0, 0]
-  });
-  static const ancAware = MbbCommand(43, 4, {
-    1: [2, 255]
-  });
-  static const requestBattery = MbbCommand(1, 8, {});
-  static const requestAnc = MbbCommand(43, 42, {});
-  static const requestAutoPause = MbbCommand(43, 17, {});
-  static const autoPauseOn = MbbCommand(43, 16, {
-    1: [1]
-  });
-  static const autoPauseOff = MbbCommand(43, 16, {
-    1: [0]
-  });
-  static const requestGestureDoubleTap = MbbCommand(1, 32, {});
-
-  static gestureDoubleTapLeft(HeadphonesGestureDoubleTap left) =>
-      MbbCommand(1, 31, {
-        1: [left.mbbValue],
-      });
-
-  static gestureDoubleTapRight(HeadphonesGestureDoubleTap right) =>
-      MbbCommand(1, 31, {
-        2: [right.mbbValue],
-      });
-
-  static const requestGestureHold = MbbCommand(43, 23, {});
-
-  static gestureHold(HeadphonesGestureHold gestureHold) => MbbCommand(43, 22, {
-        1: [gestureHold.mbbValue],
-      });
-
-  static const requestGestureHoldToggledAncModes = MbbCommand(43, 25, {});
-
-  static gestureHoldToggledAncModes(Set<HeadphonesAncMode> toggledModes) {
-    int? mbbValue;
-    const se = SetEquality();
-    if (![2, 3].contains(toggledModes.length)) {
-      throw Exception(
-          "toggledModes must have 2 or 3 elements, not ${toggledModes.length}}");
-    }
-    if (toggledModes.length == 3) mbbValue = 2;
-    if (se.equals(
-        toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.noiseCancel})) {
-      mbbValue = 0;
-    }
-    if (se.equals(toggledModes,
-        {HeadphonesAncMode.noiseCancel, HeadphonesAncMode.awareness})) {
-      mbbValue = 3;
-    }
-    if (se.equals(
-        toggledModes, {HeadphonesAncMode.off, HeadphonesAncMode.awareness})) {
-      mbbValue = 4;
-    }
-    if (mbbValue == null) throw Exception("Unknown mbbValue for $toggledModes");
-    return MbbCommand(43, 24, {
-      1: [mbbValue],
-      2: [mbbValue]
-    });
-  }
 }
 
-extension _ListUtils on List {
-  bool elementsEqual(List other) {
-    return const ListEquality().equals(this, other);
-  }
-}
-
-extension _MapUtils on Map {
-  bool elementsEqual(Map other) {
-    return const MapEquality().equals(this, other);
-  }
-}
+StreamChannel<MbbCommand> mbbChannel(StreamChannel<Uint8List> rfcomm) =>
+    rfcomm.transform(
+      StreamChannelTransformer(
+        StreamTransformer.fromHandlers(
+          handleData: (data, stream) {
+            for (final cmd in MbbCommand.fromPayload(data)) {
+              // FILTER THE SHIT OUT
+              if (cmd.serviceId == 10 && cmd.commandId == 13) continue;
+              stream.add(cmd);
+            }
+          },
+        ),
+        StreamSinkTransformer.fromHandlers(
+          handleData: (data, sink) => rfcomm.sink.add(data.toPayload()),
+        ),
+      ),
+    );

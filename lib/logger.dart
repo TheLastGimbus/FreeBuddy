@@ -7,3 +7,8 @@ final _prettyLogger = Logger(
 );
 
 Logger get logg => _prettyLogger;
+
+extension Errors on Logger {
+  /// Quick drop-in for Stream's onError
+  void onError(Object m, StackTrace s) => e(m, stackTrace: s);
+}
