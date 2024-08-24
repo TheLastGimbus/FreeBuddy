@@ -8,23 +8,30 @@ import '../../../common/list_tile_switch.dart';
 import '../../disabled.dart';
 
 class DoubleTapSection extends StatelessWidget {
-  final HeadphonesSettings<HuaweiFreeBuds4iSettings> headphones;
+  final HeadphonesSettings settings;
 
-  const DoubleTapSection(this.headphones, {super.key});
+  const DoubleTapSection(this.settings, {super.key});
 
   @override
   Widget build(BuildContext context) {
     final t = Theme.of(context);
     final tt = t.textTheme;
     final l = AppLocalizations.of(context)!;
+
     return StreamBuilder(
-      stream: headphones.settings
-          .map((s) => (l: s.doubleTapLeft, r: s.doubleTapRight)),
+      stream: settings.settings.map((s) {
+        if (s is HuaweiFreeBudsSE2Settings || s is HuaweiFreeBuds4iSettings) {
+          return (l: s.doubleTapLeft, r: s.doubleTapRight);
+        } else {
+          return (l: null, r: null);
+        }
+      }),
       initialData: (l: null, r: null),
       builder: (context, snap) {
         final dt = snap.data!;
         final enabled =
             (dt.l != DoubleTap.nothing || dt.r != DoubleTap.nothing);
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,9 +41,25 @@ class DoubleTapSection extends StatelessWidget {
               value: enabled,
               onChanged: (newVal) {
                 final g = newVal ? DoubleTap.playPause : DoubleTap.nothing;
-                headphones.setSettings(
-                  HuaweiFreeBuds4iSettings(doubleTapLeft: g, doubleTapRight: g),
-                );
+                final settingsValue = settings.settings.value;
+
+                if (settingsValue != null) {
+                  if (settingsValue is HuaweiFreeBudsSE2Settings) {
+                    settings.setSettings(
+                      settingsValue.copyWith(
+                        doubleTapLeft: g,
+                        doubleTapRight: g,
+                      ),
+                    );
+                  } else if (settingsValue is HuaweiFreeBuds4iSettings) {
+                    settings.setSettings(
+                      settingsValue.copyWith(
+                        doubleTapLeft: g,
+                        doubleTapRight: g,
+                      ),
+                    );
+                  }
+                }
               },
             ),
             Disabled(
@@ -53,9 +76,22 @@ class DoubleTapSection extends StatelessWidget {
                         ),
                         value: dt.l,
                         onChanged: enabled
-                            ? (g) => headphones.setSettings(
-                                  HuaweiFreeBuds4iSettings(doubleTapLeft: g),
-                                )
+                            ? (g) {
+                                final settingsValue = settings.settings.value;
+                                if (settingsValue != null) {
+                                  if (settingsValue
+                                      is HuaweiFreeBudsSE2Settings) {
+                                    settings.setSettings(
+                                      settingsValue.copyWith(doubleTapLeft: g),
+                                    );
+                                  } else if (settingsValue
+                                      is HuaweiFreeBuds4iSettings) {
+                                    settings.setSettings(
+                                      settingsValue.copyWith(doubleTapLeft: g),
+                                    );
+                                  }
+                                }
+                              }
                             : null,
                       ),
                     ),
@@ -67,9 +103,22 @@ class DoubleTapSection extends StatelessWidget {
                         ),
                         value: dt.r,
                         onChanged: enabled
-                            ? (g) => headphones.setSettings(
-                                  HuaweiFreeBuds4iSettings(doubleTapRight: g),
-                                )
+                            ? (g) {
+                                final settingsValue = settings.settings.value;
+                                if (settingsValue != null) {
+                                  if (settingsValue
+                                      is HuaweiFreeBudsSE2Settings) {
+                                    settings.setSettings(
+                                      settingsValue.copyWith(doubleTapRight: g),
+                                    );
+                                  } else if (settingsValue
+                                      is HuaweiFreeBuds4iSettings) {
+                                    settings.setSettings(
+                                      settingsValue.copyWith(doubleTapRight: g),
+                                    );
+                                  }
+                                }
+                              }
                             : null,
                       ),
                     ),
