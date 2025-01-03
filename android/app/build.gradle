@@ -2,6 +2,7 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "dev.flutter.flutter-gradle-plugin"
+    id "org.jetbrains.kotlin.plugin.compose" version "2.1.0"
 }
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
@@ -43,7 +44,7 @@ android {
     }
 
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.10"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 
     kotlinOptions {
@@ -94,12 +95,13 @@ flutter {
 
 dependencies {
     // All of this for AppWidgets support
-    implementation "androidx.compose.runtime:runtime:1.6.2"
-    implementation "androidx.compose.runtime:runtime-livedata:1.6.2"
-    implementation "androidx.compose.runtime:runtime-rxjava2:1.6.2"
-    implementation "androidx.glance:glance-appwidget:1.0.0"
-    implementation "androidx.glance:glance-material3:1.0.0"
-    implementation 'androidx.compose.ui:ui-unit-android:1.6.2'
+    // ...but looks like we don't need those for now...
+//    implementation "androidx.compose.runtime:runtime:1.7.6"
+//    implementation "androidx.compose.runtime:runtime-livedata:1.7.6"
+//    implementation "androidx.compose.runtime:runtime-rxjava2:1.7.6"
+//    implementation 'androidx.compose.ui:ui-unit-android:1.7.6'
+    implementation "androidx.glance:glance-appwidget:1.1.1"
+    implementation "androidx.glance:glance-material3:1.1.1"
 
     // this is to manually launch our routine update - same version as workmanager plugin 0.5.1
     def work_version = "2.8.1"
