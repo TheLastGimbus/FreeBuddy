@@ -69,6 +69,7 @@ dependency_overrides:
   ## flutter_test, as always...
   material_color_utilities: ^0.8.0
   logger: ^2.0.2+1
+  meta: ^1.15.0
 
 dev_dependencies:
   flutter_test:
