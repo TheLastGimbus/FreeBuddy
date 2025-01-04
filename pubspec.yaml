@@ -33,10 +33,10 @@ dependencies:
   # Platform plugins
   #  flutter_foreground_task: ^4.1.0 - not using it really yet
   the_last_bluetooth:
-    #    git:
-    #      url: https://github.com/TheLastGimbus/the_last_bluetooth.git
-    #      ref: master
-    path: "../the_last_bluetooth"
+    git:
+      url: https://github.com/TheLastGimbus/the_last_bluetooth.git
+      ref: master
+  #    path: "../the_last_bluetooth"
   app_settings: ^5.1.0
   url_launcher: ^6.3.0
   permission_handler: ^11.3.0

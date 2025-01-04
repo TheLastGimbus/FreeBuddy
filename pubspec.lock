@@ -698,9 +698,11 @@ packages:
   the_last_bluetooth:
     dependency: "direct main"
     description:
-      path: "../the_last_bluetooth"
-      relative: true
-    source: path
+      path: "."
+      ref: master
+      resolved-ref: "29b54e86f0ac2c4cc784382a216bc0f77976a486"
+      url: "https://github.com/TheLastGimbus/the_last_bluetooth.git"
+    source: git
     version: "0.0.1"
   tuple:
     dependency: transitive
