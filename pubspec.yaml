@@ -33,51 +33,51 @@ dependencies:
   # Platform plugins
   #  flutter_foreground_task: ^4.1.0 - not using it really yet
   the_last_bluetooth:
-    git:
-      url: https://github.com/TheLastGimbus/the_last_bluetooth.git
-      ref: master
-  #    path: "../the_last_bluetooth"
-  app_settings: ^5.1.1
-  url_launcher: ^6.2.5
+    #    git:
+    #      url: https://github.com/TheLastGimbus/the_last_bluetooth.git
+    #      ref: master
+    path: "../the_last_bluetooth"
+  app_settings: ^5.1.0
+  url_launcher: ^6.3.0
   permission_handler: ^11.3.0
-  dynamic_color: ^1.6.9
-  home_widget: ^0.4.1
-  workmanager: ^0.5.2
-  flutter_native_splash: ^2.3.13
+  dynamic_color: ^1.7.0
+  home_widget: ^0.7.0
+  workmanager: ^0.5.0
+  flutter_native_splash: ^2.4.0
 
   # Logic libs
   crclib: ^3.0.0
   ## These two conflict with, as always, flutter_test
-  collection: ^1.18.0
-  stream_channel: ^2.1.2
-  flutter_bloc: ^8.1.4
-  logger: ^2.0.2+1
-  provider: ^6.1.1
+  collection: ^1.19.0
+  stream_channel: ^2.1.0
+  flutter_bloc: ^8.1.0
+  logger: ^2.5.0
+  provider: ^6.1.0
   streaming_shared_preferences: ^2.0.0
   async: ^2.11.0
-  rxdart: ^0.27.7
+  rxdart: ^0.28.0
 
   # Flutter/ui stuff
   flutter_localizations:
     sdk: flutter
-  intl: ^0.18.1
+  intl: ^0.19.0
   ## This is low-level, but I *do* use it to mix colors here and there
-  material_color_utilities: ^0.8.0
-  material_symbols_icons: ^4.2719.1
+  material_color_utilities: ^0.11.0
+  material_symbols_icons: ^4.2801.0
 
 dependency_overrides:
   ## flutter_test, as always...
-  material_color_utilities: ^0.8.0
-  logger: ^2.0.2+1
-  meta: ^1.15.0
+  #  material_color_utilities: ^0.8.0
+  logger: ^2.5.0
+#  meta: ^1.15.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.0
 
-  flutter_lints: ^3.0.1
+  flutter_lints: ^5.0.0
   icon_font_generator: ^4.0.0
 
 
