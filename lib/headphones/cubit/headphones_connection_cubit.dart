@@ -121,7 +121,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           break;
         } catch (_) {
           loggI.w('Error when connecting socket: ${i + 1}/$connectTries tries');
-          if (!dev.isConnected.value) {
+          if (!(dev.isConnected.valueOrNull ?? false)) {
             // this may happen because connecting may take some time
             // ...which is, well, not indicated by connectRfcomm being async...
             // well, that may be a todo for the_last_bluetooth
