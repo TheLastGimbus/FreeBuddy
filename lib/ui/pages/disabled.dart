@@ -40,7 +40,7 @@ class Disabled extends StatelessWidget {
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: t.colorScheme.background,
+                      color: t.colorScheme.surface,
                       spreadRadius: 14,
                       blurRadius: 22,
                     ),

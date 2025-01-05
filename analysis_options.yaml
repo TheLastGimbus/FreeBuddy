@@ -2,6 +2,11 @@
 # packages, and plugins designed to encourage good coding practices.
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    # Those are often shit
+    - lib/gen/**
+
 linter:
   # A list of all available lints and their documentation is published at
   # https://dart-lang.github.io/linter/lints/index.html.
