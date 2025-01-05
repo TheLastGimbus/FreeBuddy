@@ -91,7 +91,6 @@ Future<void> init() async {
     // disabling for now because android 13 permission 🙃
     isInDebugMode: false,
   );
-  await Workmanager().cancelAll(); // just in case 🤷
   await Workmanager().registerPeriodicTask(
     taskIdRoutineUpdate, // this doesnt get exposed in executeTask()
     taskIdRoutineUpdate, // ...so pass it here too 🙃

@@ -24,6 +24,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   static const killOtherCubitTimeout = Duration(seconds: 3);
   static const _killUrself = "kill urself";
 
+  /// indicating all "killing other cubits" is done and we can call _init()
+  bool _warCrimesFinished = false;
+
   // I needed a way to tell (from background task) if app is currently running.
   // First idea was to then ask the cubit for some info (about battery etc)
   // But, looking at how fucked up this Port communication is, I will just
@@ -44,13 +47,18 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   late final StreamSubscription _pingReceivePortSS;
 
   /// returns true if no port, and false if timeout
-  static Future<bool> _checkUntilNoPort(Duration timeout) => Stream.periodic(
-        Duration(milliseconds: 100),
-        (_) =>
-            IsolateNameServer.lookupPortByName(
-                HeadphonesConnectionCubit.pingReceivePortName) ==
-            null,
-      ).firstWhere((e) => e).timeout(timeout, onTimeout: () => false);
+  static Future<bool> _checkUntilNoPort(Duration timeout) async {
+    // do this one time already bc stream will start only after first period
+    noPort() =>
+        IsolateNameServer.lookupPortByName(
+            HeadphonesConnectionCubit.pingReceivePortName) ==
+        null;
+    if (noPort()) return true;
+    return await Stream.periodic(
+      Duration(milliseconds: 50),
+      (_) => noPort(),
+    ).firstWhere((e) => e).timeout(timeout, onTimeout: () => false);
+  }
 
   // This is so fucking embarrassing......
   // Race conditions??? FUCK YES
@@ -75,7 +83,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     final ping = IsolateNameServer.lookupPortByName(
         HeadphonesConnectionCubit.pingReceivePortName);
     if (ping == null) {
-      logg.e("No cubit to kill :( (this probably means you're using "
+      loggI.e("No cubit to kill :( (this probably means you're using "
           "this function WRONG, or something WEIRD happened)");
       return true;
     }
@@ -84,7 +92,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     if (await _checkUntilNoPort(killOtherCubitTimeout)) {
       return true;
     } else {
-      logg.e("Cubit didn't kill itself as nicely asked :(");
+      loggI.e("Cubit didn't kill itself as nicely asked :(");
       return false;
     }
   }
@@ -112,7 +120,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           _connection = _bluetooth.connectRfcomm(dev, sppUuid);
           break;
         } catch (_) {
-          logg.w('Error when connecting socket: ${i + 1}/$connectTries tries');
+          loggI.w('Error when connecting socket: ${i + 1}/$connectTries tries');
           if (i + 1 >= connectTries) rethrow;
         }
       }
@@ -124,7 +132,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       // hopefully this happens *before* next stream event with data 🤷
       // so that it nicely goes again and we emit HeadphonesDisconnected()
     } catch (e, s) {
-      logg.e("Error while connecting to socket", error: e, stackTrace: s);
+      loggI.e("Error while connecting to socket", error: e, stackTrace: s);
     }
     await _connection?.sink.close();
     _connection = null;
@@ -181,20 +189,24 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
         super(const HeadphonesNotPaired()) {
-    _init();
+    final rolex = Stopwatch()..start();
+    _initInit().then(
+      (_) => loggI.d("_initInit() took ${rolex.elapsedMilliseconds}ms"),
+    );
   }
 
+  /// THIS should be called ONLY ONCE
   // maybetodo: i'm wondering if to make this public, and not internally called
   // in constructor, but this would complicate di...
-  Future<void> _init() async {
+  Future<void> _initInit() async {
     // TODO: Some *tests* for this nightmare...
     if (await cubitAlreadyRunningSomewhere()) {
-      logg.w("Found already running cubit while init() - "
+      loggI.w("Found already running cubit while init() - "
           "will wait $killOtherCubitTimeout and then kill it");
       if (await _checkUntilNoPort(killOtherCubitTimeout)) {
-        logg.i("Gone already, no need for war crimes 😇");
+        loggI.i("Gone already, no need for war crimes 😇");
       } else {
-        logg.i("Killing other cubit...");
+        loggI.i("Killing other cubit...");
         // ### Important thoughts ###
         //
         // I think it's a good way to stop background tasks, because when cubit
@@ -204,7 +216,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
         //
         // But, leaving those notes here, in case, some day, they don't.
         if (!await killOtherCubit()) {
-          logg.f("Failed to kill other cubit 😵... well, anyway...");
+          loggI.f("Failed to kill other cubit 😵... well, anyway...");
         }
       }
     }
@@ -212,7 +224,6 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
     // And *NOW* we can talk...
     // TODO: I mean, actually, it still sometimes hangs... but I think that's
     // a deep un-fixable-for-now fault of jni :///
-
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
     IsolateNameServer.registerPortWithName(
         _pingReceivePort.sendPort, pingReceivePortName);
@@ -221,11 +232,30 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       if (message is SendPort) message.send(true);
       // kill urself
       if (message == _killUrself) {
-        logg.w("Killing myself bc other cubit asked to 😖");
+        loggI.w("Killing myself bc other cubit asked to 😖");
         close();
       }
     });
+    _warCrimesFinished = true;
 
+    return _init();
+  }
+
+  Future<void> _init() async {
+    if (_btEnabledStream != null) {
+      loggI.w("_init() was already done and finished, but got called"
+          "again. Weird.");
+      return;
+    }
+    loggI.d("Starting init...");
+    // last check in case it's a call from requestPermission()
+    // this would prob mean user went through all permission asking stuff, and
+    // _initInit() is stilllll running... 😵‍💫
+    if (!_warCrimesFinished) {
+      loggI.w("_init() called but _initInit() not finished 😵‍💫 - "
+          "this isn't good, but we may survive this...");
+      return;
+    }
     // it's down here to be sure that we do have device connected so
     if (!await Permission.bluetoothConnect.isGranted) {
       emit(const HeadphonesNoPermission());
