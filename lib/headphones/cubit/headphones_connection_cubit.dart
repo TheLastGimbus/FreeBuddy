@@ -135,7 +135,7 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           // since, i found out that connect() may be blocking, then just in
           // case give ui some time for 2 frames :D (16.6*2)
           // of course, TODO: make this not necessary
-          await Future.delayed(Duration(milliseconds: 34));
+          await Future.delayed(Duration(milliseconds: 50));
         }
       }
       emit(
