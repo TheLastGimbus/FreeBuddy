@@ -26,6 +26,11 @@ class LRCBatteryLevels {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is LRCBatteryLevels &&
+          // TODO: Think if comparing for same runtime here is good idea
+          // or if we don't just want it to be LRC, and don't really care
+          // if it's something inheritant
+          // This ma be important, because it may touch many other aspects
+          // of this heavily-objective app ✨
           runtimeType == other.runtimeType &&
           levelLeft == other.levelLeft &&
           levelRight == other.levelRight &&
