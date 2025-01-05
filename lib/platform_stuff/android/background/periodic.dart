@@ -22,18 +22,19 @@ const commonTimeout = Duration(seconds: 10);
 const taskIdRoutineUpdate = "freebuddy.routine_update";
 
 Future<bool> routineUpdateCallback() async {
-  // i think this function is still "dependency injection" safe
-  // ...but it's not wise to keep remembering what is and what isn't, is it?
-  if (await HeadphonesConnectionCubit.cubitAlreadyRunningSomewhere()) {
-    logg.d("Not updating stuff from ROUTINE_UPDATE "
-        "because cubit is already running");
-    return true;
-  }
   // TODO: Multi-headphones BIG decisions here 😬😬 - possibly impossible to resolve without nuking all of this
   // NOT_SURE: Also use real/mock logic here?? idk, but if you want,
   // feel free to make some proper DI for this to be shared in UI and here
-  final cubit = di.getHeadphonesCubit();
+  HeadphonesConnectionCubit? cubit;
   try {
+    // i think this function is still "dependency injection" safe
+    // ...but it's not wise to keep remembering what is and what isn't, is it?
+    if (await HeadphonesConnectionCubit.cubitAlreadyRunningSomewhere()) {
+      logg.d("Not updating stuff from ROUTINE_UPDATE "
+          "because cubit is already running");
+      return true;
+    }
+    cubit = di.getHeadphonesCubit();
     final headphones = await cubit.stream
         .debounceTime(const Duration(seconds: 1))
         .firstWhere((e) => e is! HeadphonesConnecting)
@@ -57,7 +58,7 @@ Future<bool> routineUpdateCallback() async {
     await cubit.close(); // remember to close cubit to deregister port name
     return true;
   } catch (e) {
-    await cubit.close(); // remember to close cubit to deregister port name
+    await cubit?.close(); // remember to close cubit to deregister port name
     rethrow;
   }
 }
@@ -96,7 +97,7 @@ Future<void> init() async {
     taskIdRoutineUpdate, // ...so pass it here too 🙃
     frequency: const Duration(minutes: 15),
     initialDelay: const Duration(minutes: 5),
-    existingWorkPolicy: ExistingWorkPolicy.keep,
+    existingWorkPolicy: ExistingWorkPolicy.update,
     backoffPolicy: BackoffPolicy.linear,
   );
 }

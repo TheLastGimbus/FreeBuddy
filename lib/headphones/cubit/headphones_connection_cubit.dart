@@ -21,6 +21,8 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   StreamSubscription? _devStream;
   final Map<BluetoothDevice, StreamSubscription> _watchedKnownDevices = {};
   static const connectTries = 3;
+  static const killOtherCubitTimeout = Duration(seconds: 3);
+  static const _killUrself = "kill urself";
 
   // I needed a way to tell (from background task) if app is currently running.
   // First idea was to then ask the cubit for some info (about battery etc)
@@ -41,16 +43,50 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final _pingReceivePort = ReceivePort('dummyHeadphonesCubitPort');
   late final StreamSubscription _pingReceivePortSS;
 
+  /// returns true if no port, and false if timeout
+  static Future<bool> _checkUntilNoPort(Duration timeout) => Stream.periodic(
+        Duration(milliseconds: 100),
+        (_) =>
+            IsolateNameServer.lookupPortByName(
+                HeadphonesConnectionCubit.pingReceivePortName) ==
+            null,
+      ).firstWhere((e) => e).timeout(timeout, onTimeout: () => false);
+
   // This is so fucking embarrassing......
   // Race conditions??? FUCK YES
+  /// Reason this exists vs just checking port is to make sure cubit is
+  /// **running**, and not just... exising hang up somewhere, or forgot
+  /// to de-register the port
   static Future<bool> cubitAlreadyRunningSomewhere(
-      {Duration timeout = const Duration(seconds: 1)}) async {
+      {Duration responseTimeout = const Duration(seconds: 1)}) async {
     final ping = IsolateNameServer.lookupPortByName(
         HeadphonesConnectionCubit.pingReceivePortName);
     if (ping == null) return false;
     final pong = ReceivePort(); // this is not right naming, i know
     ping.send(pong.sendPort);
-    return await pong.first.timeout(timeout, onTimeout: () => false) as bool;
+    return await pong.first.timeout(responseTimeout, onTimeout: () => false);
+  }
+
+  /// returns true if cubit was killed or didn't exist, and false if it didn't
+  /// kill itself when asked
+  //(that is, port is still present - it **may** happen that it just forgot
+  // to close it, but we have no way to know)
+  static Future<bool> killOtherCubit() async {
+    final ping = IsolateNameServer.lookupPortByName(
+        HeadphonesConnectionCubit.pingReceivePortName);
+    if (ping == null) {
+      logg.e("No cubit to kill :( (this probably means you're using "
+          "this function WRONG, or something WEIRD happened)");
+      return true;
+    }
+    ping.send(_killUrself);
+    // wait until second cubit will deregister
+    if (await _checkUntilNoPort(killOtherCubitTimeout)) {
+      return true;
+    } else {
+      logg.e("Cubit didn't kill itself as nicely asked :(");
+      return false;
+    }
   }
 
   // todo: make this professional
@@ -145,20 +181,51 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   HeadphonesConnectionCubit({required TheLastBluetooth bluetooth})
       : _bluetooth = bluetooth,
         super(const HeadphonesNotPaired()) {
+    _init();
+  }
+
+  // maybetodo: i'm wondering if to make this public, and not internally called
+  // in constructor, but this would complicate di...
+  Future<void> _init() async {
+    // TODO: Some *tests* for this nightmare...
+    if (await cubitAlreadyRunningSomewhere()) {
+      logg.w("Found already running cubit while init() - "
+          "will wait $killOtherCubitTimeout and then kill it");
+      if (await _checkUntilNoPort(killOtherCubitTimeout)) {
+        logg.i("Gone already, no need for war crimes 😇");
+      } else {
+        logg.i("Killing other cubit...");
+        // ### Important thoughts ###
+        //
+        // I think it's a good way to stop background tasks, because when cubit
+        // closes, it closes all it's streams, thus all tasks waiting for
+        // battery values or other shits will throw error/timeout that will be
+        // try-catch'ed and nicely finish 👌
+        //
+        // But, leaving those notes here, in case, some day, they don't.
+        if (!await killOtherCubit()) {
+          logg.f("Failed to kill other cubit 😵... well, anyway...");
+        }
+      }
+    }
+
+    // And *NOW* we can talk...
+    // TODO: I mean, actually, it still sometimes hangs... but I think that's
+    // a deep un-fixable-for-now fault of jni :///
+
     IsolateNameServer.removePortNameMapping(pingReceivePortName);
     IsolateNameServer.registerPortWithName(
         _pingReceivePort.sendPort, pingReceivePortName);
     _pingReceivePortSS = _pingReceivePort.listen((message) {
       // ping back
       if (message is SendPort) message.send(true);
+      // kill urself
+      if (message == _killUrself) {
+        logg.w("Killing myself bc other cubit asked to 😖");
+        close();
+      }
     });
-    _init();
-  }
 
-  Future<void> _init() async {
-    // note: freezes the whole app if two cubits (jni plugins therefore) run
-    //       at the same time
-    // TODO: Check if already running, in cases when we open *just* when bgn
     // it's down here to be sure that we do have device connected so
     if (!await Permission.bluetoothConnect.isGranted) {
       emit(const HeadphonesNoPermission());
