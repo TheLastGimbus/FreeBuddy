@@ -121,7 +121,21 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
           break;
         } catch (_) {
           loggI.w('Error when connecting socket: ${i + 1}/$connectTries tries');
+          if (!dev.isConnected.value) {
+            // this may happen because connecting may take some time
+            // ...which is, well, not indicated by connectRfcomm being async...
+            // well, that may be a todo for the_last_bluetooth
+            // ...
+            // how am i even supposed to? do this on another isolate??
+            // well, maybe... 🙄 ehhh
+            loggI.w("...i's because device is not connected, dummy 😌");
+            rethrow;
+          }
           if (i + 1 >= connectTries) rethrow;
+          // since, i found out that connect() may be blocking, then just in
+          // case give ui some time for 2 frames :D (16.6*2)
+          // of course, TODO: make this not necessary
+          await Future.delayed(Duration(milliseconds: 34));
         }
       }
       emit(
@@ -261,6 +275,9 @@ class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
       emit(const HeadphonesNoPermission());
       return;
     }
+    // TODO: Some day, debug if (underneath?) this is somehow same instance
+    // as the background one, and why does it crash/hang when we init it twice
+    // ...but that's for another day xdddd
     _bluetooth.init();
     _btEnabledStream = _bluetooth.isEnabled.listen((enabled) {
       if (!enabled) emit(const HeadphonesBluetoothDisabled());
