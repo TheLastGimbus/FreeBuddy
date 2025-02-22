@@ -4,7 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:freebuddy/headphones/framework/anc.dart';
 import 'package:freebuddy/headphones/framework/lrc_battery.dart';
-import 'package:freebuddy/headphones/huawei/freebuds4i_impl.dart';
+import 'package:freebuddy/headphones/huawei/freebuds4i/freebuds4i_impl.dart';
 import 'package:freebuddy/headphones/huawei/mbb.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';

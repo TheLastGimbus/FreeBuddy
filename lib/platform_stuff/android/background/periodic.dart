@@ -5,9 +5,9 @@
 import 'package:rxdart/rxdart.dart';
 import 'package:workmanager/workmanager.dart';
 
+import '../../../cubit/headphones_connection_cubit.dart';
+import '../../../cubit/headphones_cubit_objects.dart';
 import '../../../di.dart' as di;
-import '../../../headphones/cubit/headphones_connection_cubit.dart';
-import '../../../headphones/cubit/headphones_cubit_objects.dart';
 import '../../../headphones/framework/lrc_battery.dart';
 import '../../../logger.dart';
 import '../appwidgets/battery_appwidget.dart';

@@ -1,4 +1,4 @@
-import '../framework/bluetooth_headphones.dart';
+import '../headphones/framework/bluetooth_headphones.dart';
 
 abstract class HeadphonesConnectionState {
   const HeadphonesConnectionState();

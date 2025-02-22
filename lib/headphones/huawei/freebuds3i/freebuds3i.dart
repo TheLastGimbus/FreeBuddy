@@ -1,11 +1,11 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../framework/anc.dart';
-import '../framework/bluetooth_headphones.dart';
-import '../framework/headphones_info.dart';
-import '../framework/headphones_settings.dart';
-import '../framework/lrc_battery.dart';
-import 'settings.dart';
+import '../../framework/anc.dart';
+import '../../framework/bluetooth_headphones.dart';
+import '../../framework/headphones_info.dart';
+import '../../framework/headphones_settings.dart';
+import '../../framework/lrc_battery.dart';
+import '../settings.dart';
 
 abstract base class HuaweiFreeBuds3i
     implements

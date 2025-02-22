@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../../headphones/cubit/headphones_connection_cubit.dart';
+import '../../../cubit/headphones_connection_cubit.dart';
 
 class NotPairedInfoWidget extends StatelessWidget {
   const NotPairedInfoWidget({super.key});

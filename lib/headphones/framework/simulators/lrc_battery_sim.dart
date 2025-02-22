@@ -5,7 +5,7 @@
 
 import 'package:rxdart/rxdart.dart';
 
-import '../framework/lrc_battery.dart';
+import '../lrc_battery.dart';
 
 /// This always shows battery as 100% full and not charging
 mixin LRCBatteryAlwaysFullSim implements LRCBattery {

@@ -9,9 +9,9 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import 'package:streaming_shared_preferences/streaming_shared_preferences.dart';
 
+import 'cubit/headphones_connection_cubit.dart';
+import 'cubit/headphones_cubit_objects.dart';
 import 'di.dart' as di;
-import 'headphones/cubit/headphones_connection_cubit.dart';
-import 'headphones/cubit/headphones_cubit_objects.dart';
 import 'platform_stuff/android/appwidgets/battery_appwidget.dart';
 import 'platform_stuff/android/background/periodic.dart' as android_periodic;
 import 'ui/app_settings.dart';

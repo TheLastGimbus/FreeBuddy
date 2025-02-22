@@ -3,13 +3,13 @@ import 'dart:typed_data';
 import 'package:stream_channel/stream_channel.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
-import '../framework/bluetooth_headphones.dart';
-import '../huawei/freebuds3i.dart';
-import '../huawei/freebuds3i_impl.dart';
-import '../huawei/freebuds4i.dart';
-import '../huawei/freebuds4i_impl.dart';
-import '../huawei/freebuds4i_sim.dart';
-import '../huawei/mbb.dart';
+import 'framework/bluetooth_headphones.dart';
+import 'huawei/freebuds3i/freebuds3i.dart';
+import 'huawei/freebuds3i/freebuds3i_impl.dart';
+import 'huawei/freebuds4i/freebuds4i.dart';
+import 'huawei/freebuds4i/freebuds4i_impl.dart';
+import 'huawei/freebuds4i/freebuds4i_sim.dart';
+import 'huawei/mbb.dart';
 
 typedef HeadphonesBuilder = BluetoothHeadphones Function(
     StreamChannel<Uint8List> io, BluetoothDevice device);

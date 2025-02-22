@@ -1,11 +1,11 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../framework/anc.dart';
-import '../framework/bluetooth_headphones.dart';
-import '../framework/headphones_info.dart';
-import '../framework/headphones_settings.dart';
-import '../framework/lrc_battery.dart';
-import 'settings.dart';
+import '../../framework/anc.dart';
+import '../../framework/bluetooth_headphones.dart';
+import '../../framework/headphones_info.dart';
+import '../../framework/headphones_settings.dart';
+import '../../framework/lrc_battery.dart';
+import '../settings.dart';
 
 /// Base abstract class of 4i's. It contains static info like vendor names etc,
 /// but no logic whatsoever.

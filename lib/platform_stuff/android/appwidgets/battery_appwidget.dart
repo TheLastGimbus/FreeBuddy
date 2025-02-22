@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:home_widget/home_widget.dart';
 import 'package:rxdart/rxdart.dart';
 
-import '../../../headphones/cubit/headphones_cubit_objects.dart';
+import '../../../cubit/headphones_cubit_objects.dart';
 import '../../../headphones/framework/lrc_battery.dart';
 import '../../../logger.dart';
 

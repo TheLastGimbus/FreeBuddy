@@ -10,9 +10,9 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:stream_channel/stream_channel.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart';
 
-import '../../logger.dart';
+import '../headphones/model_matching.dart';
+import '../logger.dart';
 import 'headphones_cubit_objects.dart';
-import 'model_matching.dart';
 
 class HeadphonesConnectionCubit extends Cubit<HeadphonesConnectionState> {
   final TheLastBluetooth _bluetooth;

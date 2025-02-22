@@ -5,14 +5,14 @@ import 'package:rxdart/rxdart.dart';
 import 'package:stream_channel/stream_channel.dart';
 import 'package:the_last_bluetooth/the_last_bluetooth.dart' as tlb;
 
-import '../../logger.dart';
-import '../framework/anc.dart';
-import '../framework/lrc_battery.dart';
-import 'freebuds4i.dart';
-import 'mbb.dart';
-import 'settings.dart';
+import '../../../logger.dart';
+import '../../framework/anc.dart';
+import '../../framework/lrc_battery.dart';
+import '../mbb.dart';
+import '../settings.dart';
+import 'freebuds3i.dart';
 
-final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
+final class HuaweiFreeBuds3iImpl extends HuaweiFreeBuds3i {
   final tlb.BluetoothDevice _bluetoothDevice;
 
   /// Bluetooth serial port that we communicate over
@@ -24,14 +24,14 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   final _bluetoothNameCtrl = BehaviorSubject<String>();
   final _lrcBatteryCtrl = BehaviorSubject<LRCBatteryLevels>();
   final _ancModeCtrl = BehaviorSubject<AncMode>();
-  final _settingsCtrl = BehaviorSubject<HuaweiFreeBuds4iSettings>();
+  final _settingsCtrl = BehaviorSubject<HuaweiFreeBuds3iSettings>();
 
   // stream controllers *
 
   /// This watches if we are still missing any info and re-requests it
   late StreamSubscription _watchdogStreamSub;
 
-  HuaweiFreeBuds4iImpl(this._mbb, this._bluetoothDevice) {
+  HuaweiFreeBuds3iImpl(this._mbb, this._bluetoothDevice) {
     // hope this will nicely play with closing, idk honestly
     final aliasStreamSub = _bluetoothDevice.alias
         .listen((alias) => _bluetoothAliasCtrl.add(alias));
@@ -75,10 +75,10 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
 
   void _evalMbbCommand(MbbCommand cmd) {
     final lastSettings =
-        _settingsCtrl.valueOrNull ?? const HuaweiFreeBuds4iSettings();
+        _settingsCtrl.valueOrNull ?? const HuaweiFreeBuds3iSettings();
     switch (cmd.args) {
       // # AncMode
-      case {1: [_, var ancModeCode, ...]} when cmd.isAbout(_Cmd.getAnc):
+      case {1: [var ancModeCode, ...]} when cmd.isAbout(_Cmd.getAnc):
         final mode =
             AncMode.values.firstWhereOrNull((e) => e.mbbCode == ancModeCode);
         if (mode != null) _ancModeCtrl.add(mode);
@@ -96,10 +96,6 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
           status[2] == 1,
         ));
         break;
-      // # Settings(autoPause)
-      case {1: [var autoPauseCode, ...]} when cmd.isAbout(_Cmd.getAutoPause):
-        _settingsCtrl.add(lastSettings.copyWith(autoPause: autoPauseCode == 1));
-        break;
       // # Settings(gestureDoubleTap)
       case {1: [var leftCode, ...], 2: [var rightCode, ...]}
           when cmd.isAbout(_Cmd.getGestureDoubleTap):
@@ -113,21 +109,13 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
         );
         break;
       // # Settings(hold)
-      case {1: [var holdCode, ...]} when cmd.isAbout(_Cmd.getGestureHold):
+      case {2: [var holdCode, ...]} when cmd.isAbout(_Cmd.getGestureHold):
         _settingsCtrl.add(
           lastSettings.copyWith(
             holdBoth:
-                Hold.values.firstWhereOrNull((e) => e.mbbCode == holdCode),
-          ),
-        );
-        break;
-      // # Settings(holdModes)
-      case {1: [var modesCode, ...]}
-          when cmd.isAbout(_Cmd.getGestureHoldToggledAncModes):
-        _settingsCtrl.add(
-          lastSettings.copyWith(
+                holdCode == Hold.nothing.mbbCode ? Hold.nothing : Hold.cycleAnc,
             holdBothToggledAncModes:
-                _Cmd.gestureHoldToggledAncModesFromMbbValue(modesCode),
+                _Cmd.gestureHoldToggledAncModesFromMbbValue(holdCode),
           ),
         );
         break;
@@ -137,10 +125,8 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   Future<void> _initRequestInfo() async {
     _mbb.sink.add(_Cmd.getBattery);
     _mbb.sink.add(_Cmd.getAnc);
-    _mbb.sink.add(_Cmd.getAutoPause);
     _mbb.sink.add(_Cmd.getGestureDoubleTap);
     _mbb.sink.add(_Cmd.getGestureHold);
-    _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
   }
 
   @override
@@ -169,13 +155,13 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   Future<void> setAncMode(AncMode mode) async => _mbb.sink.add(_Cmd.anc(mode));
 
   @override
-  ValueStream<HuaweiFreeBuds4iSettings> get settings => _settingsCtrl.stream;
+  ValueStream<HuaweiFreeBuds3iSettings> get settings => _settingsCtrl.stream;
 
   @override
   Future<void> setSettings(newSettings) async {
-    final prev = _settingsCtrl.valueOrNull ?? const HuaweiFreeBuds4iSettings();
+    final prev = _settingsCtrl.valueOrNull ?? const HuaweiFreeBuds3iSettings();
     // this is VERY much a boilerplate
-    // ...and, bloat...
+    // ...and, bloat...you double check the 255
     // and i don't think there is a need to export it somewhere else 🤷,
     // or make some other abstraction for it - maybe some day
     if ((newSettings.doubleTapLeft ?? prev.doubleTapLeft) !=
@@ -191,18 +177,12 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
     if ((newSettings.holdBoth ?? prev.holdBoth) != prev.holdBoth) {
       _mbb.sink.add(_Cmd.gestureHold(newSettings.holdBoth!));
       _mbb.sink.add(_Cmd.getGestureHold);
-      _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
     }
     if ((newSettings.holdBothToggledAncModes ?? prev.holdBothToggledAncModes) !=
         prev.holdBothToggledAncModes) {
       _mbb.sink.add(_Cmd.gestureHoldToggledAncModes(
           newSettings.holdBothToggledAncModes!));
       _mbb.sink.add(_Cmd.getGestureHold);
-      _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
-    }
-    if ((newSettings.autoPause ?? prev.autoPause) != prev.autoPause) {
-      _mbb.sink.add(_Cmd.autoPause(newSettings.autoPause!));
-      _mbb.sink.add(_Cmd.getAutoPause);
     }
   }
 }
@@ -216,7 +196,7 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
 abstract class _Cmd {
   static const getBattery = MbbCommand(1, 8);
 
-  static const getAnc = MbbCommand(43, 42);
+  static const getAnc = MbbCommand(43, 5);
 
   static MbbCommand anc(AncMode mode) => MbbCommand(43, 4, {
         1: [mode.mbbCode, mode == AncMode.off ? 0 : 255]
@@ -233,17 +213,15 @@ abstract class _Cmd {
   static const getGestureHold = MbbCommand(43, 23);
 
   static MbbCommand gestureHold(Hold gestureHold) => MbbCommand(43, 22, {
-        1: [gestureHold.mbbCode]
+        2: [gestureHold.mbbCode]
       });
-
-  static const getGestureHoldToggledAncModes = MbbCommand(43, 25);
 
   static Set<AncMode>? gestureHoldToggledAncModesFromMbbValue(int mbbValue) {
     return switch (mbbValue) {
-      1 => const {AncMode.off, AncMode.noiseCancelling},
-      2 => AncMode.values.toSet(),
-      3 => const {AncMode.noiseCancelling, AncMode.transparency},
-      4 => const {AncMode.off, AncMode.transparency},
+      3 => const {AncMode.off, AncMode.noiseCancelling},
+      5 => AncMode.values.toSet(),
+      6 => const {AncMode.noiseCancelling, AncMode.transparency},
+      9 => const {AncMode.off, AncMode.transparency},
       _ => null,
     };
   }
@@ -253,35 +231,32 @@ abstract class _Cmd {
     const se = SetEquality();
     // can't really do that with pattern matching because it's a Set
     if (se.equals(toggledModes, {AncMode.off, AncMode.noiseCancelling})) {
-      mbbValue = 1;
-    }
-    if (toggledModes.length == 3) mbbValue = 2;
-    if (se.equals(
-        toggledModes, {AncMode.noiseCancelling, AncMode.transparency})) {
       mbbValue = 3;
     }
+    if (toggledModes.length == 3) mbbValue = 5;
+    if (se.equals(
+        toggledModes, {AncMode.noiseCancelling, AncMode.transparency})) {
+      mbbValue = 6;
+    }
     if (se.equals(toggledModes, {AncMode.off, AncMode.transparency})) {
-      mbbValue = 4;
+      mbbValue = 9;
     }
     if (mbbValue == null) {
       logg.w("Unknown mbbValue for $toggledModes"
-          " - setting as 2 for 'all of them' as a recovery");
-      mbbValue = 2;
+          " - setting as 5 for 'all of them' as a recovery");
+      mbbValue = 5;
     }
-    return MbbCommand(43, 24, {
+    return MbbCommand(43, 22, {
+      // @mshpp:
+      //first positional argument should (could?) be used to remember the last used modi after disabling/enabling hold gestures.
+      //second positional argument sets the actual mode.
       1: [mbbValue],
       2: [mbbValue]
     });
   }
-
-  static const getAutoPause = MbbCommand(43, 17);
-
-  static MbbCommand autoPause(bool enabled) => MbbCommand(43, 16, {
-        1: [enabled ? 1 : 0]
-      });
 }
 
-extension _FB4iAncMode on AncMode {
+extension _FB3iAncMode on AncMode {
   int get mbbCode => switch (this) {
         AncMode.noiseCancelling => 1,
         AncMode.off => 0,
@@ -289,19 +264,27 @@ extension _FB4iAncMode on AncMode {
       };
 }
 
-extension _FB4iDoubleTap on DoubleTap {
+extension _FB3iDoubleTap on DoubleTap {
   int get mbbCode => switch (this) {
         DoubleTap.nothing => 255,
         DoubleTap.voiceAssistant => 0,
         DoubleTap.playPause => 1,
-        DoubleTap.next => 2,
-        DoubleTap.previous => 7
+        DoubleTap.next => 4,
+        DoubleTap.previous => 8
       };
 }
 
-extension _FB4iHold on Hold {
+extension _FB3iHold on Hold {
   int get mbbCode => switch (this) {
         Hold.nothing => 255,
-        Hold.cycleAnc => 10,
+
+        /**
+       * @mshpp:
+       * This is not ideal. Setting this to 5 means that whenever the user turns ON the "hold to change",
+       * all the 3 ANC modes will be set, instead of remembering whatever user had set before turning "hold to change" off.
+       * There seems to exist an unused positional argument "1" that can be set with 43 22 and read with 43 23 respectively,
+       * so that it could be used to save user's settings and restore them. This needs more looking into, however.
+       * */
+        Hold.cycleAnc => 5,
       };
 }

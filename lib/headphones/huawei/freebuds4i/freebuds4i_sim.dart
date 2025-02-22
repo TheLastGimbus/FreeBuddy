@@ -1,11 +1,11 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../framework/anc.dart';
-import '../simulators/anc_sim.dart';
-import '../simulators/bluetooth_headphones_sim.dart';
-import '../simulators/lrc_battery_sim.dart';
+import '../../framework/anc.dart';
+import '../../framework/simulators/anc_sim.dart';
+import '../../framework/simulators/bluetooth_headphones_sim.dart';
+import '../../framework/simulators/lrc_battery_sim.dart';
+import '../settings.dart';
 import 'freebuds4i.dart';
-import 'settings.dart';
 
 final class HuaweiFreeBuds4iSim extends HuaweiFreeBuds4i
     with BluetoothHeadphonesSim, LRCBatteryAlwaysFullSim, AncSim {

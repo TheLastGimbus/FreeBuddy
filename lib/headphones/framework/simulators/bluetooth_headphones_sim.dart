@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../framework/bluetooth_headphones.dart';
-import '../framework/headphones_info.dart';
+import '../bluetooth_headphones.dart';
+import '../headphones_info.dart';
 
 /// A handy mixin that can emulate BluetoothHeadphones properties
 /// if a mixed class implements HeadphonesModelInfo

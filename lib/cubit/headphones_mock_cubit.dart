@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../huawei/freebuds4i_sim.dart';
+import '../headphones/huawei/freebuds4i/freebuds4i_sim.dart';
 import 'headphones_connection_cubit.dart';
 import 'headphones_cubit_objects.dart';
 

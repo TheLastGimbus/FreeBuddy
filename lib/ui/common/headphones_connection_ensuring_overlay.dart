@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../headphones/cubit/headphones_connection_cubit.dart';
-import '../../headphones/cubit/headphones_cubit_objects.dart';
+import '../../cubit/headphones_connection_cubit.dart';
+import '../../cubit/headphones_cubit_objects.dart';
 import '../../headphones/framework/bluetooth_headphones.dart';
 import '../pages/disabled.dart';
 import '../pages/home/bluetooth_disabled_info_widget.dart';

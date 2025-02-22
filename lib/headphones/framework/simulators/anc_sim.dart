@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 
-import '../framework/anc.dart';
+import '../anc.dart';
 
 /// Simulates anc actually being switched on the headphones
 mixin AncSim implements Anc {
