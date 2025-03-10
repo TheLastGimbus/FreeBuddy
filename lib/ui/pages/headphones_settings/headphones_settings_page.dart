@@ -39,6 +39,10 @@ List<Widget> widgetsForModel(HeadphonesSettings settings) {
       HoldSection(settings),
       const SizedBox(height: 64),
     ];
+  } else if (settings is HeadphonesSettings<HuaweiFreeBudsSE2Settings>) {
+    return [
+      DoubleTapSection(settings),
+    ];
   } else {
     throw "You shouldn't be on this screen if you don't have settings!";
   }
