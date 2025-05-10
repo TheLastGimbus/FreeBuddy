@@ -31,6 +31,14 @@
   "lowLatency": "Low latency",
   "lowLatencyDesc": "Allows you to minimize delays, useful for games",
 
+  "pageHeadphonesSettingsEqualizer": "Equalizer",
+  "pageHeadphonesSettingsEqualizerDefault": "Default",
+  "pageHeadphonesSettingsEqualizerHardBass": "Bass",
+  "pageHeadphonesSettingsEqualizerTreble": "Treble",
+  "pageHeadphonesSettingsEqualizerVoices": "Voices",
+
+  "pageHeadphonesSettingsGestures": "Gestures",
+
   "pageHeadphonesSettingsTitle": "Headphones settings 🔧",
   "pageHeadphonesSettingsDoubleTap": "Double tap",
   "pageHeadphonesSettingsDoubleTapDesc": "Tap a bud twice to:",

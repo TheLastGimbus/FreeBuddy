@@ -13,6 +13,7 @@ class HuaweiFreeBuds5iSettings {
 
   final bool? autoPause;
   final bool? lowLatency;
+  final EqPreset? eqPreset;
 
   const HuaweiFreeBuds5iSettings({
     this.doubleTapLeft,
@@ -24,6 +25,7 @@ class HuaweiFreeBuds5iSettings {
     this.swipe,
     this.autoPause,
     this.lowLatency,
+    this.eqPreset,
   });
 
   // don't want to use codegen *yet*
@@ -37,6 +39,7 @@ class HuaweiFreeBuds5iSettings {
     Swipe? swipe,
     bool? autoPause,
     bool? lowLatency,
+    EqPreset? eqPreset,
   }) =>
       HuaweiFreeBuds5iSettings(
         doubleTapLeft: doubleTapLeft ?? this.doubleTapLeft,
@@ -49,6 +52,7 @@ class HuaweiFreeBuds5iSettings {
         swipe: swipe ?? this.swipe,
         autoPause: autoPause ?? this.autoPause,
         lowLatency: lowLatency ?? this.lowLatency,
+        eqPreset: eqPreset ?? this.eqPreset,
       );
 }
 
@@ -156,7 +160,7 @@ enum Swipe {
   adjustVolume;
 }
 
-enum EqPresets {
+enum EqPreset {
   defaultEq,
   hardBassEq,
   trebleEq,

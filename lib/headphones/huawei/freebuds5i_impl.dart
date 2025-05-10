@@ -159,6 +159,14 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
           ),
         );
         break;
+      // # Settings(equalizer)
+      case {2: [var eq, ...]} when cmd.isAbout(_Cmd.getEqOptions):
+        _settingsCtrl.add(
+          lastSettings.copyWith(
+            eqPreset: EqPreset.values.firstWhereOrNull((e) => e.mbbCode == eq),
+          ),
+        );
+        break;
     }
   }
 
@@ -172,6 +180,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
     _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
     _mbb.sink.add(_Cmd.getGestureSwipe);
     _mbb.sink.add(_Cmd.getLowLatency);
+    _mbb.sink.add(_Cmd.getEqOptions);
   }
 
   @override
@@ -253,6 +262,10 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
       _mbb.sink.add(_Cmd.lowLatency(newSettings.lowLatency!));
       await Future.delayed(Duration(seconds: 1));
       _mbb.sink.add(_Cmd.getLowLatency);
+    }
+    if ((newSettings.eqPreset ?? prev.eqPreset) != prev.eqPreset) {
+      _mbb.sink.add(_Cmd.eqOptions(newSettings.eqPreset!));
+      _mbb.sink.add(_Cmd.getEqOptions);
     }
   }
 }
@@ -349,6 +362,12 @@ abstract class _Cmd {
   static MbbCommand lowLatency(bool enabled) => MbbCommand(43, 108, {
         1: [enabled ? 1 : 0],
       });
+
+  static const getEqOptions = MbbCommand(43, 74);
+
+  static MbbCommand eqOptions(EqPreset eqPreset) => MbbCommand(43, 73, {
+        1: [eqPreset.mbbCode],
+      });
 }
 
 extension _FB5iAncMode on AncMode {
@@ -381,6 +400,15 @@ extension _FB5iSwipe on Swipe {
   int get mbbCode => switch (this) {
         Swipe.nothing => 255,
         Swipe.adjustVolume => 0,
+      };
+}
+
+extension _FB5iEqualizer on EqPreset {
+  int get mbbCode => switch (this) {
+        EqPreset.defaultEq => 1,
+        EqPreset.hardBassEq => 2,
+        EqPreset.trebleEq => 3,
+        EqPreset.voicesEq => 9,
       };
 }
 

@@ -19,7 +19,7 @@ class HeadphonesSettingsPage extends StatelessWidget {
       body: Center(
         child: HeadphonesConnectionEnsuringOverlay(
           builder: (_, h) =>
-              ListView(children: widgetsForModel(h as HeadphonesSettings)),
+              ListView(children: widgetsForModel(h as HeadphonesSettings, l)),
         ),
       ),
     );
@@ -29,7 +29,7 @@ class HeadphonesSettingsPage extends StatelessWidget {
 // this is shitty. and we don't want this. not here.
 // ...
 // but i have no better idea for now :)))))
-List<Widget> widgetsForModel(HeadphonesSettings settings) {
+List<Widget> widgetsForModel(HeadphonesSettings settings, AppLocalizations l) {
   if (settings is HeadphonesSettings<HuaweiFreeBuds4iSettings>) {
     return [
       fb4i.AutoPauseSection(settings),
@@ -41,17 +41,23 @@ List<Widget> widgetsForModel(HeadphonesSettings settings) {
     ];
   } else if (settings is HeadphonesSettings<HuaweiFreeBuds5iSettings>) {
     return [
+      fb5i.EqualizerSection(settings),
+      const Divider(indent: 16, endIndent: 16),
       fb5i.AutoPauseSection(settings),
       const Divider(indent: 16, endIndent: 16),
-      fb5i.DoubleTapSection(settings),
-      const Divider(indent: 16, endIndent: 16),
-      fb5i.TripleTapSection(settings),
-      const Divider(indent: 16, endIndent: 16),
-      fb5i.HoldSection(settings),
-      const Divider(indent: 16, endIndent: 16),
-      fb5i.SwipeSection(settings),
-      const Divider(indent: 16, endIndent: 16),
       fb5i.LowLatencySection(settings),
+      ExpansionTile(
+        title: Text(l.pageHeadphonesSettingsGestures),
+        children: [
+          fb5i.DoubleTapSection(settings),
+          const Divider(indent: 16, endIndent: 16),
+          fb5i.TripleTapSection(settings),
+          const Divider(indent: 16, endIndent: 16),
+          fb5i.HoldSection(settings),
+          const Divider(indent: 16, endIndent: 16),
+          fb5i.SwipeSection(settings),
+        ],
+      ),
       const SizedBox(height: 64),
     ];
   } else {

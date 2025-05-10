@@ -25,6 +25,7 @@ final class HuaweiFreeBuds5iSim extends HuaweiFreeBuds5i
       },
       swipe: Swipe.adjustVolume,
       autoPause: true,
+      eqPreset: EqPreset.defaultEq,
     ),
   );
 
@@ -43,6 +44,7 @@ final class HuaweiFreeBuds5iSim extends HuaweiFreeBuds5i
         holdBothToggledAncModes: newSettings.holdBothToggledAncModes,
         swipe: newSettings.swipe,
         autoPause: newSettings.autoPause,
+        eqPreset: newSettings.eqPreset,
       ),
     );
   }
