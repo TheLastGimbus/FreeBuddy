@@ -35,6 +35,8 @@
   "pageHeadphonesSettingsDoubleTapPrevSong": "Previous song",
   "pageHeadphonesSettingsDoubleTapAssist": "Voice assistant",
   "pageHeadphonesSettingsDoubleTapNone": "None",
+  "pageHeadphonesSettingsTripleTap": "Triple tap",
+  "pageHeadphonesSettingsTripleTapDesc": "Tap a bud thrice to:",
   "pageHeadphonesSettingsLeftBud": "Left bud",
   "pageHeadphonesSettingsRightBud": "Right bud",
   "pageHeadphonesSettingsHold": "Touch and hold",

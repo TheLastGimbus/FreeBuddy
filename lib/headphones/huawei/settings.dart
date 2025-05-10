@@ -1,5 +1,49 @@
 import '../framework/anc.dart';
 
+class HuaweiFreeBuds5iSettings {
+  // hey hey hay, not only settings are gonna be duplicate spaghetti shithole,
+  // but all the fields are gonna be nullable too!
+  final DoubleTap? doubleTapLeft;
+  final DoubleTap? doubleTapRight;
+  final TripleTap? tripleTapLeft;
+  final TripleTap? tripleTapRight;
+  final Hold? holdBoth;
+  final Set<AncMode>? holdBothToggledAncModes;
+
+  final bool? autoPause;
+
+  const HuaweiFreeBuds5iSettings({
+    this.doubleTapLeft,
+    this.doubleTapRight,
+    this.tripleTapLeft,
+    this.tripleTapRight,
+    this.holdBoth,
+    this.holdBothToggledAncModes,
+    this.autoPause,
+  });
+
+  // don't want to use codegen *yet*
+  HuaweiFreeBuds5iSettings copyWith({
+    DoubleTap? doubleTapLeft,
+    DoubleTap? doubleTapRight,
+    TripleTap? tripleTapLeft,
+    TripleTap? tripleTapRight,
+    Hold? holdBoth,
+    Set<AncMode>? holdBothToggledAncModes,
+    bool? autoPause,
+  }) =>
+      HuaweiFreeBuds5iSettings(
+        doubleTapLeft: doubleTapLeft ?? this.doubleTapLeft,
+        doubleTapRight: doubleTapRight ?? this.doubleTapRight,
+        tripleTapLeft: tripleTapLeft ?? this.tripleTapLeft,
+        tripleTapRight: tripleTapRight ?? this.tripleTapRight,
+        holdBoth: holdBoth ?? this.holdBoth,
+        holdBothToggledAncModes:
+            holdBothToggledAncModes ?? this.holdBothToggledAncModes,
+        autoPause: autoPause ?? this.autoPause,
+      );
+}
+
 class HuaweiFreeBuds4iSettings {
   // hey hey hay, not only settings are gonna be duplicate spaghetti shithole,
   // but all the fields are gonna be nullable too!
@@ -88,7 +132,25 @@ enum DoubleTap {
   previous;
 }
 
+enum TripleTap {
+  nothing,
+  next,
+  previous;
+}
+
 enum Hold {
   nothing,
   cycleAnc;
+}
+
+enum Swipe {
+  nothing,
+  adjustVolume;
+}
+
+enum EqPresets {
+  defaultEq,
+  hardBassEq,
+  trebleEq,
+  voicesEq;
 }

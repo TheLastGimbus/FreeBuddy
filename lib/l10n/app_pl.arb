@@ -35,6 +35,8 @@
   "pageHeadphonesSettingsDoubleTapPrevSong": "Poprzedni utwór",
   "pageHeadphonesSettingsDoubleTapAssist": "Asystent głosowy",
   "pageHeadphonesSettingsDoubleTapNone": "Nic",
+  "pageHeadphonesSettingsTripleTap": "Trzykrotnie tap",
+  "pageHeadphonesSettingsTripleTapDesc": "Tapnięcie trzy razy w słuchawkę spowoduje::",
   "pageHeadphonesSettingsLeftBud": "Lewa słuchawka",
   "pageHeadphonesSettingsRightBud": "Prawa słuchawka",
   "pageHeadphonesSettingsHold": "Przytrzymanie",
