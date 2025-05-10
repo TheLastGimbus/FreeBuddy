@@ -50,6 +50,8 @@ List<Widget> widgetsForModel(HeadphonesSettings settings) {
       fb5i.HoldSection(settings),
       const Divider(indent: 16, endIndent: 16),
       fb5i.SwipeSection(settings),
+      const Divider(indent: 16, endIndent: 16),
+      fb5i.LowLatencySection(settings),
       const SizedBox(height: 64),
     ];
   } else {

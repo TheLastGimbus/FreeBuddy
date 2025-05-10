@@ -28,6 +28,8 @@
   "swipeDesc": "Allows you to adjust volume by swiping up/down",
   "autoPause": "Auto pause ⏸",
   "autoPauseDesc": "Music will automatically pause when you take off headphones",
+  "lowLatency": "Low latency",
+  "lowLatencyDesc": "Allows you to minimize delays, useful for games",
 
   "pageHeadphonesSettingsTitle": "Headphones settings 🔧",
   "pageHeadphonesSettingsDoubleTap": "Double tap",

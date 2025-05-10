@@ -151,6 +151,14 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
           ),
         );
         break;
+      // # Settings(lowLatency)
+      case {2: [var lowLatency, ...]} when cmd.isAbout(_Cmd.getLowLatency):
+        _settingsCtrl.add(
+          lastSettings.copyWith(
+            lowLatency: lowLatency == 1,
+          ),
+        );
+        break;
     }
   }
 
@@ -163,6 +171,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
     _mbb.sink.add(_Cmd.getGestureHold);
     _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
     _mbb.sink.add(_Cmd.getGestureSwipe);
+    _mbb.sink.add(_Cmd.getLowLatency);
   }
 
   @override
@@ -240,6 +249,11 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
       _mbb.sink.add(_Cmd.autoPause(newSettings.autoPause!));
       _mbb.sink.add(_Cmd.getAutoPause);
     }
+    if ((newSettings.lowLatency ?? prev.lowLatency) != prev.lowLatency) {
+      _mbb.sink.add(_Cmd.lowLatency(newSettings.lowLatency!));
+      await Future.delayed(Duration(seconds: 1));
+      _mbb.sink.add(_Cmd.getLowLatency);
+    }
   }
 }
 
@@ -280,12 +294,6 @@ abstract class _Cmd {
         1: [gestureHold.mbbCode]
       });
 
-  static const getGestureSwipe = MbbCommand(43, 31);
-
-  static MbbCommand gestureSwipe(Swipe gestureSwipe) => MbbCommand(43, 30, {
-        1: [gestureSwipe.mbbCode]
-      });
-
   static const getGestureHoldToggledAncModes = MbbCommand(43, 25);
 
   static Set<AncMode>? gestureHoldToggledAncModesFromMbbValue(int mbbValue) {
@@ -324,10 +332,22 @@ abstract class _Cmd {
     });
   }
 
+  static const getGestureSwipe = MbbCommand(43, 31);
+
+  static MbbCommand gestureSwipe(Swipe gestureSwipe) => MbbCommand(43, 30, {
+        1: [gestureSwipe.mbbCode]
+      });
+
   static const getAutoPause = MbbCommand(43, 17);
 
   static MbbCommand autoPause(bool enabled) => MbbCommand(43, 16, {
         1: [enabled ? 1 : 0]
+      });
+
+  static const getLowLatency = MbbCommand(43, 108, {2: []});
+
+  static MbbCommand lowLatency(bool enabled) => MbbCommand(43, 108, {
+        1: [enabled ? 1 : 0],
       });
 }
 

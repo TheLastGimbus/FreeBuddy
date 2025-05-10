@@ -12,6 +12,7 @@ class HuaweiFreeBuds5iSettings {
   final Swipe? swipe;
 
   final bool? autoPause;
+  final bool? lowLatency;
 
   const HuaweiFreeBuds5iSettings({
     this.doubleTapLeft,
@@ -22,6 +23,7 @@ class HuaweiFreeBuds5iSettings {
     this.holdBothToggledAncModes,
     this.swipe,
     this.autoPause,
+    this.lowLatency,
   });
 
   // don't want to use codegen *yet*
@@ -34,6 +36,7 @@ class HuaweiFreeBuds5iSettings {
     Set<AncMode>? holdBothToggledAncModes,
     Swipe? swipe,
     bool? autoPause,
+    bool? lowLatency,
   }) =>
       HuaweiFreeBuds5iSettings(
         doubleTapLeft: doubleTapLeft ?? this.doubleTapLeft,
@@ -45,6 +48,7 @@ class HuaweiFreeBuds5iSettings {
             holdBothToggledAncModes ?? this.holdBothToggledAncModes,
         swipe: swipe ?? this.swipe,
         autoPause: autoPause ?? this.autoPause,
+        lowLatency: lowLatency ?? this.lowLatency,
       );
 }
 
