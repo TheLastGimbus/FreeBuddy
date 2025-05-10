@@ -24,6 +24,8 @@
   "pageHomeConnectedClosed": "Headphones are connected, but not with FreeBuddy 🤨",
   "pageHomeConnectedClosedDesc": "You probably opened another app - connect again 👀",
   "pageHomeConnectedClosedConnect": "Connect to headphones",
+  "swipe": "Swipe",
+  "swipeDesc": "Allows you to adjust volume by swiping up/down",
   "autoPause": "Auto pause ⏸",
   "autoPauseDesc": "Music will automatically pause when you take off headphones",
 

@@ -9,6 +9,7 @@ class HuaweiFreeBuds5iSettings {
   final TripleTap? tripleTapRight;
   final Hold? holdBoth;
   final Set<AncMode>? holdBothToggledAncModes;
+  final Swipe? swipe;
 
   final bool? autoPause;
 
@@ -19,6 +20,7 @@ class HuaweiFreeBuds5iSettings {
     this.tripleTapRight,
     this.holdBoth,
     this.holdBothToggledAncModes,
+    this.swipe,
     this.autoPause,
   });
 
@@ -30,6 +32,7 @@ class HuaweiFreeBuds5iSettings {
     TripleTap? tripleTapRight,
     Hold? holdBoth,
     Set<AncMode>? holdBothToggledAncModes,
+    Swipe? swipe,
     bool? autoPause,
   }) =>
       HuaweiFreeBuds5iSettings(
@@ -40,6 +43,7 @@ class HuaweiFreeBuds5iSettings {
         holdBoth: holdBoth ?? this.holdBoth,
         holdBothToggledAncModes:
             holdBothToggledAncModes ?? this.holdBothToggledAncModes,
+        swipe: swipe ?? this.swipe,
         autoPause: autoPause ?? this.autoPause,
       );
 }

@@ -15,12 +15,15 @@ final class HuaweiFreeBuds5iSim extends HuaweiFreeBuds5i
     const HuaweiFreeBuds5iSettings(
       doubleTapLeft: DoubleTap.playPause,
       doubleTapRight: DoubleTap.playPause,
+      tripleTapLeft: TripleTap.previous,
+      tripleTapRight: TripleTap.next,
       holdBoth: Hold.cycleAnc,
       holdBothToggledAncModes: {
         AncMode.noiseCancelling,
         AncMode.off,
         AncMode.transparency,
       },
+      swipe: Swipe.adjustVolume,
       autoPause: true,
     ),
   );
@@ -34,8 +37,11 @@ final class HuaweiFreeBuds5iSim extends HuaweiFreeBuds5i
       _settingsCtrl.value.copyWith(
         doubleTapLeft: newSettings.doubleTapLeft,
         doubleTapRight: newSettings.doubleTapRight,
+        tripleTapLeft: newSettings.tripleTapLeft,
+        tripleTapRight: newSettings.tripleTapRight,
         holdBoth: newSettings.holdBoth,
         holdBothToggledAncModes: newSettings.holdBothToggledAncModes,
+        swipe: newSettings.swipe,
         autoPause: newSettings.autoPause,
       ),
     );

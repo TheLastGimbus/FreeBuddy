@@ -143,6 +143,14 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
           ),
         );
         break;
+      // # Settings(swipeMode)
+      case {1: [var swipeMode, ...]} when cmd.isAbout(_Cmd.getGestureSwipe):
+        _settingsCtrl.add(
+          lastSettings.copyWith(
+            swipe: Swipe.values.firstWhereOrNull((e) => e.mbbCode == swipeMode),
+          ),
+        );
+        break;
     }
   }
 
@@ -154,6 +162,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
     _mbb.sink.add(_Cmd.getGestureTripleTap);
     _mbb.sink.add(_Cmd.getGestureHold);
     _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
+    _mbb.sink.add(_Cmd.getGestureSwipe);
   }
 
   @override
@@ -201,11 +210,13 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
       _mbb.sink.add(_Cmd.gestureDoubleTap(right: newSettings.doubleTapRight!));
       _mbb.sink.add(_Cmd.getGestureDoubleTap);
     }
-    if ((newSettings.tripleTapLeft ?? prev.tripleTapLeft) != prev.tripleTapLeft) {
+    if ((newSettings.tripleTapLeft ?? prev.tripleTapLeft) !=
+        prev.tripleTapLeft) {
       _mbb.sink.add(_Cmd.gestureTripleTap(left: newSettings.tripleTapLeft!));
       _mbb.sink.add(_Cmd.getGestureTripleTap);
     }
-    if ((newSettings.tripleTapRight ?? prev.tripleTapRight) != prev.tripleTapRight) {
+    if ((newSettings.tripleTapRight ?? prev.tripleTapRight) !=
+        prev.tripleTapRight) {
       _mbb.sink.add(_Cmd.gestureTripleTap(right: newSettings.tripleTapRight!));
       _mbb.sink.add(_Cmd.getGestureTripleTap);
     }
@@ -220,6 +231,10 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
           newSettings.holdBothToggledAncModes!));
       _mbb.sink.add(_Cmd.getGestureHold);
       _mbb.sink.add(_Cmd.getGestureHoldToggledAncModes);
+    }
+    if ((newSettings.swipe ?? prev.swipe) != prev.swipe) {
+      _mbb.sink.add(_Cmd.gestureSwipe(newSettings.swipe!));
+      _mbb.sink.add(_Cmd.getGestureSwipe);
     }
     if ((newSettings.autoPause ?? prev.autoPause) != prev.autoPause) {
       _mbb.sink.add(_Cmd.autoPause(newSettings.autoPause!));
@@ -263,6 +278,12 @@ abstract class _Cmd {
 
   static MbbCommand gestureHold(Hold gestureHold) => MbbCommand(43, 22, {
         1: [gestureHold.mbbCode]
+      });
+
+  static const getGestureSwipe = MbbCommand(43, 31);
+
+  static MbbCommand gestureSwipe(Swipe gestureSwipe) => MbbCommand(43, 30, {
+        1: [gestureSwipe.mbbCode]
       });
 
   static const getGestureHoldToggledAncModes = MbbCommand(43, 25);
@@ -333,6 +354,13 @@ extension _FB5iTripleTap on TripleTap {
         TripleTap.nothing => 255,
         TripleTap.next => 2,
         TripleTap.previous => 7,
+      };
+}
+
+extension _FB5iSwipe on Swipe {
+  int get mbbCode => switch (this) {
+        Swipe.nothing => 255,
+        Swipe.adjustVolume => 0,
       };
 }
 

@@ -35,7 +35,8 @@ class TripleTapSection extends StatelessWidget {
               onChanged: (newVal) {
                 headphones.setSettings(
                   HuaweiFreeBuds5iSettings(
-                    tripleTapLeft: newVal ? TripleTap.previous : TripleTap.nothing,
+                    tripleTapLeft:
+                        newVal ? TripleTap.previous : TripleTap.nothing,
                     tripleTapRight: newVal ? TripleTap.next : TripleTap.nothing,
                   ),
                 );
