@@ -167,6 +167,14 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
           ),
         );
         break;
+      // # Settings(soundQuality)
+      case {2: [var quality, ...]} when cmd.isAbout(_Cmd.getSoundQuality):
+        _settingsCtrl.add(
+          lastSettings.copyWith(
+            soundQualityMode: quality == 1,
+          ),
+        );
+        break;
     }
   }
 
@@ -181,6 +189,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
     _mbb.sink.add(_Cmd.getGestureSwipe);
     _mbb.sink.add(_Cmd.getLowLatency);
     _mbb.sink.add(_Cmd.getEqOptions);
+    _mbb.sink.add(_Cmd.getSoundQuality);
   }
 
   @override
@@ -266,6 +275,11 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
     if ((newSettings.eqPreset ?? prev.eqPreset) != prev.eqPreset) {
       _mbb.sink.add(_Cmd.eqOptions(newSettings.eqPreset!));
       _mbb.sink.add(_Cmd.getEqOptions);
+    }
+    if ((newSettings.soundQualityMode ?? prev.soundQualityMode) !=
+        prev.soundQualityMode) {
+      _mbb.sink.add(_Cmd.soundQuality(newSettings.soundQualityMode!));
+      _mbb.sink.add(_Cmd.getSoundQuality);
     }
   }
 }
@@ -367,6 +381,12 @@ abstract class _Cmd {
 
   static MbbCommand eqOptions(EqPreset eqPreset) => MbbCommand(43, 73, {
         1: [eqPreset.mbbCode],
+      });
+
+  static const getSoundQuality = MbbCommand(43, 163);
+
+  static MbbCommand soundQuality(bool enabled) => MbbCommand(43, 162, {
+        1: [enabled ? 1 : 0],
       });
 }
 

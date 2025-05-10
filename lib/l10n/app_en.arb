@@ -30,6 +30,8 @@
   "autoPauseDesc": "Music will automatically pause when you take off headphones",
   "lowLatency": "Low latency",
   "lowLatencyDesc": "Allows you to minimize delays, useful for games",
+  "soundQuality": "Enable LDAC codec",
+  "soundQualityDesc": "Allows you to listen with more quality but can cause lags",
 
   "pageHeadphonesSettingsEqualizer": "Equalizer",
   "pageHeadphonesSettingsEqualizerDefault": "Default",

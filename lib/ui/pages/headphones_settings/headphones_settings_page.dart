@@ -46,6 +46,8 @@ List<Widget> widgetsForModel(HeadphonesSettings settings, AppLocalizations l) {
       fb5i.AutoPauseSection(settings),
       const Divider(indent: 16, endIndent: 16),
       fb5i.LowLatencySection(settings),
+      const Divider(indent: 16, endIndent: 16),
+      fb5i.SoundQualitySection(settings),
       ExpansionTile(
         title: Text(l.pageHeadphonesSettingsGestures),
         children: [

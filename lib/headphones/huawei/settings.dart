@@ -14,6 +14,7 @@ class HuaweiFreeBuds5iSettings {
   final bool? autoPause;
   final bool? lowLatency;
   final EqPreset? eqPreset;
+  final bool? soundQualityMode;
 
   const HuaweiFreeBuds5iSettings({
     this.doubleTapLeft,
@@ -26,6 +27,7 @@ class HuaweiFreeBuds5iSettings {
     this.autoPause,
     this.lowLatency,
     this.eqPreset,
+    this.soundQualityMode,
   });
 
   // don't want to use codegen *yet*
@@ -40,6 +42,7 @@ class HuaweiFreeBuds5iSettings {
     bool? autoPause,
     bool? lowLatency,
     EqPreset? eqPreset,
+    bool? soundQualityMode,
   }) =>
       HuaweiFreeBuds5iSettings(
         doubleTapLeft: doubleTapLeft ?? this.doubleTapLeft,
@@ -53,6 +56,7 @@ class HuaweiFreeBuds5iSettings {
         autoPause: autoPause ?? this.autoPause,
         lowLatency: lowLatency ?? this.lowLatency,
         eqPreset: eqPreset ?? this.eqPreset,
+        soundQualityMode: soundQualityMode ?? this.soundQualityMode,
       );
 }
 

@@ -5,3 +5,4 @@ export 'hold_section.dart';
 export 'swipe_section.dart';
 export 'low_latency_section.dart';
 export 'equalizer_section.dart';
+export 'sound_quality_section.dart';
