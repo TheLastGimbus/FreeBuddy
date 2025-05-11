@@ -26,7 +26,7 @@ class EqualizerSection extends StatelessWidget {
             _EqPresetSetting(
               title: Text(
                 l.pageHeadphonesSettingsEqualizer,
-                style: tt.titleMedium,
+                style: tt.bodyLarge,
               ),
               value: dt,
               onChanged: (g) => headphones.setSettings(
@@ -54,47 +54,60 @@ class _EqPresetSetting extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context)!;
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          if (title != null) ...[
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 14, 0, 6),
-              child: title!,
-            ),
-            const Divider(indent: 32, endIndent: 32),
-          ],
-          ListTileRadio(
-            title: Text(l.pageHeadphonesSettingsEqualizerDefault),
-            value: EqPreset.defaultEq,
-            dense: true,
-            groupValue: value,
-            onChanged: onChanged,
-          ),
-          ListTileRadio(
-            title: Text(l.pageHeadphonesSettingsEqualizerHardBass),
-            value: EqPreset.hardBassEq,
-            dense: true,
-            groupValue: value,
-            onChanged: onChanged,
-          ),
-          ListTileRadio(
-            title: Text(l.pageHeadphonesSettingsEqualizerTreble),
-            value: EqPreset.trebleEq,
-            dense: true,
-            groupValue: value,
-            onChanged: onChanged,
-          ),
-          ListTileRadio(
-            title: Text(l.pageHeadphonesSettingsEqualizerVoices),
-            value: EqPreset.voicesEq,
-            dense: true,
-            groupValue: value,
-            onChanged: onChanged,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (title != null) ...[
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 14, 0, 6),
+            child: title!,
           ),
         ],
-      ),
+        Row(
+          children: [
+            Expanded(
+              child: ListTileRadio(
+                title: Text(l.pageHeadphonesSettingsEqualizerDefault),
+                value: EqPreset.defaultEq,
+                dense: true,
+                groupValue: value,
+                onChanged: onChanged,
+              ),
+            ),
+            Expanded(
+              child: ListTileRadio(
+                title: Text(l.pageHeadphonesSettingsEqualizerHardBass),
+                value: EqPreset.hardBassEq,
+                dense: true,
+                groupValue: value,
+                onChanged: onChanged,
+              ),
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            Expanded(
+              child: ListTileRadio(
+                title: Text(l.pageHeadphonesSettingsEqualizerTreble),
+                value: EqPreset.trebleEq,
+                dense: true,
+                groupValue: value,
+                onChanged: onChanged,
+              ),
+            ),
+            Expanded(
+              child: ListTileRadio(
+                title: Text(l.pageHeadphonesSettingsEqualizerVoices),
+                value: EqPreset.voicesEq,
+                dense: true,
+                groupValue: value,
+                onChanged: onChanged,
+              ),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
