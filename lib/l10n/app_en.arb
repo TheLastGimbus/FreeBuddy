@@ -62,6 +62,10 @@
   "ancOffDesc": "Turns ANC off",
   "ancAwareness": "Awareness 🔊",
   "ancAwarenessDesc": "Allows you to hear your surroundings",
+  "ancCancelLevelNormal": "Normal",
+  "ancCancelLevelComfort": "Comfort",
+  "ancCancelLevelUltra": "Ultra",
+  "ancCancelLevelDynamic": "Dynamic",
 
   "settings": "Settings",
   "privacyPolicy": "Privacy policy",

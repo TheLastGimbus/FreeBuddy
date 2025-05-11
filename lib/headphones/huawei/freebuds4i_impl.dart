@@ -169,6 +169,17 @@ final class HuaweiFreeBuds4iImpl extends HuaweiFreeBuds4i {
   Future<void> setAncMode(AncMode mode) async => _mbb.sink.add(_Cmd.anc(mode));
 
   @override
+  ValueStream<AncLevel> get ancLevel => throw UnimplementedError();
+
+  @override
+  Future<void> setAncLevel(AncLevel level) {
+    throw UnimplementedError();
+  }
+
+  @override
+  bool get supportsAncLevel => false;
+
+  @override
   ValueStream<HuaweiFreeBuds4iSettings> get settings => _settingsCtrl.stream;
 
   @override

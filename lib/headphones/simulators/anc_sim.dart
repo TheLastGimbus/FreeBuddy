@@ -11,6 +11,17 @@ mixin AncSim implements Anc {
 
   @override
   Future<void> setAncMode(AncMode mode) async => _ancModeCtrl.add(mode);
+
+  @override
+  ValueStream<AncLevel> get ancLevel => throw UnimplementedError();
+
+  @override
+  Future<void> setAncLevel(AncLevel level) {
+    throw UnimplementedError();
+  }
+
+  @override
+  bool get supportsAncLevel => false;
 }
 
 mixin AncSimPlaceholder implements Anc {
@@ -19,4 +30,15 @@ mixin AncSimPlaceholder implements Anc {
 
   @override
   Future<void> setAncMode(AncMode mode) async {}
+
+  @override
+  ValueStream<AncLevel> get ancLevel => throw UnimplementedError();
+
+  @override
+  Future<void> setAncLevel(AncLevel level) {
+    throw UnimplementedError();
+  }
+
+  @override
+  bool get supportsAncLevel => false;
 }

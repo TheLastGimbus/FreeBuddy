@@ -185,6 +185,17 @@ final class HuaweiFreeBuds3iImpl extends HuaweiFreeBuds3i {
       _mbb.sink.add(_Cmd.getGestureHold);
     }
   }
+
+  @override
+  ValueStream<AncLevel> get ancLevel => throw UnimplementedError();
+
+  @override
+  Future<void> setAncLevel(AncLevel level) {
+    throw UnimplementedError();
+  }
+
+  @override
+  bool get supportsAncLevel => false;
 }
 
 /// This is just a holder for magic numbers

@@ -24,6 +24,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
   final _bluetoothNameCtrl = BehaviorSubject<String>();
   final _lrcBatteryCtrl = BehaviorSubject<LRCBatteryLevels>();
   final _ancModeCtrl = BehaviorSubject<AncMode>();
+  final _ancLevelCtrl = BehaviorSubject<AncLevel>();
   final _settingsCtrl = BehaviorSubject<HuaweiFreeBuds5iSettings>();
 
   // stream controllers *
@@ -55,6 +56,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
         _bluetoothNameCtrl.close();
         _lrcBatteryCtrl.close();
         _ancModeCtrl.close();
+        _ancLevelCtrl.close();
         _settingsCtrl.close();
       },
     );
@@ -66,6 +68,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
         // no alias because it's okay to be null 👍
         lrcBattery.valueOrNull,
         ancMode.valueOrNull,
+        ancLevel.valueOrNull,
         settings.valueOrNull,
       ].any((e) => e == null)) {
         _initRequestInfo();
@@ -78,10 +81,14 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
         _settingsCtrl.valueOrNull ?? const HuaweiFreeBuds5iSettings();
     switch (cmd.args) {
       // # AncMode
-      case {1: [_, var ancModeCode, ...]} when cmd.isAbout(_Cmd.getAnc):
+      case {1: [var ancLevelCode, var ancModeCode, ...]}
+          when cmd.isAbout(_Cmd.getAnc):
         final mode =
             AncMode.values.firstWhereOrNull((e) => e.mbbCode == ancModeCode);
+        final level =
+            AncLevel.values.firstWhereOrNull((e) => e.mbbCode == ancLevelCode);
         if (mode != null) _ancModeCtrl.add(mode);
+        if (level != null) _ancLevelCtrl.add(level);
         break;
       // # BatteryLevels
       case {2: var level, 3: var status}
@@ -215,10 +222,21 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
   ValueStream<AncMode> get ancMode => _ancModeCtrl.stream;
 
   @override
-  Future<void> setAncMode(AncMode mode) async => _mbb.sink.add(_Cmd.anc(mode));
+  Future<void> setAncMode(AncMode mode) async =>
+      _mbb.sink.add(_Cmd.ancMode(mode));
 
   @override
   ValueStream<HuaweiFreeBuds5iSettings> get settings => _settingsCtrl.stream;
+
+  @override
+  ValueStream<AncLevel> get ancLevel => _ancLevelCtrl.stream;
+
+  @override
+  bool get supportsAncLevel => true;
+
+  @override
+  Future<void> setAncLevel(AncLevel level) async =>
+      _mbb.sink.add(_Cmd.ancLevel(ancMode.value, level));
 
   @override
   Future<void> setSettings(newSettings) async {
@@ -295,8 +313,13 @@ abstract class _Cmd {
 
   static const getAnc = MbbCommand(43, 42);
 
-  static MbbCommand anc(AncMode mode) => MbbCommand(43, 4, {
+  static MbbCommand ancMode(AncMode mode) => MbbCommand(43, 4, {
         1: [mode.mbbCode, mode == AncMode.off ? 0 : 255]
+      });
+
+  static MbbCommand ancLevel(AncMode mode, AncLevel level) =>
+      MbbCommand(43, 4, {
+        1: [mode.mbbCode, level.mbbCode]
       });
 
   static const getGestureDoubleTap = MbbCommand(1, 32);
@@ -436,5 +459,14 @@ extension _FB5iHold on Hold {
   int get mbbCode => switch (this) {
         Hold.nothing => 255,
         Hold.cycleAnc => 10,
+      };
+}
+
+extension _FB5iAncLevel on AncLevel {
+  int get mbbCode => switch (this) {
+        AncLevel.normal => 0,
+        AncLevel.comfort => 1,
+        AncLevel.ultra => 2,
+        AncLevel.dynamic => 3,
       };
 }
