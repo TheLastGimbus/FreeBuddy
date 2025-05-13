@@ -59,12 +59,14 @@ class DualConnectCard extends StatelessWidget {
     MediaQueryData mq,
     AppLocalizations l,
   ) {
+    final stream = dualConnect.dualConnectDevices;
+
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: StreamBuilder(
-          stream: dualConnect.dualConnectDevices,
+          stream: stream,
           builder: (context, snap) {
             return Row(
               children: [
@@ -73,7 +75,8 @@ class DualConnectCard extends StatelessWidget {
                     (item) {
                       return InkWell(
                         borderRadius: BorderRadius.circular(16),
-                        onTap: () => _onDeviceClick(context, item, l),
+                        onTap: () =>
+                            _onDeviceClick(context, stream.share(), item, l),
                         child: Container(
                           padding: EdgeInsets.symmetric(horizontal: 8.0),
                           height: mq.size.shortestSide * 0.2,
@@ -127,6 +130,7 @@ class DualConnectCard extends StatelessWidget {
 
   void _onDeviceClick(
     BuildContext context,
+    Stream<List<DualConnectDevice>> stream,
     DualConnectDevice device,
     AppLocalizations locale,
   ) {
@@ -150,10 +154,19 @@ class DualConnectCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(96),
                   ),
                 ),
-                _ConnectionSettingCard(
-                  dualConnect,
-                  device,
-                  locale,
+                StreamBuilder(
+                  stream: stream,
+                  builder: (_, snap) {
+                    device = snap.data?.firstWhere((e) => e.mac == device.mac,
+                            orElse: () => device) ??
+                        device;
+
+                    return _ConnectionSettingCard(
+                      dualConnect,
+                      device,
+                      locale,
+                    );
+                  },
                 ),
               ],
             ),
