@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
@@ -200,8 +199,8 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
         _dualConnectEnabledCtrl.add(enabled == 1);
         break;
       case {
-            2: [var devicesCount, ...],
-            3: [var deviceIndex, ...],
+            // 2: [var devicesCount, ...],
+            // 3: [var deviceIndex, ...],
             4: var rawMac,
             5: [var rawConnState, ...],
             7: [var rawPreferred, ...],

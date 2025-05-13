@@ -2,7 +2,7 @@
   "images" : [
     {
       "filename" : "background.png",
-      "idiom": "universal"
+      "idiom" : "universal"
     },
     {
       "appearances" : [
@@ -12,7 +12,7 @@
         }
       ],
       "filename" : "darkbackground.png",
-      "idiom": "universal"
+      "idiom" : "universal"
     }
   ],
   "info" : {

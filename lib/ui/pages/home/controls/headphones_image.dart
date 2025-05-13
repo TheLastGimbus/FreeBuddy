@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../../../../headphones/framework/headphones_info.dart';
 
@@ -9,6 +9,8 @@ class HeadphonesImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Theme.of(context).textTheme.bodyLarge?.color;
+
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 64),
@@ -19,6 +21,7 @@ class HeadphonesImage extends StatelessWidget {
                   snap.data!,
                   fit: BoxFit.contain,
                   filterQuality: FilterQuality.none,
+                  color: textColor,
                 )
               : const SizedBox(),
         ),
