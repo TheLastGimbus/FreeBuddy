@@ -3,12 +3,17 @@ import 'package:rxdart/rxdart.dart';
 import '../framework/anc.dart';
 import '../simulators/anc_sim.dart';
 import '../simulators/bluetooth_headphones_sim.dart';
+import '../simulators/dual_connect_sim.dart';
 import '../simulators/lrc_battery_sim.dart';
 import 'freebuds5i.dart';
 import 'settings.dart';
 
 final class HuaweiFreeBuds5iSim extends HuaweiFreeBuds5i
-    with BluetoothHeadphonesSim, LRCBatteryAlwaysFullSim, AncSim {
+    with
+        BluetoothHeadphonesSim,
+        LRCBatteryAlwaysFullSim,
+        DualConnectSim,
+        AncSim {
   // ehhhhhh...
 
   final _settingsCtrl = BehaviorSubject<HuaweiFreeBuds5iSettings>.seeded(
@@ -60,6 +65,7 @@ final class HuaweiFreeBuds5iSimPlaceholder extends HuaweiFreeBuds5i
     with
         BluetoothHeadphonesSimPlaceholder,
         LRCBatteryAlwaysFullSimPlaceholder,
+        DualConnectSimPlaceholder,
         AncSimPlaceholder {
   const HuaweiFreeBuds5iSimPlaceholder();
 

@@ -2,6 +2,7 @@ import 'package:rxdart/rxdart.dart';
 
 import '../framework/anc.dart';
 import '../framework/bluetooth_headphones.dart';
+import '../framework/dual_connect.dart';
 import '../framework/headphones_info.dart';
 import '../framework/headphones_settings.dart';
 import '../framework/lrc_battery.dart';
@@ -18,6 +19,7 @@ abstract base class HuaweiFreeBuds5i
         HeadphonesModelInfo,
         LRCBattery,
         Anc,
+        DualConnect,
         HeadphonesSettings<HuaweiFreeBuds5iSettings> {
   const HuaweiFreeBuds5i();
 

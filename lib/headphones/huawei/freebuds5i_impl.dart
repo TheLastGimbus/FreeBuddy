@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
@@ -7,6 +9,7 @@ import 'package:the_last_bluetooth/the_last_bluetooth.dart' as tlb;
 
 import '../../logger.dart';
 import '../framework/anc.dart';
+import '../framework/dual_connect.dart';
 import '../framework/lrc_battery.dart';
 import 'freebuds5i.dart';
 import 'mbb.dart';
@@ -26,11 +29,17 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
   final _ancModeCtrl = BehaviorSubject<AncMode>();
   final _ancLevelCtrl = BehaviorSubject<AncLevel>();
   final _settingsCtrl = BehaviorSubject<HuaweiFreeBuds5iSettings>();
+  final _dualConnectEnabledCtrl = BehaviorSubject<bool>();
+  final _dualConnectCtrl = BehaviorSubject<List<DualConnectDevice>>();
 
   // stream controllers *
 
   /// This watches if we are still missing any info and re-requests it
   late StreamSubscription _watchdogStreamSub;
+
+  final _dualConnectDevicesList = <DualConnectDevice>[];
+
+  StreamSubscription? _updateListStream;
 
   HuaweiFreeBuds5iImpl(this._mbb, this._bluetoothDevice) {
     // hope this will nicely play with closing, idk honestly
@@ -63,6 +72,8 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
     _initRequestInfo();
     _watchdogStreamSub =
         Stream.periodic(const Duration(seconds: 3)).listen((_) {
+      beginDualConnectEnumeration();
+
       if ([
         batteryLevel.valueOrNull,
         // no alias because it's okay to be null 👍
@@ -182,6 +193,40 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
           ),
         );
         break;
+      case {1: [...]} when cmd.isAbout(_Cmd.getDualConnectChangeEvent):
+        _mbb.sink.add(_Cmd.getDualConnectEnabled);
+        break;
+      case {1: [var enabled, ...]} when cmd.isAbout(_Cmd.getDualConnectEnabled):
+        _dualConnectEnabledCtrl.add(enabled == 1);
+        break;
+      case {
+            2: [var devicesCount, ...],
+            3: [var deviceIndex, ...],
+            4: var rawMac,
+            5: [var rawConnState, ...],
+            7: [var rawPreferred, ...],
+            8: [var rawAutoConnect, ...],
+            9: var rawName,
+          }
+          when cmd.isAbout(_Cmd.getDualConnectEnumeration):
+        var name = utf8.decode(rawName);
+        var connState = rawConnState == 9
+            ? DCConnectionState.playing
+            : rawConnState > 0
+                ? DCConnectionState.connected
+                : DCConnectionState.disconnected;
+        var preferred = rawPreferred == 1;
+        var autoConnect = rawAutoConnect == 1;
+        var mac =
+            rawMac.map((e) => e.toRadixString(16).padLeft(2, '0')).join(':');
+        updateDeviceInList(
+            DualConnectDevice(name, autoConnect, preferred, mac, connState));
+
+        _updateListStream?.cancel();
+        _updateListStream = Future.delayed(Duration(milliseconds: 250),
+                () => _dualConnectCtrl.add(_dualConnectDevicesList))
+            .asStream()
+            .listen((data) {});
     }
   }
 
@@ -197,6 +242,7 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
     _mbb.sink.add(_Cmd.getLowLatency);
     _mbb.sink.add(_Cmd.getEqOptions);
     _mbb.sink.add(_Cmd.getSoundQuality);
+    _mbb.sink.add(_Cmd.getDualConnectEnabled);
   }
 
   @override
@@ -299,6 +345,79 @@ final class HuaweiFreeBuds5iImpl extends HuaweiFreeBuds5i {
       _mbb.sink.add(_Cmd.soundQuality(newSettings.soundQualityMode!));
       _mbb.sink.add(_Cmd.getSoundQuality);
     }
+  }
+
+  @override
+  void beginDualConnectEnumeration() {
+    _dualConnectDevicesList.clear();
+    _mbb.sink.add(_Cmd.dualConnectEnumeration());
+  }
+
+  @override
+  ValueStream<List<DualConnectDevice>> get dualConnectDevices =>
+      _dualConnectCtrl.stream;
+
+  @override
+  void updateDeviceInList(DualConnectDevice device, {bool removed = false}) {
+    final deviceIndex =
+        _dualConnectDevicesList.indexWhere((e) => e.mac == device.mac);
+    if (deviceIndex >= 0) {
+      _dualConnectDevicesList.removeAt(deviceIndex);
+      _dualConnectDevicesList.insert(deviceIndex, device);
+    } else {
+      _dualConnectDevicesList.add(device);
+    }
+  }
+
+  @override
+  ValueStream<bool> get dualConnectionEnabled => _dualConnectEnabledCtrl.stream;
+
+  @override
+  Future<void> setDualConnectionEnabled(bool enabled) async {
+    _mbb.sink.add(_Cmd.dualConnectEnabled(enabled));
+    await Future.delayed(Duration(seconds: 1));
+    _mbb.sink.add(_Cmd.getDualConnectEnabled);
+  }
+
+  @override
+  Future<void> changeDeviceConnectionStatus(
+    DualConnectDevice device,
+    bool connect,
+  ) async {
+    _mbb.sink.add(
+      _Cmd.dualConnectExec(
+        device,
+        connect ? DualConnectCommand.connect : DualConnectCommand.disconnect,
+      ),
+    );
+  }
+
+  @override
+  Future<void> setDeviceAutoConnect(
+    DualConnectDevice device,
+    bool enabled,
+  ) async {
+    _mbb.sink.add(
+      _Cmd.dualConnectExec(
+        device,
+        enabled
+            ? DualConnectCommand.enableAuto
+            : DualConnectCommand.disableAuto,
+      ),
+    );
+  }
+
+  @override
+  Future<void> setDevicePreferred(
+    DualConnectDevice device,
+    bool enabled,
+  ) async {
+    _mbb.sink.add(_Cmd.dualConnectPreferred(device, enabled));
+  }
+
+  @override
+  Future<void> unpairDevice(DualConnectDevice device) async {
+    _mbb.sink.add(_Cmd.dualConnectExec(device, DualConnectCommand.unpair));
   }
 }
 
@@ -410,6 +529,33 @@ abstract class _Cmd {
 
   static MbbCommand soundQuality(bool enabled) => MbbCommand(43, 162, {
         1: [enabled ? 1 : 0],
+      });
+
+  static const getDualConnectEnabled = MbbCommand(43, 47);
+
+  static MbbCommand dualConnectEnabled(bool enabled) => MbbCommand(43, 46, {
+        1: [enabled ? 1 : 0]
+      });
+
+  static const getDualConnectEnumeration = MbbCommand(43, 49);
+
+  static MbbCommand dualConnectEnumeration() => MbbCommand(43, 49, {
+        1: [],
+      });
+
+  static const getDualConnectChangeEvent = MbbCommand(43, 54);
+
+  static dualConnectPreferred(DualConnectDevice device, bool enabled) =>
+      MbbCommand(43, 50, {
+        1: enabled ? device.macAsBytes : [0, 0, 0, 0, 0, 0],
+      });
+
+  static MbbCommand dualConnectExec(
+    DualConnectDevice device,
+    DualConnectCommand command,
+  ) =>
+      MbbCommand(43, 51, {
+        command.value: device.macAsBytes,
       });
 }
 
