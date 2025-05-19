@@ -24,8 +24,22 @@
   "pageHomeConnectedClosed": "Headphones are connected, but not with FreeBuddy 🤨",
   "pageHomeConnectedClosedDesc": "You probably opened another app - connect again 👀",
   "pageHomeConnectedClosedConnect": "Connect to headphones",
+  "swipe": "Swipe",
+  "swipeDesc": "Allows you to adjust volume by swiping up/down",
   "autoPause": "Auto pause ⏸",
   "autoPauseDesc": "Music will automatically pause when you take off headphones",
+  "lowLatency": "Low latency",
+  "lowLatencyDesc": "Allows you to minimize delays, useful for games",
+  "soundQuality": "Enable LDAC codec",
+  "soundQualityDesc": "Allows you to listen with more quality but can cause lags",
+
+  "pageHeadphonesSettingsEqualizer": "Equalizer",
+  "pageHeadphonesSettingsEqualizerDefault": "Default",
+  "pageHeadphonesSettingsEqualizerHardBass": "Bass",
+  "pageHeadphonesSettingsEqualizerTreble": "Treble",
+  "pageHeadphonesSettingsEqualizerVoices": "Voices",
+
+  "pageHeadphonesSettingsGestures": "Gestures",
 
   "pageHeadphonesSettingsTitle": "Headphones settings 🔧",
   "pageHeadphonesSettingsDoubleTap": "Double tap",
@@ -35,6 +49,8 @@
   "pageHeadphonesSettingsDoubleTapPrevSong": "Previous song",
   "pageHeadphonesSettingsDoubleTapAssist": "Voice assistant",
   "pageHeadphonesSettingsDoubleTapNone": "None",
+  "pageHeadphonesSettingsTripleTap": "Triple tap",
+  "pageHeadphonesSettingsTripleTapDesc": "Tap a bud thrice to:",
   "pageHeadphonesSettingsLeftBud": "Left bud",
   "pageHeadphonesSettingsRightBud": "Right bud",
   "pageHeadphonesSettingsHold": "Touch and hold",
@@ -46,6 +62,23 @@
   "ancOffDesc": "Turns ANC off",
   "ancAwareness": "Awareness 🔊",
   "ancAwarenessDesc": "Allows you to hear your surroundings",
+  "ancCancelLevelNormal": "Normal",
+  "ancCancelLevelComfort": "Comfort",
+  "ancCancelLevelUltra": "Ultra",
+  "ancCancelLevelDynamic": "Dynamic",
+
+  "dualConnect": "Dual connect",
+  "dualConnectConnect": "Connect",
+  "dualConnectDisconnect": "Disconnect",
+  "dualConnectUnpair": "Unpair",
+  "dualConnectUnpairDesc": "This device will be unpaired and cannot be connected until paired again. Continue?",
+  "dualConnectModePlaying": "Playing",
+  "dualConnectModeConnected": "Connected",
+  "dualConnectModeOffline": "Offline",
+  "dualConnectDeviceName": "Device name",
+  "dualConnectDeviceMac": "MAC address",
+  "dualConnectAutoConnect": "Auto connect",
+  "dualConnectPreferred": "Preferred device",
 
   "settings": "Settings",
   "privacyPolicy": "Privacy policy",
@@ -69,5 +102,6 @@
   "pageIntroSupported": "Currently supported are:\n - Huawei FreeBuds 4i\n - Huawei FreeBuds 3i",
   "pageIntroShortPrivacyPolicy": "This app doesn't collect any emails, identifiers, or any personal data 🎉 You can read more about it here: ",
   "pageIntroAnyQuestions": "If you have any questions, feel free to contact me 💌 Look at \"Settings->About\" for my socials!",
-  "pageIntroQuit": "Okay 👍"
+  "pageIntroQuit": "Okay 👍",
+  "cancel": "Cancel"
 }

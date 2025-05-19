@@ -3,12 +3,14 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../../headphones/framework/anc.dart';
 import '../../../../headphones/framework/bluetooth_headphones.dart';
+import '../../../../headphones/framework/dual_connect.dart';
 import '../../../../headphones/framework/headphones_info.dart';
 import '../../../../headphones/framework/headphones_settings.dart';
 import '../../../../headphones/framework/lrc_battery.dart';
 import '../../../theme/layouts.dart';
 import 'anc_card.dart';
 import 'battery_card.dart';
+import 'dual_connect_card.dart';
 import 'headphones_image.dart';
 
 /// Main whole-screen widget with controls for headphones
@@ -46,6 +48,10 @@ class HeadphonesControlsWidget extends StatelessWidget {
                     style: tt.headlineMedium,
                   ),
                 ),
+                if (headphones is DualConnect) ...[
+                  const SizedBox(height: 8),
+                  DualConnectCard(headphones as DualConnect),
+                ],
                 if (headphones is HeadphonesModelInfo)
                   HeadphonesImage(headphones as HeadphonesModelInfo)
                 else
@@ -74,6 +80,10 @@ class HeadphonesControlsWidget extends StatelessWidget {
                           style: tt.headlineMedium,
                         ),
                       ),
+                      if (headphones is DualConnect) ...[
+                        const SizedBox(height: 8),
+                        DualConnectCard(headphones as DualConnect),
+                      ],
                       if (headphones is HeadphonesModelInfo)
                         HeadphonesImage(headphones as HeadphonesModelInfo)
                       else

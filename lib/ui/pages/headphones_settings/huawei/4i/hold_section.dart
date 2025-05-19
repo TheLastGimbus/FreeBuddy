@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../../../headphones/framework/anc.dart';
-import '../../../../headphones/framework/headphones_settings.dart';
-import '../../../../headphones/huawei/settings.dart';
-import '../../../common/list_tile_checkbox.dart';
-import '../../../common/list_tile_switch.dart';
-import '../../disabled.dart';
+import '../../../../../headphones/framework/anc.dart';
+import '../../../../../headphones/framework/headphones_settings.dart';
+import '../../../../../headphones/huawei/settings.dart';
+import '../../../../common/list_tile_checkbox.dart';
+import '../../../../common/list_tile_switch.dart';
+import '../../../disabled.dart';
 
 class HoldSection extends StatelessWidget {
   final HeadphonesSettings<HuaweiFreeBuds4iSettings> headphones;

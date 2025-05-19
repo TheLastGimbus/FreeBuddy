@@ -24,6 +24,8 @@
   "pageHomeConnectedClosed": "Słuchawki są połączone, ale nie z FreeBuddy 🤨",
   "pageHomeConnectedClosedDesc": "Pewnie otworzyłeś inną apke - połącz spowrotem 👀",
   "pageHomeConnectedClosedConnect": "Połącz ze słuchawkami",
+  "swipe": "Trzepnąć",
+  "swipeDesc": "Umożliwia regulację głośności poprzez przesuwanie w górę/w dół",
   "autoPause": "Auto pauza ⏸",
   "autoPauseDesc": "Muzyka automatycznie się zatrzyma kiedy ściągniesz słuchawki",
 
@@ -35,6 +37,8 @@
   "pageHeadphonesSettingsDoubleTapPrevSong": "Poprzedni utwór",
   "pageHeadphonesSettingsDoubleTapAssist": "Asystent głosowy",
   "pageHeadphonesSettingsDoubleTapNone": "Nic",
+  "pageHeadphonesSettingsTripleTap": "Trzykrotnie tap",
+  "pageHeadphonesSettingsTripleTapDesc": "Tapnięcie trzy razy w słuchawkę spowoduje::",
   "pageHeadphonesSettingsLeftBud": "Lewa słuchawka",
   "pageHeadphonesSettingsRightBud": "Prawa słuchawka",
   "pageHeadphonesSettingsHold": "Przytrzymanie",

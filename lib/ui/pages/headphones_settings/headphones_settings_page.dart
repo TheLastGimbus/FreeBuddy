@@ -4,9 +4,9 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import '../../../headphones/framework/headphones_settings.dart';
 import '../../../headphones/huawei/settings.dart';
 import '../../common/headphones_connection_ensuring_overlay.dart';
-import 'huawei/auto_pause_section.dart';
-import 'huawei/double_tap_section.dart';
-import 'huawei/hold_section.dart';
+
+import 'huawei/4i/exports.dart' as fb4i;
+import 'huawei/5i/exports.dart' as fb5i;
 
 class HeadphonesSettingsPage extends StatelessWidget {
   const HeadphonesSettingsPage({super.key});
@@ -19,7 +19,7 @@ class HeadphonesSettingsPage extends StatelessWidget {
       body: Center(
         child: HeadphonesConnectionEnsuringOverlay(
           builder: (_, h) =>
-              ListView(children: widgetsForModel(h as HeadphonesSettings)),
+              ListView(children: widgetsForModel(h as HeadphonesSettings, l)),
         ),
       ),
     );
@@ -29,14 +29,37 @@ class HeadphonesSettingsPage extends StatelessWidget {
 // this is shitty. and we don't want this. not here.
 // ...
 // but i have no better idea for now :)))))
-List<Widget> widgetsForModel(HeadphonesSettings settings) {
+List<Widget> widgetsForModel(HeadphonesSettings settings, AppLocalizations l) {
   if (settings is HeadphonesSettings<HuaweiFreeBuds4iSettings>) {
     return [
-      AutoPauseSection(settings),
+      fb4i.AutoPauseSection(settings),
       const Divider(indent: 16, endIndent: 16),
-      DoubleTapSection(settings),
+      fb4i.DoubleTapSection(settings),
       const Divider(indent: 16, endIndent: 16),
-      HoldSection(settings),
+      fb4i.HoldSection(settings),
+      const SizedBox(height: 64),
+    ];
+  } else if (settings is HeadphonesSettings<HuaweiFreeBuds5iSettings>) {
+    return [
+      fb5i.EqualizerSection(settings),
+      const Divider(indent: 16, endIndent: 16),
+      fb5i.AutoPauseSection(settings),
+      const Divider(indent: 16, endIndent: 16),
+      fb5i.LowLatencySection(settings),
+      const Divider(indent: 16, endIndent: 16),
+      fb5i.SoundQualitySection(settings),
+      ExpansionTile(
+        title: Text(l.pageHeadphonesSettingsGestures),
+        children: [
+          fb5i.DoubleTapSection(settings),
+          const Divider(indent: 16, endIndent: 16),
+          fb5i.TripleTapSection(settings),
+          const Divider(indent: 16, endIndent: 16),
+          fb5i.HoldSection(settings),
+          const Divider(indent: 16, endIndent: 16),
+          fb5i.SwipeSection(settings),
+        ],
+      ),
       const SizedBox(height: 64),
     ];
   } else {
