@@ -2,9 +2,9 @@
 
 # 🪪 Device description
 
-| Vendor  | Name  | Release year | Type |
-|---|---|---|---|
-| Huawei | FreeBuds 3i  | 2020 | Fully wireless earbuds |
+| Vendor  | Name  | Release year | Type | Support |
+|---|---|---|---|---|
+| Huawei | FreeBuds 3i  | 2020 | Fully wireless earbuds | In progress ⌛ |
 
 - Vendor's page: https://consumer.huawei.com/sa-en/support/accessories/freebuds-3i/
 - Vendor's app: https://consumer.huawei.com/en/mobileservices/ai-life/

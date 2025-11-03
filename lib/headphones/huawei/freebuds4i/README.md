@@ -2,9 +2,9 @@
 
 # 🪪 Device description
 
-| Vendor  | Name  | Release year | Type |
-|---|---|---|---|
-| Huawei | FreeBuds 4i  | 2021 | Fully wireless earbuds |
+| Vendor  | Name  | Release year | Type | Support |
+|---|---|---|---|---|
+| Huawei | FreeBuds 4i  | 2021 | Fully wireless earbuds | Full ✅ |
 
 - Vendor's page: https://consumer.huawei.com/sa-en/headphones/freebuds4i/
 - Vendor's app: https://consumer.huawei.com/en/mobileservices/ai-life/

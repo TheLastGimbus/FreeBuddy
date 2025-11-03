@@ -1,1 +1,0 @@
-# Moved to [../lib/headphones/huawei/PROTOCOL.md](../lib/headphones/huawei/PROTOCOL.md)
